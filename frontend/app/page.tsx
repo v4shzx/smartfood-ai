@@ -1,177 +1,122 @@
 "use client";
 
-import React, { useState, useContext, createContext, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   Brain, LineChart, Activity, Bot, Zap, ChevronRight, Menu, X,
   Star, CheckCircle2, Salad, Flame, ArrowUpRight, Cpu, Database,
-  ShieldCheck, Target, CloudCog, Globe, ChevronDown,
+  ShieldCheck, Target, CloudCog,
 } from "lucide-react";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useI18n, LangSwitcher } from "@/lib/i18n";
+import { useTheme } from "next-themes";
+import { Moon, Sun } from "lucide-react";
 
-// ─── i18n ─────────────────────────────────────────────────────────────────────
+// ─── Theme Toggle ─────────────────────────────────────────────────────────────
 
-type Lang = "es" | "en" | "fr";
+function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
+  if (!mounted) return <div className="w-9 h-9" />;
 
-const LANGUAGES: { code: Lang; label: string; flag: string }[] = [
-  { code: "es", label: "Español", flag: "🇪🇸" },
-  { code: "en", label: "English", flag: "🇺🇸" },
-  { code: "fr", label: "Français", flag: "🇫🇷" },
-];
+  const isDark = resolvedTheme === "dark";
+  return (
+    <button
+      aria-label="Toggle theme"
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-slate-700 transition-all shadow-sm"
+    >
+      {isDark
+        ? <Sun  className="w-4 h-4 text-amber-400" />
+        : <Moon className="w-4 h-4 text-slate-600" />}
+    </button>
+  );
+}
 
-const T = {
-  es: {
-    nav: { features: "Características", platform: "Plataforma", testimonials: "Testimonios", pricing: "Precios", login: "Iniciar sesión", cta: "Comenzar" },
-    badge: "V2.0: Modelos IA más potentes y rápidos",
-    h1: "Optimiza tu nutrición con datos inteligentes.",
-    hero_p: "SmartFood AI analiza tus hábitos, predice tu consumo y genera recomendaciones altamente precisas adaptadas a tus objetivos metabólicos.",
-    try: "Probar SmartFood AI",
-    demo: "Ver Demo",
-    integrations: "Impulsado por pipelines modernos de Salud e IA",
-    feat_title: "Inteligencia en cada comida.",
-    feat_sub: "Olvídate de las dietas genéricas. Deja que la IA avanzada construya la estrategia nutricional perfecta para tu biología.",
-    feats: [
-      { title: "Dieta IA Personalizada", desc: "Planes de comidas generados al instante según tus necesidades calóricas y deficiencias detectadas." },
-      { title: "Predicción de Consumo", desc: "Nuestros modelos aprenden cuándo tienes hambre y envían alternativas saludables preventivas." },
-      { title: "Análisis de Hábitos", desc: "Perspectivas sobre cómo el tiempo de tus macros afecta tu energía y métricas de salud a largo plazo." },
-    ],
-    testi_title: "Amado por optimizadores de salud.",
-    reviews: [
-      { review: "SmartFood AI reemplazó completamente a mi nutricionista. La forma en que ajusta mis macros dinámicamente es increíble." },
-      { review: "El motor de predicción es impecable. Literalmente me dice qué comer antes de que mi energía caiga." },
-      { review: "Minimalista, increíblemente rápido y los insights son accionables. Stripe para la nutrición es la comparación perfecta." },
-    ],
-    price_title: "Precios simples y transparentes.",
-    price_sub: "Invierte en tu salud con insights impulsados por IA.",
-    basic_desc: "Seguimiento esencial y consejos básicos de IA.",
-    basic_feats: ["Escaneo manual de código de barras", "Objetivos de macros estándar", "Informes semanales de resumen"],
-    basic_btn: "Empezar Gratis",
-    pro_desc: "Todo el poder del motor metabólico.",
-    pro_feats: ["Generador de comidas predictivo", "Sincronización biométrica con apps", "Ajuste dinámico de macros IA", "Análisis continuo de hábitos"],
-    pro_btn: "Iniciar prueba gratuita",
-    cta_title: "¿Listo para transformar tu salud?",
-    cta_sub: "Únete a miles de personas optimizando su cuerpo con la plataforma de nutrición IA más avanzada.",
-    cta_btn: "Probar SmartFood AI ahora",
-    footer: "Construido con inteligencia.",
-    dash_title: "Perspectivas Diarias",
-    dash_sub: "Tendencias metabólicas predichas por IA para hoy.",
-    dash_accuracy: "94% Precisión",
-    macro_title: "Objetivos de Macros IA",
-    recalc: "Recalcular con IA",
-    stat1: "Cal. Netas", stat2: "Puntuación", stat3: "Energía",
-    stat1s: "Objetivo: 2,000", stat2s: "Top 5% esta semana", stat3s: "Alta hasta las 8 PM",
-    coach: "\"Necesitas 20g más de proteína hoy. Intenta añadir un yogur griego a tu merienda.\"",
-    weekly: "Ingesta Semanal vs Objetivo",
-  },
-  en: {
-    nav: { features: "Features", platform: "Platform", testimonials: "Testimonials", pricing: "Pricing", login: "Log in", cta: "Start Now" },
-    badge: "V2.0: Smarter & Faster AI Models",
-    h1: "Optimize your nutrition with intelligent data.",
-    hero_p: "SmartFood AI analyzes your habits, predicts your consumption, and generates highly accurate recommendations tailored to your metabolic goals.",
-    try: "Try SmartFood AI",
-    demo: "View Demo",
-    integrations: "Powered by modern Health & AI pipelines",
-    feat_title: "Intelligence at every meal.",
-    feat_sub: "Skip the generic diets. Let advanced AI build the perfect nutritional strategy aligned with your biology.",
-    feats: [
-      { title: "Personalized AI Diet", desc: "Get meal plans generated instantly based on your exact caloric needs, goals, and detected deficiencies." },
-      { title: "Consumption Prediction", desc: "Our models learn when you're likely to snack or overeat, sending preemptive healthy alternatives." },
-      { title: "Habit Analysis", desc: "Deep insights into how your macro timing affects your daily energy levels and long-term health metrics." },
-    ],
-    testi_title: "Loved by health optimizers.",
-    reviews: [
-      { review: "SmartFood AI completely replaced my nutritionist. The way it adjusts my macros dynamically on workout vs rest days is mind-blowing." },
-      { review: "The prediction engine is flawless. It literally tells me what to eat before my energy crashes during long training weeks." },
-      { review: "Minimalist, incredibly fast, and the insights are actually actionable. Stripe for nutrition is the perfect comparison." },
-    ],
-    price_title: "Simple, transparent pricing.",
-    price_sub: "Invest in your health with AI-powered insights.",
-    basic_desc: "Essential tracking & basic AI tips.",
-    basic_feats: ["Manual barcode scanning", "Standard macro targets", "Weekly summary reports"],
-    basic_btn: "Get Started Free",
-    pro_desc: "Full power of the metabolic engine.",
-    pro_feats: ["Auto-predictive meal generator", "Health app biometric syndication", "Dynamic macro adjustment AI", "Continuous habit analytics"],
-    pro_btn: "Start Free Trial",
-    cta_title: "Ready to transform your health?",
-    cta_sub: "Join thousands of high-performers optimizing their bodies using the most advanced AI nutrition platform ever built.",
-    cta_btn: "Try SmartFood AI Now",
-    footer: "Crafted with intelligence.",
-    dash_title: "Daily Insights",
-    dash_sub: "AI-predicted metabolic trends for today.",
-    dash_accuracy: "94% Accuracy",
-    macro_title: "Macro AI Targets",
-    recalc: "Recalculate with AI",
-    stat1: "Calorie Net", stat2: "Nutrition Score", stat3: "Energy Output",
-    stat1s: "Target: 2,000", stat2s: "Top 5% this week", stat3s: "Predicted till 8 PM",
-    coach: "\"You're 20g short on protein today. Try adding a Greek yogurt to your afternoon snack.\"",
-    weekly: "Weekly Intake vs Target",
-  },
-  fr: {
-    nav: { features: "Fonctionnalités", platform: "Plateforme", testimonials: "Témoignages", pricing: "Tarifs", login: "Connexion", cta: "Commencer" },
-    badge: "V2.0 : Modèles IA plus intelligents et rapides",
-    h1: "Optimisez votre nutrition avec des données intelligentes.",
-    hero_p: "SmartFood AI analyse vos habitudes, prédit votre consommation et génère des recommandations très précises adaptées à vos objectifs métaboliques.",
-    try: "Essayer SmartFood AI",
-    demo: "Voir la Démo",
-    integrations: "Propulsé par des pipelines Santé et IA modernes",
-    feat_title: "L'intelligence à chaque repas.",
-    feat_sub: "Oubliez les régimes génériques. Laissez l'IA avancée construire la stratégie nutritionnelle parfaite pour votre biologie.",
-    feats: [
-      { title: "Régime IA Personnalisé", desc: "Obtenez des plans de repas générés instantanément selon vos besoins caloriques et carences détectées." },
-      { title: "Prédiction de Consommation", desc: "Nos modèles apprennent quand vous êtes susceptible de grignoter et envoient des alternatives saines préventives." },
-      { title: "Analyse des Habitudes", desc: "Des insights sur la façon dont le timing de vos macros affecte votre énergie et vos métriques de santé à long terme." },
-    ],
-    testi_title: "Adoré par les optimiseurs de santé.",
-    reviews: [
-      { review: "SmartFood AI a complètement remplacé mon nutritionniste. La façon dont il ajuste mes macros dynamiquement est époustouflante." },
-      { review: "Le moteur de prédiction est impeccable. Il me dit littéralement quoi manger avant que mon énergie ne chute." },
-      { review: "Minimaliste, incroyablement rapide, et les insights sont vraiment exploitables. Stripe pour la nutrition est la comparaison parfaite." },
-    ],
-    price_title: "Tarification simple et transparente.",
-    price_sub: "Investissez dans votre santé avec des insights propulsés par l'IA.",
-    basic_desc: "Suivi essentiel et conseils IA de base.",
-    basic_feats: ["Scan de code-barres manuel", "Objectifs de macros standards", "Rapports hebdomadaires récapitulatifs"],
-    basic_btn: "Commencer Gratuitement",
-    pro_desc: "Toute la puissance du moteur métabolique.",
-    pro_feats: ["Générateur de repas prédictif", "Synchronisation biométrique des apps", "Ajustement dynamique des macros IA", "Analyse continue des habitudes"],
-    pro_btn: "Démarrer l'essai gratuit",
-    cta_title: "Prêt à transformer votre santé ?",
-    cta_sub: "Rejoignez des milliers de personnes qui optimisent leur corps grâce à la plateforme de nutrition IA la plus avancée.",
-    cta_btn: "Essayer SmartFood AI maintenant",
-    footer: "Conçu avec intelligence.",
-    dash_title: "Aperçus Quotidiens",
-    dash_sub: "Tendances métaboliques prédites par IA pour aujourd'hui.",
-    dash_accuracy: "94% de Précision",
-    macro_title: "Objectifs Macros IA",
-    recalc: "Recalculer avec IA",
-    stat1: "Cal. Nettes", stat2: "Score Nutrition", stat3: "Énergie",
-    stat1s: "Objectif : 2 000", stat2s: "Top 5% cette semaine", stat3s: "Prévu jusqu'à 20h",
-    coach: "\"Il vous manque 20g de protéines aujourd'hui. Essayez d'ajouter un yaourt grec à votre collation.\"",
-    weekly: "Apport Hebdomadaire vs Objectif",
-  },
-} as const;
+// ─── Animated Background ──────────────────────────────────────────────────────
 
-// ─── Context ──────────────────────────────────────────────────────────────────
+function AnimatedBackground() {
+  return (
+    <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none select-none">
+      {/* Base gradient – light / dark */}
+      <div className="absolute inset-0 bg-linear-to-br from-slate-50 via-white to-blue-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950/40 transition-colors duration-700" />
 
-type Translations = {
-  nav: { features: string; platform: string; testimonials: string; pricing: string; login: string; cta: string };
-  badge: string; h1: string; hero_p: string; try: string; demo: string; integrations: string;
-  feat_title: string; feat_sub: string; feats: ReadonlyArray<{ title: string; desc: string }>;
-  testi_title: string; reviews: ReadonlyArray<{ review: string }>;
-  price_title: string; price_sub: string; basic_desc: string; basic_feats: ReadonlyArray<string>; basic_btn: string;
-  pro_desc: string; pro_feats: ReadonlyArray<string>; pro_btn: string;
-  cta_title: string; cta_sub: string; cta_btn: string; footer: string;
-  dash_title: string; dash_sub: string; dash_accuracy: string; macro_title: string; recalc: string;
-  stat1: string; stat2: string; stat3: string; stat1s: string; stat2s: string; stat3s: string;
-  coach: string; weekly: string;
-};
+      {/* Animated dot grid overlay */}
+      <div
+        className="animated-grid absolute inset-0 dark:opacity-30"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle, rgb(148 163 184 / 0.22) 1px, transparent 1px)",
+          backgroundSize: "32px 32px",
+        }}
+      />
 
-const LangCtx = createContext<{ lang: Lang; t: Translations; setLang: (l: Lang) => void }>({
-  lang: "es", t: T["es"] as Translations, setLang: () => {},
-});
+      {/* Blob 1 – large blue, top-left */}
+      <div
+        className="blob-1 absolute -top-40 -left-40 w-[700px] h-[700px] rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle at 40% 40%, oklch(0.65 0.18 240 / 0.18), transparent 70%)",
+          filter: "blur(60px)",
+        }}
+      />
+
+      {/* Blob 2 – indigo, top-right */}
+      <div
+        className="blob-2 absolute -top-20 -right-32 w-[600px] h-[600px] rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle at 60% 35%, oklch(0.55 0.2 270 / 0.16), transparent 70%)",
+          filter: "blur(80px)",
+        }}
+      />
+
+      {/* Blob 3 – violet, center */}
+      <div
+        className="blob-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] rounded-full"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 50%, oklch(0.6 0.15 260 / 0.09), transparent 65%)",
+          filter: "blur(90px)",
+        }}
+      />
+
+      {/* Blob 4 – sky blue, bottom-left */}
+      <div
+        className="blob-4 absolute -bottom-40 -left-20 w-[500px] h-[500px] rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle at 40% 60%, oklch(0.70 0.16 220 / 0.13), transparent 70%)",
+          filter: "blur(70px)",
+        }}
+      />
+
+      {/* Blob 5 – pale indigo, bottom-right */}
+      <div
+        className="blob-5 absolute -bottom-20 -right-40 w-[650px] h-[650px] rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle at 55% 55%, oklch(0.62 0.17 280 / 0.12), transparent 68%)",
+          filter: "blur(75px)",
+        }}
+      />
+
+      {/* Top shimmer */}
+      <div
+        className="absolute top-0 left-0 right-0 h-px"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, oklch(0.6 0.18 240 / 0.4) 40%, oklch(0.55 0.2 270 / 0.4) 60%, transparent)",
+        }}
+      />
+    </div>
+  );
+}
 
 // ─── Chart Data ───────────────────────────────────────────────────────────────
 
@@ -186,114 +131,51 @@ const calorieData = [
 ];
 
 const macroData = [
-  { name: "Protein", val: 140, goal: 150, color: "#3b82f6" },
-  { name: "Carbs",  val: 210, goal: 200, color: "#8b5cf6" },
-  { name: "Fat",    val: 55,  goal: 65,  color: "#14b8a6" },
+  { name: "Protein", val: 140, goal: 150, color: "#2563eb" },
+  { name: "Carbs",  val: 210, goal: 200, color: "#4f46e5" },
+  { name: "Fat",    val: 55,  goal: 65,  color: "#64748b" },
 ];
-
-// ─── Language Switcher ────────────────────────────────────────────────────────
-
-function LangSwitcher() {
-  const { lang, setLang } = useContext(LangCtx);
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const current = LANGUAGES.find((l) => l.code === lang)!;
-
-  useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
-
-  return (
-    <div ref={ref} className="relative">
-      <button
-        id="lang-switcher-btn"
-        onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 border border-gray-200 px-3 py-1.5 rounded-full transition-all"
-        aria-label="Switch language"
-      >
-        <Globe className="w-4 h-4 text-gray-400" />
-        <span>{current.flag}</span>
-        <span className="hidden sm:inline">{current.label}</span>
-        <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
-      </button>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: 6, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 4, scale: 0.97 }}
-            transition={{ duration: 0.15 }}
-            className="absolute right-0 mt-2 w-44 bg-white border border-gray-100 rounded-2xl shadow-xl shadow-gray-200/60 overflow-hidden z-50"
-          >
-            {LANGUAGES.map((l) => (
-              <button
-                key={l.code}
-                id={`lang-option-${l.code}`}
-                onClick={() => { setLang(l.code); setOpen(false); }}
-                className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
-                  lang === l.code
-                    ? "bg-blue-50 text-blue-700"
-                    : "text-gray-700 hover:bg-gray-50"
-                }`}
-              >
-                <span className="text-base">{l.flag}</span>
-                <span>{l.label}</span>
-                {lang === l.code && (
-                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-500" />
-                )}
-              </button>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
 
 // ─── Navbar ───────────────────────────────────────────────────────────────────
 
 function Navbar() {
-  const { t } = useContext(LangCtx);
+  const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100/50 transition-all">
+    <nav className="fixed w-full z-50 bg-white/60 dark:bg-slate-900/70 backdrop-blur-2xl border-b border-slate-200/30 dark:border-slate-700/30 transition-all shadow-sm shadow-slate-900/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="bg-blue-600 p-2 rounded-xl">
-              <Brain className="w-5 h-5 text-white" />
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20">
+              <Activity className="text-white w-5 h-5" />
             </div>
-            <span className="font-semibold text-xl tracking-tight text-gray-900">SmartFood AI</span>
+            <span className="font-bold text-xl tracking-tight text-slate-900 dark:text-white">SmartFood AI</span>
           </div>
 
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center gap-8">
-            <a href="#features"     className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">{t.nav.features}</a>
-            <a href="#demo"         className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">{t.nav.platform}</a>
-            <a href="#testimonials" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">{t.nav.testimonials}</a>
-            <a href="#pricing"      className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">{t.nav.pricing}</a>
+            <a href="#features"     className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t.nav.features}</a>
+            <a href="#demo"         className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t.nav.platform}</a>
+            <a href="#testimonials" className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t.nav.testimonials}</a>
+            <a href="#pricing"      className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t.nav.pricing}</a>
           </div>
 
           {/* Desktop Right Controls */}
           <div className="hidden md:flex items-center gap-3">
             <LangSwitcher />
-            <button className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">{t.nav.login}</button>
-            <button className="bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium px-4 py-2 rounded-full transition-all shadow-sm hover:shadow-md">
+            <ThemeToggle />
+            <Link href="/login" className="bg-slate-900 dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-700 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-slate-900/10 dark:shadow-blue-500/20 active:scale-95">
               {t.nav.cta}
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Toggle */}
           <div className="md:hidden flex items-center gap-2">
             <LangSwitcher />
-            <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600 p-1">
+            <ThemeToggle />
+            <button onClick={() => setIsOpen(!isOpen)} className="text-slate-600 dark:text-slate-300 p-1">
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
@@ -305,14 +187,15 @@ function Navbar() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="md:hidden bg-white border-b border-gray-100 px-4 pt-2 pb-4 space-y-1"
+          className="md:hidden bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 px-4 pt-2 pb-6 space-y-1 shadow-xl"
         >
-          <a href="#features"     className="block px-3 py-2 text-base font-medium text-gray-700">{t.nav.features}</a>
-          <a href="#pricing"      className="block px-3 py-2 text-base font-medium text-gray-700">{t.nav.pricing}</a>
-          <a href="#testimonials" className="block px-3 py-2 text-base font-medium text-gray-700">{t.nav.testimonials}</a>
-          <div className="border-t border-gray-100 mt-4 pt-4 flex flex-col gap-2">
-            <button className="w-full text-left px-3 py-2 text-base font-medium text-gray-700">{t.nav.login}</button>
-            <button className="w-full bg-blue-600 text-white px-3 py-2 rounded-lg text-base font-medium">{t.nav.cta}</button>
+          <a href="#features"     className="block px-3 py-3 text-base font-semibold text-slate-700 dark:text-slate-200">{t.nav.features}</a>
+          <a href="#pricing"      className="block px-3 py-3 text-base font-semibold text-slate-700 dark:text-slate-200">{t.nav.pricing}</a>
+          <a href="#testimonials" className="block px-3 py-3 text-base font-semibold text-slate-700 dark:text-slate-200">{t.nav.testimonials}</a>
+          <div className="border-t border-slate-100 dark:border-slate-800 mt-4 pt-4 flex flex-col gap-3">
+            <Link href="/login" className="w-full bg-blue-600 text-white px-3 py-3 rounded-xl text-base font-bold text-center shadow-lg shadow-blue-500/20">
+              {t.nav.cta}
+            </Link>
           </div>
         </motion.div>
       )}
@@ -323,33 +206,31 @@ function Navbar() {
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 
 function Hero() {
-  const { t } = useContext(LangCtx);
+  const { t } = useI18n();
   return (
-    <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-100/40 rounded-full blur-3xl -z-10" />
-
+    <section className="pt-40 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-sm font-medium mb-8">
-        <SparkleIcon className="w-4 h-4" />
+        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-100 dark:border-blue-800/60 text-blue-700 dark:text-blue-300 text-xs font-bold mb-10 tracking-wide uppercase">
+        <Zap className="w-3.5 h-3.5 fill-blue-600 dark:fill-blue-400" />
         <span>{t.badge}</span>
       </motion.div>
 
       <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
-        className="text-5xl md:text-7xl font-extrabold tracking-tight text-transparent bg-clip-text bg-linear-to-br from-gray-900 via-gray-800 to-gray-500 max-w-4xl">
-        {t.h1}
+        className="text-5xl md:text-7xl font-black tracking-tight text-slate-900 dark:text-white max-w-4xl leading-[1.1]">
+        {t.h1.split(".")[0]}<span className="text-blue-600 dark:text-blue-400">.</span>
       </motion.h1>
 
       <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
-        className="mt-6 text-xl text-gray-600 max-w-2xl leading-relaxed">
+        className="mt-8 text-xl text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed font-medium">
         {t.hero_p}
       </motion.p>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }}
-        className="mt-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-        <button className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 rounded-full text-lg font-medium transition-all flex items-center justify-center gap-2 shadow-lg shadow-gray-900/20 hover:shadow-xl hover:shadow-gray-900/30">
+        className="mt-12 flex flex-col sm:flex-row gap-5 w-full sm:w-auto">
+        <Link href="/login" className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-2xl text-lg font-bold transition-all flex items-center justify-center gap-2 shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 active:scale-[0.98]">
           {t.try} <ChevronRight className="w-5 h-5" />
-        </button>
-        <button className="bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 px-8 py-4 rounded-full text-lg font-medium transition-all flex items-center justify-center gap-2 shadow-sm">
+        </Link>
+        <button className="bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 px-10 py-4 rounded-2xl text-lg font-bold transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md active:scale-[0.98]">
           {t.demo}
         </button>
       </motion.div>
@@ -360,106 +241,110 @@ function Hero() {
 // ─── Dashboard Mockup ─────────────────────────────────────────────────────────
 
 function DashboardMockup() {
-  const { t } = useContext(LangCtx);
+  const { t } = useI18n();
   return (
     <section id="demo" className="py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto relative">
       <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
-        className="relative rounded-2xl bg-white border border-gray-200/60 shadow-2xl shadow-gray-200/50 overflow-hidden ring-1 ring-gray-900/5">
-        {/* Window Controls */}
-        <div className="h-12 border-b border-gray-100 bg-gray-50/50 flex items-center px-4 gap-2">
-          <div className="w-3 h-3 rounded-full bg-red-400" />
-          <div className="w-3 h-3 rounded-full bg-amber-400" />
-          <div className="w-3 h-3 rounded-full bg-green-400" />
-          <div className="ml-4 text-xs font-medium text-gray-400 flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4" /> Secure AI Connection Active
-          </div>
-        </div>
-
-        <div className="flex h-[600px]">
-          {/* Sidebar */}
-          <div className="w-64 border-r border-gray-100 bg-gray-50/30 p-4 hidden md:flex flex-col gap-2">
-            <div className="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">{t.nav.platform}</div>
-            <SidebarItem icon={<LineChart />} label={t.dash_title} active />
-            <SidebarItem icon={<Salad />}     label="Meal Planner" />
-            <SidebarItem icon={<Activity />}  label="Metabolic Status" />
-            <SidebarItem icon={<Target />}    label="Goals & Tracking" />
-            <div className="mt-auto">
-              <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
-                <div className="flex items-center gap-2 text-blue-700 font-semibold mb-2">
-                  <Bot className="w-5 h-5" /> AI Coach
-                </div>
-                <p className="text-xs text-blue-600/80 leading-relaxed">{t.coach}</p>
-              </div>
+        className="relative rounded-[2.5rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/60 shadow-2xl shadow-slate-200/60 dark:shadow-slate-900/80 overflow-hidden ring-1 ring-slate-900/5 dark:ring-white/5 p-2 backdrop-blur-sm">
+        <div className="rounded-[2rem] bg-white dark:bg-slate-900 overflow-hidden border border-slate-200/60 dark:border-slate-700/40 shadow-inner">
+          {/* Window Controls */}
+          <div className="h-14 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 flex items-center px-6 gap-2">
+            <div className="flex gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-slate-200 dark:bg-slate-700" />
+              <div className="w-3 h-3 rounded-full bg-slate-200 dark:bg-slate-700" />
+              <div className="w-3 h-3 rounded-full bg-slate-200 dark:bg-slate-700" />
+            </div>
+            <div className="ml-6 text-[11px] font-bold text-slate-400 dark:text-slate-500 flex items-center gap-2 uppercase tracking-widest">
+              <ShieldCheck className="w-4 h-4 text-blue-500" /> Secure AI Connection
             </div>
           </div>
 
-          {/* Main */}
-          <div className="flex-1 p-6 lg:p-10 overflow-y-auto bg-gray-50/10">
-            <div className="flex items-end justify-between mb-8">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 tracking-tight">{t.dash_title}</h2>
-                <p className="text-sm text-gray-500 mt-1">{t.dash_sub}</p>
-              </div>
-              <div className="text-sm font-medium px-3 py-1 bg-green-50 text-green-700 rounded-full flex items-center gap-1 border border-green-100">
-                <ArrowUpRight className="w-4 h-4" /> {t.dash_accuracy}
+          <div className="flex h-[600px]">
+            {/* Sidebar */}
+            <div className="w-64 border-r border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/30 p-6 hidden md:flex flex-col gap-2">
+              <div className="px-3 py-2 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">{t.nav.platform}</div>
+              <SidebarItem icon={<LineChart />} label={t.dash_title} active />
+              <SidebarItem icon={<Salad />}     label="Meal Planner" />
+              <SidebarItem icon={<Activity />}  label="Metabolic Status" />
+              <SidebarItem icon={<Target />}    label="Goals & Tracking" />
+              <div className="mt-auto">
+                <div className="bg-blue-600 rounded-2xl p-5 shadow-xl shadow-blue-500/20">
+                  <div className="flex items-center gap-2 text-white font-bold mb-2 text-sm">
+                    <Bot className="w-5 h-5" /> AI Coach
+                  </div>
+                  <p className="text-[11px] text-blue-50 leading-relaxed font-medium">{t.coach}</p>
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <StatCard title={t.stat1} value="1,840" subtitle={t.stat1s} icon={<Flame className="w-5 h-5 text-orange-500" />} />
-              <StatCard title={t.stat2} value="A+"    subtitle={t.stat2s} icon={<Star  className="w-5 h-5 text-amber-500"  />} />
-              <StatCard title={t.stat3} value="High"  subtitle={t.stat3s} icon={<Zap   className="w-5 h-5 text-yellow-500" />} />
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2 bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="font-semibold text-gray-900">{t.weekly}</h3>
-                  <div className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Last 7 Days</div>
+            {/* Main */}
+            <div className="flex-1 p-8 lg:p-12 overflow-y-auto bg-white dark:bg-slate-900/80">
+              <div className="flex items-end justify-between mb-10">
+                <div>
+                  <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">{t.dash_title}</h2>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-1.5 font-medium">{t.dash_sub}</p>
                 </div>
-                <div className="h-48 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={calorieData}>
-                      <defs>
-                        <linearGradient id="colorCal" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%"  stopColor="#3b82f6" stopOpacity={0.2} />
-                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}   />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                      <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#9ca3af" }} dy={10} />
-                      <YAxis hide domain={["dataMin - 200", "dataMax + 200"]} />
-                      <Tooltip contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }} cursor={{ stroke: "#e5e7eb", strokeWidth: 2 }} />
-                      <Area type="monotone" dataKey="target"   stroke="#9ca3af" strokeDasharray="5 5" fill="none"             strokeWidth={2} />
-                      <Area type="monotone" dataKey="calories" stroke="#3b82f6" strokeWidth={3}        fillOpacity={1} fill="url(#colorCal)" />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                <div className="text-xs font-bold px-4 py-1.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center gap-1.5 border border-emerald-100 dark:border-emerald-900/60 uppercase tracking-wider">
+                  <ArrowUpRight className="w-3.5 h-3.5" /> {t.dash_accuracy}
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
-                <h3 className="font-semibold text-gray-900 mb-6">{t.macro_title}</h3>
-                <div className="space-y-4">
-                  {macroData.map((macro) => (
-                    <div key={macro.name}>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="text-gray-600 font-medium">{macro.name}</span>
-                        <span className="text-gray-900 font-semibold">{macro.val}g <span className="text-gray-400 font-normal">/ {macro.goal}g</span></span>
-                      </div>
-                      <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
-                        <motion.div className="h-full rounded-full" style={{ backgroundColor: macro.color }}
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${(macro.val / macro.goal) * 100}%` }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 1, delay: 0.2 }} />
-                      </div>
-                    </div>
-                  ))}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
+                <StatCard title={t.stat1} value="1,840" subtitle={t.stat1s} icon={<Flame className="w-5 h-5 text-orange-500" />} />
+                <StatCard title={t.stat2} value="A+"    subtitle={t.stat2s} icon={<Star  className="w-5 h-5 text-blue-500"  />} />
+                <StatCard title={t.stat3} value="High"  subtitle={t.stat3s} icon={<Zap   className="w-5 h-5 text-amber-500" />} />
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2 bg-slate-50/50 dark:bg-slate-800/40 rounded-3xl border border-slate-100 dark:border-slate-700/50 p-7 shadow-sm">
+                  <div className="flex justify-between items-center mb-8">
+                    <h3 className="font-bold text-slate-900 dark:text-white">{t.weekly}</h3>
+                    <div className="text-[10px] font-bold bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-700 uppercase tracking-wider">Last 7 Days</div>
+                  </div>
+                  <div className="h-52 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={calorieData}>
+                        <defs>
+                          <linearGradient id="colorCal" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%"  stopColor="#2563eb" stopOpacity={0.15} />
+                            <stop offset="95%" stopColor="#2563eb" stopOpacity={0}   />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                        <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#94a3b8", fontWeight: 600 }} dy={15} />
+                        <YAxis hide domain={["dataMin - 200", "dataMax + 200"]} />
+                        <Tooltip contentStyle={{ borderRadius: "16px", border: "none", boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)", padding: "12px" }} cursor={{ stroke: "#cbd5e1", strokeWidth: 2 }} />
+                        <Area type="monotone" dataKey="target"   stroke="#94a3b8" strokeDasharray="6 6" fill="none"             strokeWidth={2} />
+                        <Area type="monotone" dataKey="calories" stroke="#2563eb" strokeWidth={4}        fillOpacity={1} fill="url(#colorCal)" />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
-                <div className="mt-6 pt-4 border-t border-gray-100">
-                  <button className="w-full text-center text-sm text-blue-600 font-medium hover:text-blue-700 flex justify-center items-center gap-1">
-                    {t.recalc} <Bot className="w-4 h-4" />
-                  </button>
+
+                <div className="bg-slate-50/50 dark:bg-slate-800/40 rounded-3xl border border-slate-100 dark:border-slate-700/50 p-7 shadow-sm">
+                  <h3 className="font-bold text-slate-900 dark:text-white mb-8">{t.macro_title}</h3>
+                  <div className="space-y-6">
+                    {macroData.map((macro) => (
+                      <div key={macro.name}>
+                        <div className="flex justify-between text-xs mb-2">
+                          <span className="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">{macro.name}</span>
+                          <span className="text-slate-900 dark:text-white font-black">{macro.val}g <span className="text-slate-400 font-normal">/ {macro.goal}g</span></span>
+                        </div>
+                        <div className="w-full bg-slate-200/50 dark:bg-slate-700/50 rounded-full h-2.5 overflow-hidden p-0.5">
+                          <motion.div className="h-full rounded-full" style={{ backgroundColor: macro.color }}
+                            initial={{ width: 0 }}
+                            whileInView={{ width: `${(macro.val / macro.goal) * 100}%` }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 1.2, ease: "circOut" }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-10 pt-6 border-t border-slate-200 dark:border-slate-700">
+                    <button className="w-full text-center text-xs text-blue-600 dark:text-blue-400 font-bold hover:text-blue-700 dark:hover:text-blue-300 flex justify-center items-center gap-2 uppercase tracking-widest transition-colors">
+                      {t.recalc} <Bot className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -473,16 +358,16 @@ function DashboardMockup() {
 // ─── Integrations ─────────────────────────────────────────────────────────────
 
 function Integrations() {
-  const { t } = useContext(LangCtx);
+  const { t } = useI18n();
   return (
-    <section className="py-16 bg-white border-y border-gray-100">
+    <section className="py-20 bg-slate-50/50 dark:bg-slate-800/20 border-y border-slate-100 dark:border-slate-800/60">
       <div className="max-w-7xl mx-auto px-4 text-center">
-        <p className="text-sm font-medium text-gray-400 mb-8 uppercase tracking-widest">{t.integrations}</p>
-        <div className="flex flex-wrap justify-center gap-8 md:gap-16 items-center opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-          <div className="flex items-center gap-2 text-xl font-bold text-gray-800"><Cpu      className="w-6 h-6" /> Meta Llama</div>
-          <div className="flex items-center gap-2 text-xl font-bold text-gray-800"><Database className="w-6 h-6" /> Apple Health</div>
-          <div className="flex items-center gap-2 text-xl font-bold text-gray-800"><Activity  className="w-6 h-6" /> Google Fit</div>
-          <div className="flex items-center gap-2 text-xl font-bold text-gray-800"><CloudCog  className="w-6 h-6" /> OpenAI</div>
+        <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 mb-12 uppercase tracking-[0.3em]">{t.integrations}</p>
+        <div className="flex flex-wrap justify-center gap-10 md:gap-20 items-center opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
+          <div className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200"><Cpu      className="w-6 h-6 text-blue-600" /> Meta Llama</div>
+          <div className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200"><Database className="w-6 h-6 text-blue-600" /> Apple Health</div>
+          <div className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200"><Activity  className="w-6 h-6 text-blue-600" /> Google Fit</div>
+          <div className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200"><CloudCog  className="w-6 h-6 text-blue-600" /> OpenAI</div>
         </div>
       </div>
     </section>
@@ -492,29 +377,29 @@ function Integrations() {
 // ─── Features ─────────────────────────────────────────────────────────────────
 
 const FEAT_STYLES = [
-  { icon: <Brain    className="text-blue-500   w-6 h-6" />, bg: "bg-blue-50"   },
-  { icon: <Target   className="text-purple-500 w-6 h-6" />, bg: "bg-purple-50" },
-  { icon: <Activity className="text-green-500  w-6 h-6" />, bg: "bg-green-50"  },
+  { icon: <Brain    className="text-blue-600   w-6 h-6" />, bg: "bg-blue-50   dark:bg-blue-950/60"   },
+  { icon: <Target   className="text-indigo-600 w-6 h-6" />, bg: "bg-indigo-50 dark:bg-indigo-950/60" },
+  { icon: <Activity className="text-slate-600  w-6 h-6 dark:text-slate-300" />, bg: "bg-slate-100  dark:bg-slate-800/60"  },
 ];
 
 function Features() {
-  const { t } = useContext(LangCtx);
+  const { t } = useI18n();
   return (
-    <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <div className="text-center mb-16">
-        <h2 className="text-3xl md:text-5xl font-bold text-gray-900 tracking-tight">{t.feat_title}</h2>
-        <p className="mt-4 text-lg text-gray-500 max-w-2xl mx-auto">{t.feat_sub}</p>
+    <section id="features" className="py-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div className="text-center mb-20">
+        <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">{t.feat_title}</h2>
+        <p className="mt-6 text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed">{t.feat_sub}</p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {t.feats.map((f, i) => (
           <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             transition={{ delay: i * 0.1, duration: 0.5 }}
-            className="p-8 rounded-3xl bg-gray-50/50 border border-gray-100 hover:bg-white hover:shadow-xl hover:shadow-gray-200/50 transition-all">
-            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 ${FEAT_STYLES[i].bg} shadow-sm`}>
+            className="p-10 rounded-[2.5rem] bg-white dark:bg-slate-900/80 border border-slate-100 dark:border-slate-800 hover:border-blue-100 dark:hover:border-blue-900 hover:shadow-2xl hover:shadow-blue-500/5 dark:hover:shadow-blue-500/10 transition-all group cursor-default">
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-8 ${FEAT_STYLES[i].bg} shadow-sm group-hover:scale-110 transition-transform duration-300`}>
               {FEAT_STYLES[i].icon}
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-3">{f.title}</h3>
-            <p className="text-gray-500 leading-relaxed">{f.desc}</p>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{f.title}</h3>
+            <p className="text-slate-500 dark:text-slate-400 leading-relaxed font-medium">{f.desc}</p>
           </motion.div>
         ))}
       </div>
@@ -531,23 +416,29 @@ const TESTI_PEOPLE = [
 ];
 
 function Testimonials() {
-  const { t } = useContext(LangCtx);
+  const { t } = useI18n();
   return (
-    <section id="testimonials" className="py-24 bg-gray-50 border-y border-gray-100">
-      <div className="max-w-7xl mx-auto px-4 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 mb-12">{t.testi_title}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto text-left">
+    <section id="testimonials" className="py-32 bg-slate-900 dark:bg-slate-950 relative overflow-hidden">
+      {/* Background Aurora */}
+      <div className="absolute top-0 left-0 w-full h-full">
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-600/20 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-indigo-600/20 blur-[120px] rounded-full" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
+        <h2 className="text-4xl md:text-5xl font-black tracking-tight text-white mb-20">{t.testi_title}</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto text-left">
           {t.reviews.map((r, i) => (
-            <div key={i} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, j) => <Star key={j} className="w-5 h-5 fill-amber-400 text-amber-400" />)}
+            <div key={i} className="bg-white/5 backdrop-blur-xl p-10 rounded-[2.5rem] border border-white/10 shadow-2xl transition-all hover:bg-white/10 group">
+              <div className="flex gap-1 mb-6">
+                {[...Array(5)].map((_, j) => <Star key={j} className="w-4 h-4 fill-blue-500 text-blue-500" />)}
               </div>
-              <p className="text-gray-600 mb-6 font-medium leading-relaxed">"{r.review}"</p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gray-200 rounded-full" />
+              <p className="text-slate-200 mb-8 font-semibold leading-relaxed italic text-lg">&quot;{r.review}&quot;</p>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-slate-800 rounded-2xl border border-white/10 group-hover:border-blue-500/50 transition-colors" />
                 <div>
-                  <div className="text-sm font-bold text-gray-900">{TESTI_PEOPLE[i].name}</div>
-                  <div className="text-xs text-gray-500">{TESTI_PEOPLE[i].role}</div>
+                  <div className="text-sm font-black text-white uppercase tracking-wider">{TESTI_PEOPLE[i].name}</div>
+                  <div className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">{TESTI_PEOPLE[i].role}</div>
                 </div>
               </div>
             </div>
@@ -561,40 +452,46 @@ function Testimonials() {
 // ─── Pricing ──────────────────────────────────────────────────────────────────
 
 function Pricing() {
-  const { t } = useContext(LangCtx);
+  const { t } = useI18n();
   return (
-    <section id="pricing" className="py-24 px-4 max-w-7xl mx-auto text-center">
-      <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 mb-4">{t.price_title}</h2>
-      <p className="text-gray-500 mb-12">{t.price_sub}</p>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+    <section id="pricing" className="py-32 px-4 max-w-7xl mx-auto text-center">
+      <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-6">{t.price_title}</h2>
+      <p className="text-slate-500 dark:text-slate-400 mb-16 text-lg font-medium">{t.price_sub}</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
         {/* Basic */}
-        <div className="p-8 rounded-3xl border border-gray-200 text-left">
-          <h3 className="text-2xl font-bold text-gray-900">Basic</h3>
-          <p className="text-gray-500 mt-2 text-sm">{t.basic_desc}</p>
-          <div className="my-6"><span className="text-4xl font-bold text-gray-900">$0</span><span className="text-gray-500"> /mo</span></div>
-          <ul className="space-y-4 mb-8">
+        <div className="p-12 rounded-[3rem] border border-slate-200 dark:border-slate-700 text-left bg-white dark:bg-slate-900/80 hover:shadow-xl dark:hover:shadow-slate-900/50 transition-all duration-500">
+          <h3 className="text-3xl font-black text-slate-900 dark:text-white">Basic</h3>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 text-sm font-bold uppercase tracking-widest">{t.basic_desc}</p>
+          <div className="my-10 flex items-baseline gap-1">
+            <span className="text-6xl font-black text-slate-900 dark:text-white">$0</span>
+            <span className="text-slate-400 dark:text-slate-500 font-bold text-lg">/mo</span>
+          </div>
+          <ul className="space-y-5 mb-12">
             {t.basic_feats.map((f, i) => (
-              <li key={i} className="flex gap-3 text-gray-600 font-medium"><CheckCircle2 className="text-gray-400 shrink-0" /> {f}</li>
+              <li key={i} className="flex gap-4 text-slate-600 dark:text-slate-300 font-bold text-sm items-center"><CheckCircle2 className="text-slate-300 dark:text-slate-600 shrink-0 w-5 h-5" /> {f}</li>
             ))}
           </ul>
-          <button className="w-full py-3 rounded-xl border border-gray-300 font-semibold text-gray-900 hover:bg-gray-50 transition-colors">{t.basic_btn}</button>
+          <button className="w-full py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 font-black text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-all uppercase tracking-widest text-xs active:scale-[0.98]">{t.basic_btn}</button>
         </div>
 
         {/* Pro */}
-        <div className="p-8 rounded-3xl bg-gray-900 border border-gray-800 text-left relative overflow-hidden shadow-2xl">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 blur-3xl rounded-full" />
+        <div className="p-12 rounded-[3rem] bg-[#0F172A] border border-slate-800 text-left relative overflow-hidden shadow-[0_20px_50px_rgba(37,99,235,0.15)] group">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 blur-[100px] rounded-full -mr-20 -mt-20 group-hover:bg-blue-600/30 transition-colors duration-700" />
           <div className="flex justify-between items-center relative z-10">
-            <h3 className="text-2xl font-bold text-white">Pro AI</h3>
-            <span className="text-xs font-bold bg-blue-500/10 text-blue-400 px-3 py-1 rounded-full border border-blue-500/20">MOST POPULAR</span>
+            <h3 className="text-3xl font-black text-white">Pro AI</h3>
+            <span className="text-[10px] font-black bg-blue-600 text-white px-4 py-1.5 rounded-full border border-blue-500 shadow-lg shadow-blue-500/40 uppercase tracking-widest">Most Popular</span>
           </div>
-          <p className="text-gray-400 mt-2 text-sm">{t.pro_desc}</p>
-          <div className="my-6"><span className="text-4xl font-bold text-white">$12</span><span className="text-gray-400"> /mo</span></div>
-          <ul className="space-y-4 mb-8">
+          <p className="text-slate-400 mt-3 text-sm font-bold uppercase tracking-widest relative z-10">{t.pro_desc}</p>
+          <div className="my-10 flex items-baseline gap-1 relative z-10">
+            <span className="text-6xl font-black text-white">$12</span>
+            <span className="text-slate-500 font-bold text-lg">/mo</span>
+          </div>
+          <ul className="space-y-5 mb-12 relative z-10">
             {t.pro_feats.map((f, i) => (
-              <li key={i} className="flex gap-3 text-gray-300 font-medium"><CheckCircle2 className="text-blue-500 shrink-0" /> {f}</li>
+              <li key={i} className="flex gap-4 text-slate-200 font-bold text-sm items-center"><CheckCircle2 className="text-blue-500 shrink-0 w-5 h-5" /> {f}</li>
             ))}
           </ul>
-          <button className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold transition-colors shadow-lg shadow-blue-900/50">{t.pro_btn}</button>
+          <button className="w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-black transition-all shadow-xl shadow-blue-600/20 uppercase tracking-widest text-xs relative z-10 active:scale-[0.98]">{t.pro_btn}</button>
         </div>
       </div>
     </section>
@@ -604,15 +501,21 @@ function Pricing() {
 // ─── CTA ──────────────────────────────────────────────────────────────────────
 
 function CTA() {
-  const { t } = useContext(LangCtx);
+  const { t } = useI18n();
   return (
-    <section className="py-24 px-4 bg-white border-t border-gray-100">
-      <div className="max-w-4xl mx-auto text-center rounded-3xl bg-linear-to-br from-gray-50 to-blue-50 p-12 border border-blue-100 shadow-xl shadow-blue-900/5">
-        <h2 className="text-3xl md:text-5xl font-bold text-gray-900 tracking-tight mb-6">{t.cta_title}</h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-10">{t.cta_sub}</p>
-        <button className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 rounded-full text-lg font-medium transition-all inline-flex items-center gap-2 shadow-lg hover:shadow-xl hover:shadow-gray-900/20">
-          {t.cta_btn} <ChevronRight className="w-5 h-5" />
-        </button>
+    <section className="py-32 px-4 bg-transparent border-t border-slate-100 dark:border-slate-800/60">
+      <div className="max-w-5xl mx-auto text-center rounded-[3.5rem] bg-slate-900 dark:bg-slate-950 p-16 md:p-24 border border-slate-800 shadow-2xl relative overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-blue-600/20 blur-[120px] rounded-full" />
+          <div className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] bg-indigo-600/20 blur-[120px] rounded-full" />
+        </div>
+        <div className="relative z-10">
+          <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-8 leading-tight">{t.cta_title}</h2>
+          <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-12 font-medium leading-relaxed">{t.cta_sub}</p>
+          <Link href="/login" className="bg-white hover:bg-slate-50 text-slate-900 px-12 py-5 rounded-2xl text-xl font-black transition-all inline-flex items-center gap-3 shadow-xl hover:shadow-2xl active:scale-95">
+            {t.cta_btn} <ChevronRight className="w-6 h-6" />
+          </Link>
+        </div>
       </div>
     </section>
   );
@@ -620,18 +523,14 @@ function CTA() {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function SparkleIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
-    </svg>
-  );
-}
-
 function SidebarItem({ icon, label, active = false }: { icon: React.ReactNode; label: string; active?: boolean }) {
   return (
-    <div className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer ${active ? "bg-white shadow-sm border border-gray-200 text-gray-900" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"}`}>
-      <div className={`${active ? "text-blue-600" : "text-gray-400"} w-5 h-5`}>{icon}</div>
+    <div className={`flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+      active
+        ? "bg-blue-50 dark:bg-blue-950/60 shadow-sm border border-blue-100 dark:border-blue-900/60 text-blue-600 dark:text-blue-300"
+        : "text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60"
+    }`}>
+      <div className={`${active ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500"} w-5 h-5 transition-colors`}>{icon}</div>
       {label}
     </div>
   );
@@ -639,13 +538,13 @@ function SidebarItem({ icon, label, active = false }: { icon: React.ReactNode; l
 
 function StatCard({ title, value, subtitle, icon }: { title: string; value: string; subtitle: string; icon: React.ReactNode }) {
   return (
-    <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-start justify-between">
+    <div className="bg-white dark:bg-slate-800/60 p-6 rounded-3xl border border-slate-100 dark:border-slate-700/50 shadow-sm flex items-start justify-between group hover:border-blue-100 dark:hover:border-blue-900 transition-colors">
       <div>
-        <div className="text-gray-500 text-sm font-medium mb-1">{title}</div>
-        <div className="text-2xl font-bold text-gray-900">{value}</div>
-        <div className="text-xs text-gray-400 mt-1">{subtitle}</div>
+        <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black mb-1.5 uppercase tracking-widest">{title}</div>
+        <div className="text-3xl font-black text-slate-900 dark:text-white">{value}</div>
+        <div className="text-[10px] text-slate-400 dark:text-slate-500 font-bold mt-1 uppercase tracking-wider group-hover:text-slate-500 dark:group-hover:text-slate-400 transition-colors">{subtitle}</div>
       </div>
-      <div className="bg-gray-50 p-2 rounded-lg">{icon}</div>
+      <div className="bg-slate-50 dark:bg-slate-700/50 p-3 rounded-2xl group-hover:bg-blue-50 dark:group-hover:bg-blue-950/50 transition-colors">{icon}</div>
     </div>
   );
 }
@@ -653,24 +552,20 @@ function StatCard({ title, value, subtitle, icon }: { title: string; value: stri
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
 export default function Home() {
-  const [lang, setLang] = useState<Lang>("es");
-  const t = T[lang];
-
   return (
-    <LangCtx.Provider value={{ lang, t, setLang }}>
-      <main className="bg-white min-h-screen font-sans antialiased text-gray-900 selection:bg-blue-100 selection:text-blue-900">
-        <Navbar />
-        <Hero />
-        <DashboardMockup />
-        <Integrations />
-        <Features />
-        <Testimonials />
-        <Pricing />
-        <CTA />
-        <footer className="py-8 text-center text-sm text-gray-400 border-t border-gray-100 bg-white">
-          © {new Date().getFullYear()} SmartFood AI. {t.footer}
-        </footer>
-      </main>
-    </LangCtx.Provider>
+    <main className="bg-transparent min-h-screen font-sans antialiased text-slate-900 dark:text-white selection:bg-blue-100 dark:selection:bg-blue-900/50 selection:text-blue-900 dark:selection:text-blue-200">
+      <AnimatedBackground />
+      <Navbar />
+      <Hero />
+      <DashboardMockup />
+      <Integrations />
+      <Features />
+      <Testimonials />
+      <Pricing />
+      <CTA />
+      <footer className="py-12 text-center text-xs font-bold text-slate-400 dark:text-slate-600 border-t border-slate-100 dark:border-slate-800/60 bg-transparent uppercase tracking-widest">
+        © {new Date().getFullYear()} SmartFood AI. Crafted with <span className="text-blue-600 dark:text-blue-400">Intelligence</span>.
+      </footer>
+    </main>
   );
 }

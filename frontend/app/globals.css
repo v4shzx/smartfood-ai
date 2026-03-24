@@ -128,3 +128,57 @@
     @apply font-sans;
   }
 }
+
+/* ─── Animated Background Keyframes ───────────────────────────────────────── */
+
+@keyframes blob-float {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  33%       { transform: translate(40px, -60px) scale(1.08); }
+  66%       { transform: translate(-30px, 30px) scale(0.94); }
+}
+
+@keyframes blob-drift {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  25%       { transform: translate(-50px, 40px) scale(1.05); }
+  50%       { transform: translate(30px, -50px) scale(0.96); }
+  75%       { transform: translate(50px, 20px) scale(1.03); }
+}
+
+@keyframes blob-pulse {
+  0%, 100% { transform: translate(0px, 0px) scale(1); opacity: 0.6; }
+  50%       { transform: translate(-20px, -30px) scale(1.12); opacity: 0.8; }
+}
+
+@keyframes grid-fade {
+  0%, 100% { opacity: 0.03; }
+  50%       { opacity: 0.06; }
+}
+
+@keyframes noise-shift {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
+}
+
+.blob-1 { animation: blob-float 18s ease-in-out infinite; }
+.blob-2 { animation: blob-drift 24s ease-in-out infinite; }
+.blob-3 { animation: blob-pulse 14s ease-in-out infinite; }
+.blob-4 { animation: blob-float 20s ease-in-out infinite reverse; }
+.blob-5 { animation: blob-drift 28s ease-in-out infinite reverse; }
+
+/* Boost visibility in dark mode */
+.dark .blob-1,
+.dark .blob-2,
+.dark .blob-3,
+.dark .blob-4,
+.dark .blob-5 {
+  filter: blur(60px) brightness(1.4);
+  opacity: 0.85;
+}
+
+.animated-grid {
+  animation: grid-fade 8s ease-in-out infinite;
+  background-image:
+    linear-gradient(to right, rgb(148 163 184 / 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(148 163 184 / 0.15) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
