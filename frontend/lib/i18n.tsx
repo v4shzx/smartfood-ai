@@ -247,39 +247,39 @@ export function LangSwitcher() {
       <button
         id="lang-switcher-btn"
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 border border-gray-200 px-3 py-1.5 rounded-full transition-all"
+        className="flex items-center gap-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-white/80 dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700 px-2 py-1 rounded-full transition-all backdrop-blur-sm shadow-sm"
         aria-label="Switch language"
       >
-        <Globe className="w-4 h-4 text-gray-400" />
-        <span>{current.flag}</span>
-        <span className="hidden sm:inline">{current.label}</span>
-        <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+        <Globe className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+        <span className="text-sm">{current.flag}</span>
+        <span className="hidden sm:inline">{current.code.toUpperCase()}</span>
+        <ChevronDown className={`w-3 h-3 text-slate-400 dark:text-slate-500 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </button>
 
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: 6, scale: 0.97 }}
+            initial={{ opacity: 0, y: 4, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 4, scale: 0.97 }}
+            exit={{ opacity: 0, y: 2, scale: 0.97 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 mt-2 w-44 bg-white border border-gray-100 rounded-2xl shadow-xl shadow-gray-200/60 overflow-hidden z-50"
+            className="absolute right-0 mt-1.5 w-32 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg shadow-slate-200/50 dark:shadow-black/40 overflow-hidden z-50"
           >
             {LANGUAGES.map((l) => (
               <button
                 key={l.code}
                 id={`lang-option-${l.code}`}
                 onClick={() => { setLang(l.code); setOpen(false); }}
-                className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
+                className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-medium transition-colors ${
                   lang === l.code
-                    ? "bg-blue-50 text-blue-700"
-                    : "text-gray-700 hover:bg-gray-50"
+                    ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400"
+                    : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
                 }`}
               >
-                <span className="text-base">{l.flag}</span>
+                <span className="text-sm">{l.flag}</span>
                 <span>{l.label}</span>
                 {lang === l.code && (
-                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-500" />
+                  <span className="ml-auto w-1 h-1 rounded-full bg-blue-500 dark:bg-blue-400" />
                 )}
               </button>
             ))}

@@ -37,7 +37,7 @@ export function FlickeringGrid({
       }
       const canvas = document.createElement("canvas");
       canvas.width = canvas.height = 1;
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
       if (!ctx) return "rgba(255, 0, 0,";
       ctx.fillStyle = color;
       ctx.fillRect(0, 0, 1, 1);
@@ -69,16 +69,20 @@ export function FlickeringGrid({
 
   const updateSquares = useCallback(
     (squares: Float32Array, deltaTime: number) => {
+      const updatedIndices: number[] = [];
+      // To optimize, we only update squares probabilistically and track which changed
       for (let i = 0; i < squares.length; i++) {
         if (Math.random() < flickerChance * deltaTime) {
           squares[i] = Math.random() * maxOpacity;
+          updatedIndices.push(i);
         }
       }
+      return updatedIndices;
     },
     [flickerChance, maxOpacity]
   );
 
-  const drawGrid = useCallback(
+  const drawInitialGrid = useCallback(
     (
       ctx: CanvasRenderingContext2D,
       width: number,
@@ -89,8 +93,6 @@ export function FlickeringGrid({
       dpr: number
     ) => {
       ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = "transparent";
-      ctx.fillRect(0, 0, width, height);
 
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
@@ -108,10 +110,41 @@ export function FlickeringGrid({
     [memoizedColor, squareSize, gridGap]
   );
 
+  const drawUpdatedSquares = useCallback(
+    (
+      ctx: CanvasRenderingContext2D,
+      cols: number,
+      rows: number,
+      squares: Float32Array,
+      updatedIndices: number[],
+      dpr: number
+    ) => {
+      // Instead of clearing the entire canvas, we ONLY redraw the changed squares.
+      // This reduces fillRect calls by >99%.
+      for (const idx of updatedIndices) {
+        const i = Math.floor(idx / rows);
+        const j = idx % rows;
+        const opacity = squares[idx];
+
+        const x = i * (squareSize + gridGap) * dpr;
+        const y = j * (squareSize + gridGap) * dpr;
+        const size = squareSize * dpr;
+
+        // Clear only the specific square
+        ctx.clearRect(x, y, size, size);
+
+        // Draw the newly updated square
+        ctx.fillStyle = `${memoizedColor}${opacity})`;
+        ctx.fillRect(x, y, size, size);
+      }
+    },
+    [memoizedColor, squareSize, gridGap]
+  );
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
-    const ctx = canvas?.getContext("2d") ?? null;
+    const ctx = canvas?.getContext("2d", { alpha: true }) ?? null;
     let animationFrameId: number | null = null;
     let resizeObserver: ResizeObserver | null = null;
     let intersectionObserver: IntersectionObserver | null = null;
@@ -123,19 +156,9 @@ export function FlickeringGrid({
         const newHeight = height || container.clientHeight;
         setCanvasSize({ width: newWidth, height: newHeight });
         gridParams = setupCanvas(canvas, newWidth, newHeight);
-      };
 
-      updateCanvasSize();
-
-      let lastTime = 0;
-      const animate = (time: number) => {
-        if (!isInView || !gridParams) return;
-
-        const deltaTime = (time - lastTime) / 1000;
-        lastTime = time;
-
-        updateSquares(gridParams.squares, deltaTime);
-        drawGrid(
+        // Perform initial heavy draw once
+        drawInitialGrid(
           ctx,
           canvas.width,
           canvas.height,
@@ -144,6 +167,37 @@ export function FlickeringGrid({
           gridParams.squares,
           gridParams.dpr
         );
+      };
+
+      updateCanvasSize();
+
+      let lastTime = 0;
+      const animate = (time: number) => {
+        if (!isInView || !gridParams) return;
+
+        // Throttle to max ~30 FPS (every ~33ms) to save CPU/GPU overhead
+        const elapsed = time - lastTime;
+        if (elapsed < 33) {
+          animationFrameId = requestAnimationFrame(animate);
+          return;
+        }
+
+        const deltaTime = elapsed / 1000;
+        lastTime = time;
+
+        const updatedIndices = updateSquares(gridParams.squares, deltaTime);
+
+        if (updatedIndices.length > 0) {
+          drawUpdatedSquares(
+            ctx,
+            gridParams.cols,
+            gridParams.rows,
+            gridParams.squares,
+            updatedIndices,
+            gridParams.dpr
+          );
+        }
+
         animationFrameId = requestAnimationFrame(animate);
       };
 
@@ -155,12 +209,16 @@ export function FlickeringGrid({
       intersectionObserver = new IntersectionObserver(
         ([entry]) => {
           setIsInView(entry.isIntersecting);
+          if (entry.isIntersecting) {
+            lastTime = performance.now();
+          }
         },
         { threshold: 0 }
       );
       intersectionObserver.observe(canvas);
 
       if (isInView) {
+        lastTime = performance.now();
         animationFrameId = requestAnimationFrame(animate);
       }
     }
@@ -176,7 +234,7 @@ export function FlickeringGrid({
         intersectionObserver.disconnect();
       }
     };
-  }, [setupCanvas, updateSquares, drawGrid, width, height, isInView]);
+  }, [setupCanvas, updateSquares, drawInitialGrid, drawUpdatedSquares, width, height, isInView]);
 
   return (
     <div

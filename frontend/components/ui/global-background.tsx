@@ -5,7 +5,6 @@ import { useTheme } from "next-themes";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
 
 export function GlobalBackground() {
-  const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
