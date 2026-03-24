@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useI18n, LangSwitcher } from "@/lib/i18n";
+import { FlickeringGrid } from "@/components/ui/flickering-grid";
 
 export default function LoginPage() {
   const { t } = useI18n();
@@ -43,13 +44,14 @@ export default function LoginPage() {
           <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-slate-800/40 blur-[100px] rounded-full" />
         </div>
 
-        {/* Animated Grid Pattern */}
-        <div 
-          className="absolute inset-0 opacity-[0.03]" 
-          style={{ 
-            backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
-            backgroundSize: '32px 32px' 
-          }} 
+        {/* Animated Flickering Grid Pattern */}
+        <FlickeringGrid 
+          className="absolute inset-0 z-0 size-full"
+          squareSize={4}
+          gridGap={6}
+          color="#6B7280"
+          maxOpacity={0.5}
+          flickerChance={0.1}
         />
 
         <div className="relative z-10 w-full max-w-lg">

@@ -81,6 +81,7 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --color-particle: oklch(0.6 0 0);
 }
 
 .dark {
@@ -115,6 +116,7 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --color-particle: oklch(0.985 0 0 / 0.2);
 }
 
 @layer base {
@@ -132,31 +134,21 @@
 /* ─── Animated Background Keyframes ───────────────────────────────────────── */
 
 @keyframes blob-float {
-  0%, 100% { transform: translate(0px, 0px) scale(1); }
-  33%       { transform: translate(40px, -60px) scale(1.08); }
-  66%       { transform: translate(-30px, 30px) scale(0.94); }
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(4vw, -6vh) scale(1.08); }
+  66%       { transform: translate(-3vw, 3vh) scale(0.94); }
 }
 
 @keyframes blob-drift {
-  0%, 100% { transform: translate(0px, 0px) scale(1); }
-  25%       { transform: translate(-50px, 40px) scale(1.05); }
-  50%       { transform: translate(30px, -50px) scale(0.96); }
-  75%       { transform: translate(50px, 20px) scale(1.03); }
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25%       { transform: translate(-5vw, 4vh) scale(1.05); }
+  50%       { transform: translate(3vw, -5vh) scale(0.96); }
+  75%       { transform: translate(5vw, 2vh) scale(1.03); }
 }
 
 @keyframes blob-pulse {
-  0%, 100% { transform: translate(0px, 0px) scale(1); opacity: 0.6; }
-  50%       { transform: translate(-20px, -30px) scale(1.12); opacity: 0.8; }
-}
-
-@keyframes grid-fade {
-  0%, 100% { opacity: 0.03; }
-  50%       { opacity: 0.06; }
-}
-
-@keyframes noise-shift {
-  0%   { background-position: 0% 0%; }
-  100% { background-position: 100% 100%; }
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+  50%       { transform: translate(-2vw, -3vh) scale(1.12); opacity: 0.8; }
 }
 
 .blob-1 { animation: blob-float 18s ease-in-out infinite; }
@@ -171,14 +163,6 @@
 .dark .blob-3,
 .dark .blob-4,
 .dark .blob-5 {
-  filter: blur(60px) brightness(1.4);
-  opacity: 0.85;
-}
-
-.animated-grid {
-  animation: grid-fade 8s ease-in-out infinite;
-  background-image:
-    linear-gradient(to right, rgb(148 163 184 / 0.15) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(148 163 184 / 0.15) 1px, transparent 1px);
-  background-size: 64px 64px;
+  filter: blur(90px) brightness(2.5);
+  opacity: 0.9;
 }
