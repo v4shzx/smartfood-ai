@@ -289,15 +289,31 @@ function Integrations() {
   return (
     <section className="py-20 relative z-10">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="w-full bg-white/5 dark:bg-slate-950/5 backdrop-blur-[12px] rounded-[2.5rem] border border-white/10 dark:border-white/5 p-10 md:p-16 text-center shadow-xl shadow-slate-900/5 dark:shadow-black/20">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="w-full bg-white/5 dark:bg-slate-950/5 backdrop-blur-[12px] rounded-[2.5rem] border border-white/10 dark:border-white/5 p-10 md:p-16 text-center shadow-xl shadow-slate-900/5 dark:shadow-black/20"
+        >
           <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 mb-12 uppercase tracking-[0.3em]">{t.integrations}</p>
           <div className="flex flex-wrap justify-center gap-10 md:gap-20 items-center opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
-            <div className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200"><Cpu      className="w-6 h-6 text-blue-600" /> Meta Llama</div>
-            <div className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200"><Database className="w-6 h-6 text-blue-600" /> Apple Health</div>
-            <div className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200"><Activity  className="w-6 h-6 text-blue-600" /> Google Fit</div>
-            <div className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200"><CloudCog  className="w-6 h-6 text-blue-600" /> OpenAI</div>
+            {[
+              { icon: <Cpu className="w-6 h-6 text-blue-600" />, label: "Meta Llama" },
+              { icon: <Database className="w-6 h-6 text-blue-600" />, label: "Apple Health" },
+              { icon: <Activity className="w-6 h-6 text-blue-600" />, label: "Google Fit" },
+              { icon: <CloudCog className="w-6 h-6 text-blue-600" />, label: "OpenAI" },
+            ].map((item, i) => (
+              <motion.div 
+                key={i}
+                whileHover={{ scale: 1.1, y: -5 }}
+                className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200 cursor-default"
+              >
+                {item.icon} {item.label}
+              </motion.div>
+            ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -316,15 +332,36 @@ function Features() {
   return (
     <section id="features" className="py-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <div className="text-center mb-20">
-        <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">{t.feat_title}</h2>
-        <p className="mt-6 text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed">{t.feat_sub}</p>
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight"
+        >
+          {t.feat_title}
+        </motion.h2>
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="mt-6 text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed"
+        >
+          {t.feat_sub}
+        </motion.p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {t.feats.map((f, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            transition={{ delay: i * 0.1, duration: 0.5 }}
-            className="p-10 rounded-[2.5rem] bg-white dark:bg-slate-900/80 border border-slate-100 dark:border-slate-800 hover:border-blue-100 dark:hover:border-blue-900 hover:shadow-2xl hover:shadow-blue-500/5 dark:hover:shadow-blue-500/10 transition-all group cursor-default">
-            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-8 ${FEAT_STYLES[i].bg} shadow-sm group-hover:scale-110 transition-transform duration-300`}>
+          <motion.div 
+            key={i} 
+            initial={{ opacity: 0, y: 30 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.1, duration: 0.6 }}
+            whileHover={{ y: -10 }}
+            className="p-10 rounded-[2.5rem] bg-white dark:bg-slate-900/80 border border-slate-100 dark:border-slate-800 hover:border-blue-100 dark:hover:border-blue-900 hover:shadow-2xl hover:shadow-blue-500/5 dark:hover:shadow-blue-500/10 transition-all group cursor-default"
+          >
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-8 ${FEAT_STYLES[i].bg} shadow-sm group-hover:rotate-12 transition-transform duration-300`}>
               {FEAT_STYLES[i].icon}
             </div>
             <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{f.title}</h3>
@@ -355,22 +392,49 @@ function Testimonials() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
-        <h2 className="text-4xl md:text-5xl font-black tracking-tight text-white mb-20">{t.testi_title}</h2>
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-4xl md:text-5xl font-black tracking-tight text-white mb-20"
+        >
+          {t.testi_title}
+        </motion.h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto text-left">
           {t.reviews.map((r, i) => (
-            <div key={i} className="bg-white/5 backdrop-blur-xl p-10 rounded-[2.5rem] border border-white/10 shadow-2xl transition-all hover:bg-white/10 group">
+            <motion.div 
+              key={i}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1, duration: 0.5 }}
+              whileHover={{ y: -5, backgroundColor: "rgba(255, 255, 255, 0.08)" }}
+              className="bg-white/5 backdrop-blur-xl p-10 rounded-[2.5rem] border border-white/10 shadow-2xl transition-all group"
+            >
               <div className="flex gap-1 mb-6">
-                {[...Array(5)].map((_, j) => <Star key={j} className="w-4 h-4 fill-blue-500 text-blue-500" />)}
+                {[...Array(5)].map((_, j) => (
+                  <motion.div
+                    key={j}
+                    initial={{ opacity: 0, scale: 0 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.3 + (j * 0.05) }}
+                  >
+                    <Star className="w-4 h-4 fill-blue-500 text-blue-500" />
+                  </motion.div>
+                ))}
               </div>
               <p className="text-slate-200 mb-8 font-semibold leading-relaxed italic text-lg">&quot;{r.review}&quot;</p>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-slate-800 rounded-2xl border border-white/10 group-hover:border-blue-500/50 transition-colors" />
+                <div className="w-12 h-12 bg-slate-800 rounded-2xl border border-white/10 group-hover:border-blue-500/50 transition-colors overflow-hidden relative">
+                   <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-transparent" />
+                </div>
                 <div>
                   <div className="text-sm font-black text-white uppercase tracking-wider">{TESTI_PEOPLE[i].name}</div>
                   <div className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">{TESTI_PEOPLE[i].role}</div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -384,11 +448,33 @@ function Pricing() {
   const { t } = useI18n();
   return (
     <section id="pricing" className="py-32 px-4 max-w-7xl mx-auto text-center">
-      <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-6">{t.price_title}</h2>
-      <p className="text-slate-500 dark:text-slate-400 mb-16 text-lg font-medium">{t.price_sub}</p>
+      <motion.h2 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-6"
+      >
+        {t.price_title}
+      </motion.h2>
+      <motion.p 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.1 }}
+        className="text-slate-500 dark:text-slate-400 mb-16 text-lg font-medium"
+      >
+        {t.price_sub}
+      </motion.p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
         {/* Basic */}
-        <div className="p-12 rounded-[3rem] border border-slate-200 dark:border-slate-700 text-left bg-white dark:bg-slate-900/80 hover:shadow-xl dark:hover:shadow-slate-900/50 transition-all duration-500">
+        <motion.div 
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          whileHover={{ y: -10 }}
+          className="p-12 rounded-[3rem] border border-slate-200 dark:border-slate-700 text-left bg-white dark:bg-slate-900/80 hover:shadow-xl dark:hover:shadow-slate-900/50 transition-all duration-500"
+        >
           <h3 className="text-3xl font-black text-slate-900 dark:text-white">Basic</h3>
           <p className="text-slate-500 dark:text-slate-400 mt-3 text-sm font-bold uppercase tracking-widest">{t.basic_desc}</p>
           <div className="my-10 flex items-baseline gap-1">
@@ -401,14 +487,27 @@ function Pricing() {
             ))}
           </ul>
           <button className="w-full py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 font-black text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-all uppercase tracking-widest text-xs active:scale-[0.98]">{t.basic_btn}</button>
-        </div>
+        </motion.div>
 
         {/* Pro */}
-        <div className="p-12 rounded-[3rem] bg-[#0F172A] border border-slate-800 text-left relative overflow-hidden shadow-[0_20px_50px_rgba(37,99,235,0.15)] group">
+        <motion.div 
+          initial={{ opacity: 0, x: 30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          whileHover={{ y: -10 }}
+          className="p-12 rounded-[3rem] bg-[#0F172A] border border-slate-800 text-left relative overflow-hidden shadow-[0_20px_50px_rgba(37,99,235,0.15)] group"
+        >
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 blur-[100px] rounded-full -mr-20 -mt-20 group-hover:bg-blue-600/30 transition-colors duration-700" />
           <div className="flex justify-between items-center relative z-10">
             <h3 className="text-3xl font-black text-white">Pro AI</h3>
-            <span className="text-[10px] font-black bg-blue-600 text-white px-4 py-1.5 rounded-full border border-blue-500 shadow-lg shadow-blue-500/40 uppercase tracking-widest">Most Popular</span>
+            <motion.span 
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="text-[10px] font-black bg-blue-600 text-white px-4 py-1.5 rounded-full border border-blue-500 shadow-lg shadow-blue-500/40 uppercase tracking-widest"
+            >
+              Most Popular
+            </motion.span>
           </div>
           <p className="text-slate-400 mt-3 text-sm font-bold uppercase tracking-widest relative z-10">{t.pro_desc}</p>
           <div className="my-10 flex items-baseline gap-1 relative z-10">
@@ -421,7 +520,7 @@ function Pricing() {
             ))}
           </ul>
           <button className="w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-black transition-all shadow-xl shadow-blue-600/20 uppercase tracking-widest text-xs relative z-10 active:scale-[0.98]">{t.pro_btn}</button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -433,19 +532,48 @@ function CTA() {
   const { t } = useI18n();
   return (
     <section className="py-32 px-4 bg-transparent border-t border-slate-100 dark:border-slate-800/60">
-      <div className="max-w-5xl mx-auto text-center rounded-[3.5rem] bg-slate-900 dark:bg-slate-950 p-16 md:p-24 border border-slate-800 shadow-2xl relative overflow-hidden">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="max-w-5xl mx-auto text-center rounded-[3.5rem] bg-slate-900 dark:bg-slate-950 p-16 md:p-24 border border-slate-800 shadow-2xl relative overflow-hidden"
+      >
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-blue-600/20 blur-[120px] rounded-full" />
           <div className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] bg-indigo-600/20 blur-[120px] rounded-full" />
         </div>
         <div className="relative z-10">
-          <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-8 leading-tight">{t.cta_title}</h2>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-12 font-medium leading-relaxed">{t.cta_sub}</p>
-          <Link href="/login" className="bg-white hover:bg-slate-50 text-slate-900 px-12 py-5 rounded-2xl text-xl font-black transition-all inline-flex items-center gap-3 shadow-xl hover:shadow-2xl active:scale-95">
-            {t.cta_btn} <ChevronRight className="w-6 h-6" />
-          </Link>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-4xl md:text-6xl font-black text-white tracking-tight mb-8 leading-tight"
+          >
+            {t.cta_title}
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="text-xl text-slate-400 max-w-2xl mx-auto mb-12 font-medium leading-relaxed"
+          >
+            {t.cta_sub}
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 }}
+          >
+            <Link href="/login" className="bg-white hover:bg-slate-50 text-slate-900 px-12 py-5 rounded-2xl text-xl font-black transition-all inline-flex items-center gap-3 shadow-xl hover:shadow-2xl active:scale-95 group">
+              {t.cta_btn} <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
@@ -454,27 +582,33 @@ function CTA() {
 
 function SidebarItem({ icon, label, active = false }: { icon: React.ReactNode; label: string; active?: boolean }) {
   return (
-    <div className={`flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-      active
-        ? "bg-blue-50 dark:bg-blue-950/60 shadow-sm border border-blue-100 dark:border-blue-900/60 text-blue-600 dark:text-blue-300"
-        : "text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60"
-    }`}>
+    <motion.div 
+      whileHover={{ x: 5 }}
+      className={`flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+        active
+          ? "bg-blue-50 dark:bg-blue-950/60 shadow-sm border border-blue-100 dark:border-blue-900/60 text-blue-600 dark:text-blue-300"
+          : "text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60"
+      }`}
+    >
       <div className={`${active ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500"} w-5 h-5 transition-colors`}>{icon}</div>
       {label}
-    </div>
+    </motion.div>
   );
 }
 
 function StatCard({ title, value, subtitle, icon }: { title: string; value: string; subtitle: string; icon: React.ReactNode }) {
   return (
-    <div className="bg-white dark:bg-slate-800/60 p-6 rounded-3xl border border-slate-100 dark:border-slate-700/50 shadow-sm flex items-start justify-between group hover:border-blue-100 dark:hover:border-blue-900 transition-colors">
+    <motion.div 
+      whileHover={{ y: -5 }}
+      className="bg-white dark:bg-slate-800/60 p-6 rounded-3xl border border-slate-100 dark:border-slate-700/50 shadow-sm flex items-start justify-between group hover:border-blue-100 dark:hover:border-blue-900 transition-colors cursor-default"
+    >
       <div>
         <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black mb-1.5 uppercase tracking-widest">{title}</div>
         <div className="text-3xl font-black text-slate-900 dark:text-white">{value}</div>
         <div className="text-[10px] text-slate-400 dark:text-slate-500 font-bold mt-1 uppercase tracking-wider group-hover:text-slate-500 dark:group-hover:text-slate-400 transition-colors">{subtitle}</div>
       </div>
-      <div className="bg-slate-50 dark:bg-slate-700/50 p-3 rounded-2xl group-hover:bg-blue-50 dark:group-hover:bg-blue-950/50 transition-colors">{icon}</div>
-    </div>
+      <div className="bg-slate-50 dark:bg-slate-700/50 p-3 rounded-2xl group-hover:bg-blue-50 dark:group-hover:bg-blue-950/50 transition-colors group-hover:scale-110 duration-300">{icon}</div>
+    </motion.div>
   );
 }
 
