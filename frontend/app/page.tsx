@@ -128,31 +128,38 @@ function Navbar() {
 function Hero() {
   const { t } = useI18n();
   return (
-    <section className="pt-40 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-100 dark:border-blue-800/60 text-blue-700 dark:text-blue-300 text-xs font-bold mb-10 tracking-wide uppercase">
-        <Zap className="w-3.5 h-3.5 fill-blue-600 dark:fill-blue-400" />
-        <span>{t.badge}</span>
-      </motion.div>
+    <section className="pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10 flex flex-col items-center">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 0.6 }}
+        className="w-full max-w-5xl bg-white/5 dark:bg-slate-950/5 backdrop-blur-[12px] rounded-[3rem] border border-white/10 dark:border-white/5 p-8 md:p-16 flex flex-col items-center text-center shadow-2xl shadow-slate-900/5 dark:shadow-black/20"
+      >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50/50 dark:bg-blue-950/30 border border-blue-100/30 dark:border-blue-800/30 text-blue-700 dark:text-blue-300 text-xs font-bold mb-10 tracking-wide uppercase">
+          <Zap className="w-3.5 h-3.5 fill-blue-600 dark:fill-blue-400" />
+          <span>{t.badge}</span>
+        </motion.div>
 
-      <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
-        className="text-5xl md:text-7xl font-black tracking-tight text-slate-900 dark:text-white max-w-4xl leading-[1.1]">
-        {t.h1.split(".")[0]}<span className="text-blue-600 dark:text-blue-400">.</span>
-      </motion.h1>
+        <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
+          className="text-5xl md:text-7xl font-black tracking-tight text-slate-900 dark:text-white max-w-4xl leading-[1.1]">
+          {t.h1.split(".")[0]}<span className="text-blue-600 dark:text-blue-400">.</span>
+        </motion.h1>
 
-      <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
-        className="mt-8 text-xl text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed font-medium">
-        {t.hero_p}
-      </motion.p>
+        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
+          className="mt-8 text-xl text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed font-medium">
+          {t.hero_p}
+        </motion.p>
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }}
-        className="mt-12 flex flex-col sm:flex-row gap-5 w-full sm:w-auto">
-        <Link href="/login" className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-2xl text-lg font-bold transition-all flex items-center justify-center gap-2 shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 active:scale-[0.98]">
-          {t.try} <ChevronRight className="w-5 h-5" />
-        </Link>
-        <button className="bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 px-10 py-4 rounded-2xl text-lg font-bold transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md active:scale-[0.98]">
-          {t.demo}
-        </button>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-12 flex flex-col sm:flex-row gap-5 w-full sm:w-auto">
+          <Link href="/login" className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-2xl text-lg font-bold transition-all flex items-center justify-center gap-2 shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 active:scale-[0.98]">
+            {t.try} <ChevronRight className="w-5 h-5" />
+          </Link>
+          <button className="bg-white/40 dark:bg-slate-800/40 hover:bg-white/60 dark:hover:bg-slate-700/60 text-slate-900 dark:text-white border border-slate-200/50 dark:border-slate-700/50 px-10 py-4 rounded-2xl text-lg font-bold transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md backdrop-blur-md active:scale-[0.98]">
+            {t.demo}
+          </button>
+        </motion.div>
       </motion.div>
     </section>
   );
@@ -280,14 +287,16 @@ function DashboardMockup() {
 function Integrations() {
   const { t } = useI18n();
   return (
-    <section className="py-20 bg-slate-50/50 dark:bg-slate-800/20 border-y border-slate-100 dark:border-slate-800/60">
-      <div className="max-w-7xl mx-auto px-4 text-center">
-        <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 mb-12 uppercase tracking-[0.3em]">{t.integrations}</p>
-        <div className="flex flex-wrap justify-center gap-10 md:gap-20 items-center opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
-          <div className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200"><Cpu      className="w-6 h-6 text-blue-600" /> Meta Llama</div>
-          <div className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200"><Database className="w-6 h-6 text-blue-600" /> Apple Health</div>
-          <div className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200"><Activity  className="w-6 h-6 text-blue-600" /> Google Fit</div>
-          <div className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200"><CloudCog  className="w-6 h-6 text-blue-600" /> OpenAI</div>
+    <section className="py-20 relative z-10">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="w-full bg-white/5 dark:bg-slate-950/5 backdrop-blur-[12px] rounded-[2.5rem] border border-white/10 dark:border-white/5 p-10 md:p-16 text-center shadow-xl shadow-slate-900/5 dark:shadow-black/20">
+          <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 mb-12 uppercase tracking-[0.3em]">{t.integrations}</p>
+          <div className="flex flex-wrap justify-center gap-10 md:gap-20 items-center opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
+            <div className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200"><Cpu      className="w-6 h-6 text-blue-600" /> Meta Llama</div>
+            <div className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200"><Database className="w-6 h-6 text-blue-600" /> Apple Health</div>
+            <div className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200"><Activity  className="w-6 h-6 text-blue-600" /> Google Fit</div>
+            <div className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200"><CloudCog  className="w-6 h-6 text-blue-600" /> OpenAI</div>
+          </div>
         </div>
       </div>
     </section>
