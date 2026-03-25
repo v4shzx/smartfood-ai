@@ -231,7 +231,13 @@ export function useI18n() {
 export function LangSwitcher() {
   const { lang, setLang } = useI18n();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const current = LANGUAGES.find((l) => l.code === lang)!;
 
   useEffect(() => {
@@ -242,17 +248,47 @@ export function LangSwitcher() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
+  if (!mounted) return <div className="w-20 sm:w-24 h-8" />;
+
+  const FlagIcon = ({ code }: { code: Lang }) => {
+    if (code === "es") return (
+      <svg viewBox="0 0 512 512" className="w-4 h-4 rounded-full shadow-sm border border-slate-200 dark:border-slate-800 shrink-0">
+        <path fill="#AA151B" d="M0 0h512v512H0z"/>
+        <path fill="#F1BF00" d="M0 128h512v256H0z"/>
+        <path fill="#AA151B" d="M0 0v128h512V0zm0 384v128h512V384z"/>
+      </svg>
+    );
+    if (code === "en") return (
+      <svg viewBox="0 0 512 512" className="w-4 h-4 rounded-full shadow-sm border border-slate-200 dark:border-slate-800 shrink-0">
+        <path fill="#012169" d="M0 0h512v512H0z"/>
+        <path fill="#FFF" d="m0 0 512 512m0-512L0 512"/>
+        <path stroke="#FFF" strokeWidth="64" d="m0 0 512 512m0-512L0 512"/>
+        <path stroke="#C8102E" strokeWidth="40" d="m0 0 512 512m0-512L0 512"/>
+        <path stroke="#FFF" strokeWidth="96" d="M256 0v512M0 256h512"/>
+        <path stroke="#C8102E" strokeWidth="60" d="M256 0v512M0 256h512"/>
+      </svg>
+    );
+    if (code === "fr") return (
+      <svg viewBox="0 0 512 512" className="w-4 h-4 rounded-full shadow-sm border border-slate-200 dark:border-slate-800 shrink-0">
+        <path fill="#002395" d="M0 0h171v512H0z"/>
+        <path fill="#FFF" d="M171 0h170v512H171z"/>
+        <path fill="#ED2939" d="M341 0h171v512H341z"/>
+      </svg>
+    );
+    return null;
+  };
+
   return (
     <div ref={ref} className="relative">
       <button
         id="lang-switcher-btn"
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-white/80 dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700 px-2 py-1 rounded-full transition-all backdrop-blur-sm shadow-sm"
+        className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-white/80 dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-full transition-all backdrop-blur-sm shadow-sm"
         aria-label="Switch language"
       >
         <Globe className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-        <span className="text-sm">{current.flag}</span>
-        <span className="hidden sm:inline">{current.code.toUpperCase()}</span>
+        <FlagIcon code={current.code} />
+        <span className="hidden sm:inline font-bold">{current.code.toUpperCase()}</span>
         <ChevronDown className={`w-3 h-3 text-slate-400 dark:text-slate-500 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </button>
 
@@ -263,23 +299,23 @@ export function LangSwitcher() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 2, scale: 0.97 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 mt-1.5 w-32 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg shadow-slate-200/50 dark:shadow-black/40 overflow-hidden z-50"
+            className="absolute right-0 mt-2 w-40 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-black/50 overflow-hidden z-50 p-1"
           >
             {LANGUAGES.map((l) => (
               <button
                 key={l.code}
                 id={`lang-option-${l.code}`}
                 onClick={() => { setLang(l.code); setOpen(false); }}
-                className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-medium transition-colors ${
+                className={`w-full flex items-center gap-3 px-3 py-2.5 text-xs font-bold transition-all rounded-xl ${
                   lang === l.code
-                    ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400"
-                    : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                    ? "bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400"
+                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200"
                 }`}
               >
-                <span className="text-sm">{l.flag}</span>
+                <FlagIcon code={l.code} />
                 <span>{l.label}</span>
                 {lang === l.code && (
-                  <span className="ml-auto w-1 h-1 rounded-full bg-blue-500 dark:bg-blue-400" />
+                  <motion.div layoutId="active-lang" className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
                 )}
               </button>
             ))}

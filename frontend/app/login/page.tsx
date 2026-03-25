@@ -68,7 +68,7 @@ export default function LoginPage() {
   const isDark = mounted && resolvedTheme === "dark";
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 flex overflow-hidden font-sans transition-colors duration-500">
+    <div className="min-h-screen bg-transparent flex overflow-hidden font-sans transition-colors duration-500">
       {/* --- Left Side: Visual Panel (Hidden on Mobile) --- */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-slate-50 dark:bg-black items-center justify-center p-12 overflow-hidden border-r border-slate-200 dark:border-slate-800/50 transition-colors duration-500">
         {/* Abstract Background Elements */}

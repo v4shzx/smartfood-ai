@@ -12,11 +12,11 @@ export function GlobalBackground() {
   }, []);
 
   if (!mounted) {
-    return <div className="fixed inset-0 -z-10 bg-slate-50 dark:bg-slate-950" />;
+    return <div className="fixed inset-0 z-0 bg-slate-50 dark:bg-slate-950" />;
   }
 
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none select-none">
+    <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none select-none">
       {/* Base gradient */}
       <div className="absolute inset-0 bg-linear-to-br from-slate-50 via-white to-blue-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950/40 transition-colors duration-700" />
 
@@ -26,8 +26,8 @@ export function GlobalBackground() {
         squareSize={4}
         gridGap={6}
         color="#6B7280"
-        maxOpacity={0.5}
-        flickerChance={0.1}
+        maxOpacity={0.6}
+        flickerChance={0.3}
       />
 
       {/* Blob 1 – large blue, top-left */}

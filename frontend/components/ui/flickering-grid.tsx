@@ -239,7 +239,7 @@ export function FlickeringGrid({
         intersectionObserver.disconnect();
       }
     };
-  }, [setupCanvas, updateSquares, drawInitialGrid, drawUpdatedSquares, width, height, isInView]);
+  }, [setupCanvas, updateSquares, drawInitialGrid, drawUpdatedSquares, width, height, isInView, mounted]);
 
   return (
     <div
