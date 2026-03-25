@@ -62,8 +62,8 @@ export default function LoginPage() {
             transition={{ duration: 0.6 }}
             className="flex items-center gap-3 mb-8"
           >
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-              <Activity className="text-white w-6 h-6" />
+            <div className="w-12 h-12 flex items-center justify-center">
+              <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
             </div>
             <span className="text-2xl font-bold text-white tracking-tight">SmartFood AI</span>
           </motion.div>
@@ -201,8 +201,8 @@ export default function LoginPage() {
         <div className="w-full max-w-[400px]">
           {/* Mobile Header (Hidden on Desktop) */}
           <div className="lg:hidden flex items-center gap-2 mb-10">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <Activity className="text-white w-5 h-5" />
+            <div className="w-8 h-8 flex items-center justify-center">
+              <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
             </div>
             <span className="text-xl font-bold text-slate-900 dark:text-white">SmartFood AI</span>
           </div>

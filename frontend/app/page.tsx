@@ -68,8 +68,8 @@ function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20">
-              <Activity className="text-white w-5 h-5" />
+            <div className="w-9 h-9 flex items-center justify-center">
+              <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
             </div>
             <span className="font-bold text-xl tracking-tight text-slate-900 dark:text-white">SmartFood AI</span>
           </div>
@@ -625,8 +625,12 @@ export default function Home() {
       <Testimonials />
       <Pricing />
       <CTA />
-      <footer className="py-12 text-center text-xs font-bold text-slate-400 dark:text-slate-600 border-t border-slate-100 dark:border-slate-800/60 bg-transparent uppercase tracking-widest">
-        © {new Date().getFullYear()} SmartFood AI. Crafted with <span className="text-blue-600 dark:text-blue-400">Intelligence</span>.
+      <footer className="py-16 border-t border-slate-100 dark:border-slate-800/60 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <p className="text-xs font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest">
+            © {new Date().getFullYear()} Diseñado y desarrollado por Alejandro Balderas Rios
+          </p>
+        </div>
       </footer>
     </main>
   );
