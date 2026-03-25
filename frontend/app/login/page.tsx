@@ -13,14 +13,41 @@ import {
   Sparkles,
   ChevronRight,
   Eye,
-  EyeOff
+  EyeOff,
+  Moon,
+  Sun
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useI18n, LangSwitcher } from "@/lib/i18n";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
+import { useTheme } from "next-themes";
+
+// ─── Theme Toggle ─────────────────────────────────────────────────────────────
+
+function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
+  if (!mounted) return <div className="w-9 h-9" />;
+
+  const isDark = resolvedTheme === "dark";
+  return (
+    <button
+      type="button"
+      aria-label="Toggle theme"
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-800/40 bg-white/60 dark:bg-slate-900/60 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm backdrop-blur-sm"
+    >
+      {isDark
+        ? <Sun  className="w-4 h-4 text-amber-400" />
+        : <Moon className="w-4 h-4 text-slate-600" />}
+    </button>
+  );
+}
 
 export default function LoginPage() {
   const { t } = useI18n();
+  const { resolvedTheme } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -36,12 +63,12 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 flex overflow-hidden font-sans transition-colors duration-500">
       {/* --- Left Side: Visual Panel (Hidden on Mobile) --- */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 dark:bg-black items-center justify-center p-12 overflow-hidden border-r border-slate-200 dark:border-slate-800/50">
+      <div className="hidden lg:flex lg:w-1/2 relative bg-slate-50 dark:bg-black items-center justify-center p-12 overflow-hidden border-r border-slate-200 dark:border-slate-800/50 transition-colors duration-500">
         {/* Abstract Background Elements */}
         <div className="absolute top-0 left-0 w-full h-full">
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/20 blur-[120px] rounded-full" />
-          <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-slate-800/40 blur-[100px] rounded-full" />
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/10 dark:bg-blue-600/20 blur-[120px] rounded-full" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/10 dark:bg-indigo-600/20 blur-[120px] rounded-full" />
+          <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-slate-200/40 dark:bg-slate-800/40 blur-[100px] rounded-full" />
         </div>
 
         {/* Animated Flickering Grid Pattern */}
@@ -49,8 +76,8 @@ export default function LoginPage() {
           className="absolute inset-0 z-0 size-full"
           squareSize={4}
           gridGap={6}
-          color="#6B7280"
-          maxOpacity={0.4}
+          color={resolvedTheme === "dark" ? "#334155" : "#cbd5e1"}
+          maxOpacity={resolvedTheme === "dark" ? 0.3 : 0.2}
           flickerChance={0.1}
         />
 
@@ -65,7 +92,7 @@ export default function LoginPage() {
             <div className="w-12 h-12 flex items-center justify-center">
               <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
             </div>
-            <span className="text-2xl font-bold text-white tracking-tight">SmartFood AI</span>
+            <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">SmartFood AI</span>
           </motion.div>
 
           {/* Tagline */}
@@ -73,17 +100,16 @@ export default function LoginPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl font-bold text-white leading-tight mb-4"
+            className="text-4xl font-bold text-slate-900 dark:text-white leading-tight mb-4"
           >
-            {t.login.tagline.split("AI")[0]} <br />
-            <span className="text-blue-400">{t.login.tagline.split("AI")[1] || "with intelligence."}</span>
+            {t.login.tagline}
           </motion.h1>
           
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-slate-400 text-lg mb-12 max-w-md"
+            className="text-slate-500 dark:text-slate-400 text-lg mb-12 max-w-md font-medium"
           >
             {t.login.description}
           </motion.p>
@@ -95,21 +121,21 @@ export default function LoginPage() {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="relative"
           >
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl relative overflow-hidden group">
+            <div className="bg-white/40 dark:bg-white/5 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-2xl relative overflow-hidden group">
               {/* Header of card */}
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-                    <Sparkles className="w-4 h-4 text-blue-400" />
+                    <Sparkles className="w-4 h-4 text-blue-500 dark:text-blue-400" />
                   </div>
-                  <div className="h-4 w-32 bg-white/10 rounded-full" />
+                  <div className="h-4 w-32 bg-slate-200 dark:bg-white/10 rounded-full" />
                 </div>
-                <div className="h-4 w-12 bg-white/10 rounded-full" />
+                <div className="h-4 w-12 bg-slate-200 dark:bg-white/10 rounded-full" />
               </div>
 
               {/* Fake Graph Lines */}
               <div className="space-y-4 mb-8">
-                <div className="h-2 w-full bg-white/5 rounded-full relative overflow-hidden">
+                <div className="h-2 w-full bg-slate-100 dark:bg-white/5 rounded-full relative overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: "70%" }}
@@ -117,7 +143,7 @@ export default function LoginPage() {
                     className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-500"
                   />
                 </div>
-                <div className="h-2 w-full bg-white/5 rounded-full relative overflow-hidden">
+                <div className="h-2 w-full bg-slate-100 dark:bg-white/5 rounded-full relative overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: "45%" }}
@@ -125,7 +151,7 @@ export default function LoginPage() {
                     className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500"
                   />
                 </div>
-                <div className="h-2 w-full bg-white/5 rounded-full relative overflow-hidden">
+                <div className="h-2 w-full bg-slate-100 dark:bg-white/5 rounded-full relative overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: "90%" }}
@@ -139,7 +165,7 @@ export default function LoginPage() {
               <div className="flex items-center gap-4">
                 <div className="relative w-12 h-12 flex items-center justify-center">
                   <svg className="w-full h-full transform -rotate-90">
-                    <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-white/5" />
+                    <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-slate-100 dark:text-white/5" />
                     <motion.circle 
                       cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" 
                       className="text-blue-500"
@@ -195,7 +221,10 @@ export default function LoginPage() {
             </div>
             <span className="text-sm font-medium">{t.login.back}</span>
           </Link>
-          <LangSwitcher />
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <LangSwitcher />
+          </div>
         </div>
 
         <div className="w-full max-w-[400px]">

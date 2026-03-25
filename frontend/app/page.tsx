@@ -78,7 +78,6 @@ function Navbar() {
           <div className="hidden md:flex items-center gap-8">
             <a href="#features"     className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t.nav.features}</a>
             <a href="#demo"         className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t.nav.platform}</a>
-            <a href="#testimonials" className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t.nav.testimonials}</a>
             <a href="#pricing"      className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t.nav.pricing}</a>
           </div>
 
@@ -111,7 +110,6 @@ function Navbar() {
         >
           <a href="#features"     className="block px-3 py-3 text-base font-semibold text-slate-700 dark:text-slate-200">{t.nav.features}</a>
           <a href="#pricing"      className="block px-3 py-3 text-base font-semibold text-slate-700 dark:text-slate-200">{t.nav.pricing}</a>
-          <a href="#testimonials" className="block px-3 py-3 text-base font-semibold text-slate-700 dark:text-slate-200">{t.nav.testimonials}</a>
           <div className="border-t border-slate-100 dark:border-slate-800 mt-4 pt-4 flex flex-col gap-3">
             <Link href="/login" className="w-full bg-blue-600 text-white px-3 py-3 rounded-xl text-base font-bold text-center shadow-lg shadow-blue-500/20">
               {t.nav.cta}
@@ -133,7 +131,7 @@ function Hero() {
         initial={{ opacity: 0, y: 20 }} 
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: 0.6 }}
-        className="w-full max-w-5xl bg-white/5 dark:bg-slate-950/5 backdrop-blur-[12px] rounded-[3rem] border border-white/10 dark:border-white/5 p-8 md:p-16 flex flex-col items-center text-center shadow-2xl shadow-slate-900/5 dark:shadow-black/20"
+        className="w-full max-w-5xl bg-white/5 dark:bg-slate-950/5 backdrop-blur-md rounded-[3rem] border border-white/10 dark:border-white/5 p-8 md:p-16 flex flex-col items-center text-center shadow-2xl shadow-slate-900/5 dark:shadow-black/20"
       >
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50/50 dark:bg-blue-950/30 border border-blue-100/30 dark:border-blue-800/30 text-blue-700 dark:text-blue-300 text-xs font-bold mb-10 tracking-wide uppercase">
@@ -143,7 +141,36 @@ function Hero() {
 
         <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
           className="text-5xl md:text-7xl font-black tracking-tight text-slate-900 dark:text-white max-w-4xl leading-[1.1]">
-          {t.h1.split(".")[0]}<span className="text-blue-600 dark:text-blue-400">.</span>
+          {t.h1.split(". ").map((phrase, i) => {
+            const words = phrase.split(" ");
+            const firstWord = words[0];
+            const rest = words.slice(1).join(" ");
+            const colors = [
+              "text-blue-600 dark:text-blue-400",
+              "text-amber-500 dark:text-amber-400",
+              "text-emerald-500 dark:text-emerald-400"
+            ];
+            
+            return (
+              <span key={i} className="block sm:inline">
+                <motion.span 
+                  className={`inline-block ${colors[i % colors.length]}`}
+                  animate={{ 
+                    scale: [1, 1.05, 1],
+                  }}
+                  transition={{ 
+                    duration: 2, 
+                    repeat: Infinity, 
+                    delay: i * 0.5,
+                    ease: "easeInOut" 
+                  }}
+                >
+                  {firstWord}
+                </motion.span>
+                {" "}{rest}{i < 2 ? ". " : "."}
+              </span>
+            );
+          })}
         </motion.h1>
 
         <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
@@ -294,7 +321,7 @@ function Integrations() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="w-full bg-white/5 dark:bg-slate-950/5 backdrop-blur-[12px] rounded-[2.5rem] border border-white/10 dark:border-white/5 p-10 md:p-16 text-center shadow-xl shadow-slate-900/5 dark:shadow-black/20"
+          className="w-full bg-white/5 dark:bg-slate-950/5 backdrop-blur-md rounded-[2.5rem] border border-white/10 dark:border-white/5 p-10 md:p-16 text-center shadow-xl shadow-slate-900/5 dark:shadow-black/20"
         >
           <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 mb-12 uppercase tracking-[0.3em]">{t.integrations}</p>
           <div className="flex flex-wrap justify-center gap-10 md:gap-20 items-center opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
@@ -368,75 +395,6 @@ function Features() {
             <p className="text-slate-500 dark:text-slate-400 leading-relaxed font-medium">{f.desc}</p>
           </motion.div>
         ))}
-      </div>
-    </section>
-  );
-}
-
-// ─── Testimonials ─────────────────────────────────────────────────────────────
-
-const TESTI_PEOPLE = [
-  { name: "David Chen",     role: "Software Engineer" },
-  { name: "Sarah Jenkins",  role: "Marathon Runner"   },
-  { name: "Marcus Webb",    role: "Founder"           },
-];
-
-function Testimonials() {
-  const { t } = useI18n();
-  return (
-    <section id="testimonials" className="py-32 bg-slate-900 dark:bg-slate-950 relative overflow-hidden">
-      {/* Background Aurora */}
-      <div className="absolute top-0 left-0 w-full h-full">
-        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-600/20 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-indigo-600/20 blur-[120px] rounded-full" />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-black tracking-tight text-white mb-20"
-        >
-          {t.testi_title}
-        </motion.h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto text-left">
-          {t.reviews.map((r, i) => (
-            <motion.div 
-              key={i}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-              whileHover={{ y: -5, backgroundColor: "rgba(255, 255, 255, 0.08)" }}
-              className="bg-white/5 backdrop-blur-xl p-10 rounded-[2.5rem] border border-white/10 shadow-2xl transition-all group"
-            >
-              <div className="flex gap-1 mb-6">
-                {[...Array(5)].map((_, j) => (
-                  <motion.div
-                    key={j}
-                    initial={{ opacity: 0, scale: 0 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.3 + (j * 0.05) }}
-                  >
-                    <Star className="w-4 h-4 fill-blue-500 text-blue-500" />
-                  </motion.div>
-                ))}
-              </div>
-              <p className="text-slate-200 mb-8 font-semibold leading-relaxed italic text-lg">&quot;{r.review}&quot;</p>
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-slate-800 rounded-2xl border border-white/10 group-hover:border-blue-500/50 transition-colors overflow-hidden relative">
-                   <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-transparent" />
-                </div>
-                <div>
-                  <div className="text-sm font-black text-white uppercase tracking-wider">{TESTI_PEOPLE[i].name}</div>
-                  <div className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">{TESTI_PEOPLE[i].role}</div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
       </div>
     </section>
   );
@@ -612,7 +570,7 @@ function StatCard({ title, value, subtitle, icon }: { title: string; value: stri
   );
 }
 
-// ─── Root ─────────────────────────────────────────────────────────────────────
+// ─── Footer ─────────────────────────────────────────────────────────────────────
 
 export default function Home() {
   return (
@@ -622,7 +580,6 @@ export default function Home() {
       <DashboardMockup />
       <Integrations />
       <Features />
-      <Testimonials />
       <Pricing />
       <CTA />
       <footer className="py-16 border-t border-slate-100 dark:border-slate-800/60 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl">

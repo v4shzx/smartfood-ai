@@ -39,18 +39,6 @@ Plataforma administrativa que analiza ventas históricas y condiciones climátic
 
 ---
 
-## 🧠 Architecture
-
-```text
-[ Frontend (React) ]
-          ↓
-[ Backend API (Node.js / Express) ]
-          ↓
-[ Servicio de IA (OpenAI / modelo propio) ]
-          ↓
-[ Base de datos ]
-```
-
 **Descripción:**
 
 - El frontend consume la API REST
@@ -58,58 +46,7 @@ Plataforma administrativa que analiza ventas históricas y condiciones climátic
 - La IA genera respuestas inteligentes
 - Los datos se almacenan en la base de datos
 
----
 
-## 📸 Screenshots
-
-_Agrega aquí capturas de pantalla del login, dashboard y resultados._
-
----
-
-## 📌 Roadmap
-
-- [ ] Implementación de app móvil
-- [ ] Integración con dispositivos wearables
-- [ ] Sistema de recomendaciones más avanzadas
-- [ ] Panel de administración
-- [ ] Mejora en modelos de IA personalizados
-
----
-
-## 🤝 Contributing
-
-Las contribuciones son bienvenidas.
-
-1. Haz un fork del proyecto
-2. Crea una nueva rama (`feature/nueva-funcionalidad`)
-3. Haz commit de tus cambios
-4. Abre un Pull Request
-
----
-
-## 🧪 Testing
-
-```bash
-npm run test
-```
-
-_Agrega aquí tus herramientas de testing si aplica (Jest, Cypress, etc.)_
-
----
-
-## 🚀 Deployment
-
-Puedes desplegar el proyecto en:
-
-- Vercel (frontend)
-- Render / Railway (backend)
-- Docker (full stack)
-
----
-
-## 📄 License
-
-Este proyecto está bajo la licencia MIT.
 
 ---
 
