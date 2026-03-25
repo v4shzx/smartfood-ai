@@ -119,6 +119,16 @@
   --color-particle: oklch(0.985 0 0 / 0.2);
 }
 
+/* Boost visibility in dark mode */
+.dark .blob-1,
+.dark .blob-2,
+.dark .blob-3,
+.dark .blob-4,
+.dark .blob-5 {
+  filter: blur(90px) brightness(2.5);
+  opacity: 0.9;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

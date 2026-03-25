@@ -46,7 +46,6 @@ export default function RootLayout({
           attribute="class"
           defaultTheme="system"
           enableSystem
-          disableTransitionOnChange
         >
           <GlobalBackground />
           <div className="relative z-10 w-full min-h-full flex flex-col">
