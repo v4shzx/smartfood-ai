@@ -584,7 +584,7 @@ export default function Home() {
       <CTA />
       <footer className="py-16 border-t border-slate-100 dark:border-slate-800/60 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-xs font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest">
+          <p className="text-xs font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest" suppressHydrationWarning>
             © {new Date().getFullYear()} Diseñado y desarrollado por Alejandro Balderas Rios
           </p>
         </div>

@@ -52,6 +52,11 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,6 +64,8 @@ export default function LoginPage() {
     // Simulate login
     setTimeout(() => setIsLoading(false), 2000);
   };
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 flex overflow-hidden font-sans transition-colors duration-500">
@@ -76,8 +83,8 @@ export default function LoginPage() {
           className="absolute inset-0 z-0 size-full"
           squareSize={4}
           gridGap={6}
-          color={resolvedTheme === "dark" ? "#334155" : "#cbd5e1"}
-          maxOpacity={resolvedTheme === "dark" ? 0.3 : 0.2}
+          color={isDark ? "#334155" : "#cbd5e1"}
+          maxOpacity={isDark ? 0.3 : 0.2}
           flickerChance={0.1}
         />
 
