@@ -3,8 +3,10 @@
 import React from "react";
 import { useTheme } from "next-themes";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
+import { cn } from "@/lib/utils";
 
 export function GlobalBackground() {
+  const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -12,13 +14,20 @@ export function GlobalBackground() {
   }, []);
 
   if (!mounted) {
-    return <div className="fixed inset-0 z-0 bg-slate-50 dark:bg-slate-950" />;
+    return <div className="fixed inset-0 z-0 bg-slate-950" />;
   }
+
+  const isDark = resolvedTheme === "dark";
 
   return (
     <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none select-none">
       {/* Base gradient */}
-      <div className="absolute inset-0 bg-linear-to-br from-slate-50 via-white to-emerald-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-teal-950/40 transition-colors duration-700" />
+      <div className={cn(
+        "absolute inset-0 transition-colors duration-700",
+        isDark 
+          ? "bg-linear-to-br from-slate-950 via-slate-900 to-teal-950/40" 
+          : "bg-linear-to-br from-slate-50 via-white to-emerald-50/30"
+      )} />
 
       {/* Flickering Grid */}
       <FlickeringGrid

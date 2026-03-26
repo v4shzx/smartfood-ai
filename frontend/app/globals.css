@@ -143,6 +143,43 @@
   body {
     @apply text-foreground;
   }
+  
+  /* ─── High Contrast Accessibility Mode ─── */
+  body.high-contrast {
+    --background: #000000 !important;
+    --foreground: #ffffff !important;
+    --card: #000000 !important;
+    --card-foreground: #ffffff !important;
+    --popover: #000000 !important;
+    --popover-foreground: #ffffff !important;
+    --primary: #ffff00 !important;
+    --primary-foreground: #000000 !important;
+    --secondary: #000000 !important;
+    --secondary-foreground: #ffffff !important;
+    --muted: #000000 !important;
+    --muted-foreground: #ffffff !important;
+    --accent: #ffff00 !important;
+    --accent-foreground: #000000 !important;
+    --border: #ffffff !important;
+    --input: #ffffff !important;
+    --ring: #ffff00 !important;
+    background-color: #000000 !important;
+    color: #ffffff !important;
+  }
+  
+  body.high-contrast * {
+    border-color: #ffffff !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  body.high-contrast button, 
+  body.high-contrast a {
+    outline: 2px solid #ffff00 !important;
+    outline-offset: 2px !important;
+  }
+
   html {
     @apply font-sans;
     scroll-behavior: smooth !important;
