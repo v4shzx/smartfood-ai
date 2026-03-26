@@ -152,7 +152,7 @@ function Hero() {
             ];
             
             return (
-              <span key={i} className="block sm:inline">
+              <span key={i} className="block">
                 <motion.span 
                   className={`inline-block ${colors[i % colors.length]}`}
                   animate={{ 
@@ -167,7 +167,7 @@ function Hero() {
                 >
                   {firstWord}
                 </motion.span>
-                {" "}{rest}{i < 2 ? ". " : "."}
+                {" "}{rest}{i < 2 ? "." : "."}
               </span>
             );
           })}

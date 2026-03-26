@@ -16,7 +16,7 @@ export const T = {
   es: {
     nav: { features: "Características", platform: "Plataforma", testimonials: "Testimonios", pricing: "Precios", login: "Iniciar sesión", cta: "Comenzar" },
     badge: "V2.0: Modelos IA más potentes y rápidos",
-    h1: "Predice la demanda. Reduce desperdicios. Maximiza ganancias.",
+    h1: "Predice la demanda. Reduce desperdicios. Maximiza ganancias",
     hero_p: "Con SmartFood, anticipa la demanda de alimentos usando IA y machine learning. Ajusta tu inventario automáticamente y visualiza todo con dashboards claros y accionables.",
     try: "Probar SmartFood AI",
     demo: "Ver Demo",
@@ -82,7 +82,7 @@ export const T = {
   en: {
     nav: { features: "Features", platform: "Platform", testimonials: "Testimonials", pricing: "Pricing", login: "Log in", cta: "Start Now" },
     badge: "V2.0: Smarter & Faster AI Models",
-    h1: "Predict demand. Reduce waste. Maximize profits.",
+    h1: "Predict demand. Reduce waste. Maximize profits",
     hero_p: "With SmartFood, anticipate food demand using AI and machine learning. Automatically adjust your inventory and visualize everything with clear, actionable dashboards.",
     try: "Try SmartFood AI",
     demo: "View Demo",
@@ -128,6 +128,8 @@ export const T = {
       welcome: "Welcome back",
       subtitle: "Enter your credentials to access your dashboard",
       google: "Continue with Google",
+      apple: "Continue with Apple",
+      microsoft: "Continue with Microsoft",
       or: "or email",
       email_label: "Email Address",
       email_placeholder: "name@company.com",
@@ -146,7 +148,7 @@ export const T = {
   fr: {
     nav: { features: "Fonctionnalités", platform: "Plateforme", testimonials: "Témoignages", pricing: "Tarifs", login: "Connexion", cta: "Commencer" },
     badge: "V2.0 : Modèles IA plus intelligents et rapides",
-    h1: "Prédisez la demande. Réduisez le gaspillage. Maximisez les profits.",
+    h1: "Prédisez la demande. Réduisez le gaspillage. Maximisez les profits",
     hero_p: "Avec SmartFood, anticipez la demande alimentaire grâce à l'IA et au machine learning. Ajustez automatiquement votre inventaire et visualisez tout avec des tableaux de bord clairs et exploitables.",
     try: "Essayer SmartFood AI",
     demo: "Voir la Démo",
