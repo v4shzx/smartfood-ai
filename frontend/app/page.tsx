@@ -65,7 +65,7 @@ function Navbar() {
   const [activeSection, setActiveSection] = useState("hero");
 
   React.useEffect(() => {
-    const sections = ["hero", "demo", "features", "pricing"];
+    const sections = ["hero", "demo", "features", "pricing", "contact"];
     const observerOptions = {
       root: null,
       rootMargin: "-20% 0px -70% 0px",
@@ -95,6 +95,7 @@ function Navbar() {
     { href: "#demo", label: t.nav.platform, id: "demo" },
     { href: "#features", label: t.nav.features, id: "features" },
     { href: "#pricing", label: t.nav.pricing, id: "pricing" },
+    { href: "#contact", label: t.nav.contact, id: "contact" },
   ];
 
   return (
@@ -569,6 +570,112 @@ function Pricing() {
   );
 }
 
+// ─── Contact ──────────────────────────────────────────────────────────────────
+
+function Contact() {
+  const { t } = useI18n();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setTimeout(() => {
+      setIsSubmitting(false);
+      alert("Message sent! (Simulation)");
+    }, 2000);
+  };
+
+  return (
+    <section id="contact" className="py-32 px-4 max-w-7xl mx-auto">
+      <div className="text-center mb-20">
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight"
+        >
+          {t.contact_title}
+        </motion.h2>
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="mt-6 text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium"
+        >
+          {t.contact_sub}
+        </motion.p>
+      </div>
+
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="max-w-3xl mx-auto bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl rounded-[3rem] border border-slate-200/50 dark:border-slate-800/50 p-8 md:p-12 shadow-2xl"
+      >
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2 text-left">
+              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_form.name}</label>
+              <input
+                type="text"
+                required
+                className="w-full bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-6 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                placeholder={t.contact_form.placeholder_name}
+              />
+            </div>
+            <div className="space-y-2 text-left">
+              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_form.email}</label>
+              <input
+                type="email"
+                required
+                className="w-full bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-6 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                placeholder={t.contact_form.placeholder_email}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2 text-left">
+            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_form.subject}</label>
+            <input
+              type="text"
+              required
+              className="w-full bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-6 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
+              placeholder={t.contact_form.placeholder_subject}
+            />
+          </div>
+
+          <div className="space-y-2 text-left">
+            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_form.message}</label>
+            <textarea
+              required
+              rows={5}
+              className="w-full bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-6 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none"
+              placeholder={t.contact_form.placeholder_message}
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-5 rounded-2xl text-lg font-black transition-all shadow-xl shadow-emerald-500/25 active:scale-[0.98] disabled:opacity-70 flex items-center justify-center gap-3"
+          >
+            {isSubmitting ? (
+              <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <>
+                {t.contact_form.send}
+                <ChevronRight className="w-5 h-5" />
+              </>
+            )}
+          </button>
+        </form>
+      </motion.div>
+    </section>
+  );
+}
+
 // ─── CTA ──────────────────────────────────────────────────────────────────────
 
 function CTA() {
@@ -667,6 +774,7 @@ export default function Home() {
       <Integrations />
       <Features />
       <Pricing />
+      <Contact />
       <CTA />
       <footer className="py-16 border-t border-slate-100 dark:border-slate-800/60 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 text-center">

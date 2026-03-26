@@ -51,6 +51,7 @@ data/
 # =========================
 .pytest_cache/
 .cache/
+business/
 
 # =========================
 # 🧾 SISTEMA

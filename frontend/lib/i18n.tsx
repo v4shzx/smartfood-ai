@@ -14,7 +14,7 @@ export const LANGUAGES: { code: Lang; label: string; flag: string }[] = [
 
 export const T = {
   es: {
-    nav: { home: "Inicio", features: "Características", platform: "Plataforma", testimonials: "Testimonios", pricing: "Precios", login: "Iniciar sesión", cta: "Comenzar" },
+    nav: { home: "Inicio", features: "Características", platform: "Plataforma", testimonials: "Testimonios", pricing: "Precios", contact: "Contacto", login: "Iniciar sesión", cta: "Comenzar" },
     badge: "V2.0: Modelos IA más potentes y rápidos",
     h1: "Predice la demanda. Reduce desperdicios. Maximiza ganancias",
     hero_p: "Con SmartFood, anticipa la demanda de alimentos usando IA y machine learning. Ajusta tu inventario automáticamente y visualiza todo con dashboards claros y accionables.",
@@ -66,6 +66,19 @@ export const T = {
       }
     ],
     popular_badge: "Más Popular",
+    contact_title: "Contáctanos",
+    contact_sub: "Estamos aquí para ayudarte. Envíanos un mensaje.",
+    contact_form: {
+      name: "Nombre Completo",
+      email: "Correo Electrónico",
+      subject: "Asunto",
+      message: "Mensaje",
+      send: "Enviar Mensaje",
+      placeholder_name: "Tu nombre",
+      placeholder_email: "tu@correo.com",
+      placeholder_subject: "¿Cómo podemos ayudarte?",
+      placeholder_message: "Escribe tu mensaje aquí...",
+    },
     cta_title: "¿Listo para transformar tu salud?",
     cta_sub: "Únete a miles de personas optimizando su cuerpo con la plataforma de nutrición IA más avanzada.",
     cta_btn: "Probar SmartFood AI ahora",
@@ -105,7 +118,7 @@ export const T = {
     }
   },
   en: {
-    nav: { home: "Home", features: "Features", platform: "Platform", testimonials: "Testimonials", pricing: "Pricing", login: "Log in", cta: "Start Now" },
+    nav: { home: "Home", features: "Features", platform: "Platform", testimonials: "Testimonials", pricing: "Pricing", contact: "Contact", login: "Log in", cta: "Start Now" },
     badge: "V2.0: Smarter & Faster AI Models",
     h1: "Predict demand. Reduce waste. Maximize profits",
     hero_p: "With SmartFood, anticipate food demand using AI and machine learning. Automatically adjust your inventory and visualize everything with clear, actionable dashboards.",
@@ -157,6 +170,19 @@ export const T = {
       }
     ],
     popular_badge: "Most Popular",
+    contact_title: "Contact Us",
+    contact_sub: "We're here to help. Send us a message.",
+    contact_form: {
+      name: "Full Name",
+      email: "Email Address",
+      subject: "Subject",
+      message: "Message",
+      send: "Send Message",
+      placeholder_name: "Your name",
+      placeholder_email: "you@email.com",
+      placeholder_subject: "How can we help?",
+      placeholder_message: "Write your message here...",
+    },
     cta_title: "Ready to transform your health?",
     cta_sub: "Join thousands of high-performers optimizing their bodies using the most advanced AI nutrition platform ever built.",
     cta_btn: "Try SmartFood AI Now",
@@ -196,7 +222,7 @@ export const T = {
     }
   },
   fr: {
-    nav: { home: "Accueil", features: "Fonctionnalités", platform: "Plateforme", testimonials: "Témoignages", pricing: "Tarifs", login: "Connexion", cta: "Commencer" },
+    nav: { home: "Accueil", features: "Fonctionnalités", platform: "Plateforme", testimonials: "Témoignages", pricing: "Tarifs", contact: "Contact", login: "Connexion", cta: "Commencer" },
     badge: "V2.0 : Modèles IA plus intelligents et rapides",
     h1: "Prédisez la demande. Réduisez le gaspillage. Maximisez les profits",
     hero_p: "Avec SmartFood, anticipez la demande alimentaire grâce à l'IA et au machine learning. Ajustez automatiquement votre inventaire et visualisez tout avec des tableaux de bord clairs et exploitables.",
@@ -248,6 +274,19 @@ export const T = {
       }
     ],
     popular_badge: "Plus Populaire",
+    contact_title: "Contactez-nous",
+    contact_sub: "Nous sommes là pour vous aider. Envoyez-nous un message.",
+    contact_form: {
+      name: "Nom Complet",
+      email: "Adresse E-mail",
+      subject: "Sujet",
+      message: "Message",
+      send: "Envoyer le Message",
+      placeholder_name: "Votre nom",
+      placeholder_email: "vous@email.com",
+      placeholder_subject: "Comment pouvons-nous vous aider ?",
+      placeholder_message: "Écrivez votre message ici...",
+    },
     cta_title: "Prêt à transformer votre santé ?",
     cta_sub: "Rejoignez des milliers de personnes qui optimisent leur corps grâce à la plateforme de nutrition IA la plus avancée.",
     cta_btn: "Essayer SmartFood AI maintenant",
