@@ -92,8 +92,8 @@ function Navbar() {
 
   const navLinks = [
     { href: "#hero", label: t.nav.home, id: "hero" },
-    { href: "#features", label: t.nav.features, id: "features" },
     { href: "#demo", label: t.nav.platform, id: "demo" },
+    { href: "#features", label: t.nav.features, id: "features" },
     { href: "#pricing", label: t.nav.pricing, id: "pricing" },
   ];
 

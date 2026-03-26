@@ -35,6 +35,8 @@ export default function RootLayout({
       className={cn(
         "h-full",
         "antialiased",
+        "scroll-smooth",
+        geistSans.variable,
         geistSans.variable,
         geistMono.variable,
         "font-sans",

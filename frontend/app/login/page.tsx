@@ -69,157 +69,8 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-transparent flex overflow-hidden font-sans transition-colors duration-500">
-      {/* --- Left Side: Visual Panel (Hidden on Mobile) --- */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-slate-50 dark:bg-black items-center justify-center p-12 overflow-hidden border-r border-slate-200 dark:border-slate-800/50 transition-colors duration-500">
-        {/* Abstract Background Elements */}
-        <div className="absolute top-0 left-0 w-full h-full">
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-600/10 dark:bg-emerald-600/20 blur-[120px] rounded-full" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-teal-600/10 dark:bg-teal-600/20 blur-[120px] rounded-full" />
-          <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-slate-200/40 dark:bg-slate-800/40 blur-[100px] rounded-full" />
-        </div>
-
-        {/* Animated Flickering Grid Pattern */}
-        <FlickeringGrid 
-          className="absolute inset-0 z-0 size-full"
-          squareSize={4}
-          gridGap={6}
-          color={isDark ? "#334155" : "#cbd5e1"}
-          maxOpacity={isDark ? 0.3 : 0.2}
-          flickerChance={0.1}
-        />
-
-        <div className="relative z-10 w-full max-w-lg">
-          {/* Logo & Branding */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex items-center gap-3 mb-8"
-          >
-            <div className="w-12 h-12 flex items-center justify-center">
-              <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
-            </div>
-            <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">SmartFood AI</span>
-          </motion.div>
-
-          {/* Tagline */}
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl font-bold text-slate-900 dark:text-white leading-tight mb-4"
-          >
-            {t.login.tagline}
-          </motion.h1>
-          
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-slate-500 dark:text-slate-400 text-lg mb-12 max-w-md font-medium"
-          >
-            {t.login.description}
-          </motion.p>
-
-          {/* Visual Mockup: Glassmorphism Dashboard Element */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="relative"
-          >
-            <div className="bg-white/40 dark:bg-white/5 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-2xl relative overflow-hidden group">
-              {/* Header of card */}
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                    <Sparkles className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
-                  </div>
-                  <div className="h-4 w-32 bg-slate-200 dark:bg-white/10 rounded-full" />
-                </div>
-                <div className="h-4 w-12 bg-slate-200 dark:bg-white/10 rounded-full" />
-              </div>
-
-              {/* Fake Graph Lines */}
-              <div className="space-y-4 mb-8">
-                <div className="h-2 w-full bg-slate-100 dark:bg-white/5 rounded-full relative overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: "70%" }}
-                    transition={{ duration: 1.5, delay: 1 }}
-                    className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500"
-                  />
-                </div>
-                <div className="h-2 w-full bg-slate-100 dark:bg-white/5 rounded-full relative overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: "45%" }}
-                    transition={{ duration: 1.5, delay: 1.2 }}
-                    className="absolute inset-0 bg-gradient-to-r from-teal-500 to-lime-500"
-                  />
-                </div>
-                <div className="h-2 w-full bg-slate-100 dark:bg-white/5 rounded-full relative overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: "90%" }}
-                    transition={{ duration: 1.5, delay: 1.4 }}
-                    className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-emerald-600"
-                  />
-                </div>
-              </div>
-
-              {/* Circular Metric */}
-              <div className="flex items-center gap-4">
-                <div className="relative w-12 h-12 flex items-center justify-center">
-                  <svg className="w-full h-full transform -rotate-90">
-                    <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-slate-100 dark:text-white/5" />
-                    <motion.circle 
-                      cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" 
-                      className="text-emerald-500"
-                      strokeDasharray="125.6"
-                      initial={{ strokeDashoffset: 125.6 }}
-                      animate={{ strokeDashoffset: 40 }}
-                      transition={{ duration: 2, delay: 1 }}
-                    />
-                  </svg>
-                  <span className="absolute text-[10px] font-bold text-white">82%</span>
-                </div>
-                <div className="space-y-2">
-                  <div className="h-3 w-24 bg-white/10 rounded-full" />
-                  <div className="h-2 w-16 bg-white/5 rounded-full" />
-                </div>
-              </div>
-              
-              {/* Floating Decorative Elements */}
-              <motion.div 
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-1/4 right-[-10px] w-12 h-12 bg-emerald-600/30 rounded-full blur-xl" 
-              />
-            </div>
-
-            {/* Sub-card floating */}
-            <motion.div 
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              className="absolute -bottom-6 -right-6 bg-emerald-600/90 backdrop-blur-md p-4 rounded-xl shadow-xl border border-white/20 z-20"
-            >
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/20 rounded-lg">
-                  <Shield className="w-4 h-4 text-white" />
-                </div>
-                <div>
-                  <div className="text-[10px] text-emerald-100 font-medium">{t.login.security}</div>
-                  <div className="text-xs text-white font-bold">Encrypted 256-bit</div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* --- Right Side: Login Form --- */}
-      <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-6 md:p-12 relative bg-white dark:bg-slate-950 transition-colors duration-500">
+      {/* --- Left Side: Login Form (Moved from Right) --- */}
+      <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-6 md:p-12 relative bg-white dark:bg-slate-950 transition-colors duration-500 border-r border-slate-200 dark:border-slate-800/50">
         {/* Back Link & Lang Switcher */}
         <div className="absolute top-8 left-8 lg:left-12 right-8 flex justify-between items-center">
           <Link href="/" className="group flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all duration-200">
@@ -408,6 +259,155 @@ export default function LoginPage() {
             <Link href="#" className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">{t.login.privacy}</Link>
             <Link href="#" className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">{t.login.security}</Link>
           </div>
+        </div>
+      </div>
+
+      {/* --- Right Side: Visual Panel (Moved from Left) --- */}
+      <div className="hidden lg:flex lg:w-1/2 relative bg-slate-50 dark:bg-black items-center justify-center p-12 overflow-hidden transition-colors duration-500">
+        {/* Abstract Background Elements */}
+        <div className="absolute top-0 left-0 w-full h-full">
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-600/10 dark:bg-emerald-600/20 blur-[120px] rounded-full" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-teal-600/10 dark:bg-teal-600/20 blur-[120px] rounded-full" />
+          <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-slate-200/40 dark:bg-slate-800/40 blur-[100px] rounded-full" />
+        </div>
+
+        {/* Animated Flickering Grid Pattern */}
+        <FlickeringGrid 
+          className="absolute inset-0 z-0 size-full"
+          squareSize={4}
+          gridGap={6}
+          color={isDark ? "#334155" : "#cbd5e1"}
+          maxOpacity={isDark ? 0.3 : 0.2}
+          flickerChance={0.1}
+        />
+
+        <div className="relative z-10 w-full max-w-lg">
+          {/* Logo & Branding */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex items-center gap-3 mb-8"
+          >
+            <div className="w-12 h-12 flex items-center justify-center">
+              <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+            </div>
+            <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">SmartFood AI</span>
+          </motion.div>
+
+          {/* Tagline */}
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-4xl font-bold text-slate-900 dark:text-white leading-tight mb-4"
+          >
+            {t.login.tagline}
+          </motion.h1>
+          
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-slate-500 dark:text-slate-400 text-lg mb-12 max-w-md font-medium"
+          >
+            {t.login.description}
+          </motion.p>
+
+          {/* Visual Mockup: Glassmorphism Dashboard Element */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="relative"
+          >
+            <div className="bg-white/40 dark:bg-white/5 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-2xl relative overflow-hidden group">
+              {/* Header of card */}
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
+                  </div>
+                  <div className="h-4 w-32 bg-slate-200 dark:bg-white/10 rounded-full" />
+                </div>
+                <div className="h-4 w-12 bg-slate-200 dark:bg-white/10 rounded-full" />
+              </div>
+
+              {/* Fake Graph Lines */}
+              <div className="space-y-4 mb-8">
+                <div className="h-2 w-full bg-slate-100 dark:bg-white/5 rounded-full relative overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: "70%" }}
+                    transition={{ duration: 1.5, delay: 1 }}
+                    className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500"
+                  />
+                </div>
+                <div className="h-2 w-full bg-slate-100 dark:bg-white/5 rounded-full relative overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: "45%" }}
+                    transition={{ duration: 1.5, delay: 1.2 }}
+                    className="absolute inset-0 bg-gradient-to-r from-teal-500 to-lime-500"
+                  />
+                </div>
+                <div className="h-2 w-full bg-slate-100 dark:bg-white/5 rounded-full relative overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: "90%" }}
+                    transition={{ duration: 1.5, delay: 1.4 }}
+                    className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-emerald-600"
+                  />
+                </div>
+              </div>
+
+              {/* Circular Metric */}
+              <div className="flex items-center gap-4">
+                <div className="relative w-12 h-12 flex items-center justify-center">
+                  <svg className="w-full h-full transform -rotate-90">
+                    <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-slate-100 dark:text-white/5" />
+                    <motion.circle 
+                      cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" 
+                      className="text-emerald-500"
+                      strokeDasharray="125.6"
+                      initial={{ strokeDashoffset: 125.6 }}
+                      animate={{ strokeDashoffset: 40 }}
+                      transition={{ duration: 2, delay: 1 }}
+                    />
+                  </svg>
+                  <span className="absolute text-[10px] font-bold text-white">82%</span>
+                </div>
+                <div className="space-y-2">
+                  <div className="h-3 w-24 bg-white/10 rounded-full" />
+                  <div className="h-2 w-16 bg-white/5 rounded-full" />
+                </div>
+              </div>
+              
+              {/* Floating Decorative Elements */}
+              <motion.div 
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute top-1/4 right-[-10px] w-12 h-12 bg-emerald-600/30 rounded-full blur-xl" 
+              />
+            </div>
+
+            {/* Sub-card floating */}
+            <motion.div 
+              animate={{ y: [0, 8, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              className="absolute -bottom-6 -right-6 bg-emerald-600/90 backdrop-blur-md p-4 rounded-xl shadow-xl border border-white/20 z-20"
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-white/20 rounded-lg">
+                  <Shield className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <div className="text-[10px] text-emerald-100 font-medium">{t.login.security}</div>
+                  <div className="text-xs text-white font-bold">Encrypted 256-bit</div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     </div>
