@@ -13,6 +13,24 @@ export function AccessibilityButton() {
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [voiceIndex, setVoiceIndex] = useState(0);
 
+  // Initial load from localStorage
+  useEffect(() => {
+    const savedFontSize = localStorage.getItem("accessibility-font-size");
+    const savedHighContrast = localStorage.getItem("accessibility-high-contrast");
+
+    if (savedFontSize) setFontSize(parseInt(savedFontSize));
+    if (savedHighContrast) setIsHighContrast(savedHighContrast === "true");
+  }, []);
+
+  // Persist settings
+  useEffect(() => {
+    localStorage.setItem("accessibility-font-size", fontSize.toString());
+  }, [fontSize]);
+
+  useEffect(() => {
+    localStorage.setItem("accessibility-high-contrast", isHighContrast.toString());
+  }, [isHighContrast]);
+
   // Load voices
   useEffect(() => {
     const loadVoices = () => {

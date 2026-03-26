@@ -172,12 +172,42 @@
     background-image: none !important;
     box-shadow: none !important;
     text-shadow: none !important;
+    animation: none !important;
+  }
+
+  body.high-contrast .blob-1,
+  body.high-contrast .blob-2,
+  body.high-contrast .blob-3,
+  body.high-contrast .blob-4,
+  body.high-contrast .blob-5,
+  body.high-contrast [class*="blob-"],
+  body.high-contrast canvas,
+  body.high-contrast .flickering-grid {
+    display: none !important;
+    opacity: 0 !important;
   }
 
   body.high-contrast button, 
   body.high-contrast a {
-    outline: 2px solid #ffff00 !important;
-    outline-offset: 2px !important;
+    outline: 3px solid #ffff00 !important;
+    outline-offset: 4px !important;
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border: 2px solid #ffffff !important;
+  }
+
+  body.high-contrast button:hover, 
+  body.high-contrast a:hover {
+    background-color: #ffff00 !important;
+    color: #000000 !important;
+  }
+
+  body.high-contrast svg {
+    filter: brightness(0) invert(1) !important;
+  }
+
+  body.high-contrast img {
+    filter: contrast(150%) grayscale(100%) !important;
   }
 
   html {

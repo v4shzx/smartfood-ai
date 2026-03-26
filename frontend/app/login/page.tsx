@@ -68,9 +68,9 @@ export default function LoginPage() {
   const isDark = mounted && resolvedTheme === "dark";
 
   return (
-    <div className="min-h-screen bg-transparent flex overflow-hidden font-sans transition-colors duration-500">
-      {/* --- Left Side: Login Form (Moved from Right) --- */}
-      <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-6 md:p-12 relative bg-white dark:bg-slate-950 transition-colors duration-500 border-r border-slate-200 dark:border-slate-800/50">
+    <div className="min-h-screen bg-transparent flex flex-row-reverse overflow-hidden font-sans transition-colors duration-500">
+      {/* --- Right Side: Login Form --- */}
+      <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-6 md:p-12 relative bg-white dark:bg-slate-950 transition-colors duration-500 border-l border-slate-200 dark:border-slate-800/50">
         {/* Back Link & Lang Switcher */}
         <div className="absolute top-8 left-8 lg:left-12 right-8 flex justify-between items-center">
           <Link href="/" className="group flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all duration-200">
@@ -262,7 +262,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* --- Right Side: Visual Panel (Moved from Left) --- */}
+      {/* --- Left Side: Visual Panel --- */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-slate-50 dark:bg-black items-center justify-center p-12 overflow-hidden transition-colors duration-500">
         {/* Abstract Background Elements */}
         <div className="absolute top-0 left-0 w-full h-full">
