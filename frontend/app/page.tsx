@@ -29,7 +29,7 @@ function ThemeToggle() {
     <button
       aria-label="Toggle theme"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-slate-700 transition-all shadow-sm"
+      className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-all shadow-sm"
     >
       {isDark
         ? <Sun  className="w-4 h-4 text-amber-400" />
@@ -76,16 +76,17 @@ function Navbar() {
 
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center gap-8">
-            <a href="#features"     className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t.nav.features}</a>
-            <a href="#demo"         className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t.nav.platform}</a>
-            <a href="#pricing"      className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t.nav.pricing}</a>
+            <a href="#hero"         className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t.nav.home}</a>
+            <a href="#features"     className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t.nav.features}</a>
+            <a href="#demo"         className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t.nav.platform}</a>
+            <a href="#pricing"      className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t.nav.pricing}</a>
           </div>
 
           {/* Desktop Right Controls */}
           <div className="hidden md:flex items-center gap-3">
             <LangSwitcher />
             <ThemeToggle />
-            <Link href="/login" className="bg-slate-900 dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-700 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-slate-900/10 dark:shadow-blue-500/20 active:scale-95">
+            <Link href="/login" className="bg-slate-900 dark:bg-emerald-600 hover:bg-slate-800 dark:hover:bg-emerald-700 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-slate-900/10 dark:shadow-emerald-500/20 active:scale-95">
               {t.nav.cta}
             </Link>
           </div>
@@ -108,10 +109,11 @@ function Navbar() {
           animate={{ opacity: 1, y: 0 }}
           className="md:hidden bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 px-4 pt-2 pb-6 space-y-1 shadow-xl"
         >
+          <a href="#hero"         className="block px-3 py-3 text-base font-semibold text-slate-700 dark:text-slate-200">{t.nav.home}</a>
           <a href="#features"     className="block px-3 py-3 text-base font-semibold text-slate-700 dark:text-slate-200">{t.nav.features}</a>
           <a href="#pricing"      className="block px-3 py-3 text-base font-semibold text-slate-700 dark:text-slate-200">{t.nav.pricing}</a>
           <div className="border-t border-slate-100 dark:border-slate-800 mt-4 pt-4 flex flex-col gap-3">
-            <Link href="/login" className="w-full bg-blue-600 text-white px-3 py-3 rounded-xl text-base font-bold text-center shadow-lg shadow-blue-500/20">
+            <Link href="/login" className="w-full bg-emerald-600 text-white px-3 py-3 rounded-xl text-base font-bold text-center shadow-lg shadow-emerald-500/20">
               {t.nav.cta}
             </Link>
           </div>
@@ -126,7 +128,7 @@ function Navbar() {
 function Hero() {
   const { t } = useI18n();
   return (
-    <section className="pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10 flex flex-col items-center">
+    <section id="hero" className="pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10 flex flex-col items-center">
       <motion.div 
         initial={{ opacity: 0, y: 20 }} 
         animate={{ opacity: 1, y: 0 }} 
@@ -134,8 +136,8 @@ function Hero() {
         className="w-full max-w-5xl bg-white/5 dark:bg-slate-950/5 backdrop-blur-md rounded-[3rem] border border-white/10 dark:border-white/5 p-8 md:p-16 flex flex-col items-center text-center shadow-2xl shadow-slate-900/5 dark:shadow-black/20"
       >
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50/50 dark:bg-blue-950/30 border border-blue-100/30 dark:border-blue-800/30 text-blue-700 dark:text-blue-300 text-xs font-bold mb-10 tracking-wide uppercase">
-          <Zap className="w-3.5 h-3.5 fill-blue-600 dark:fill-blue-400" />
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-100/30 dark:border-emerald-800/30 text-emerald-700 dark:text-emerald-300 text-xs font-bold mb-10 tracking-wide uppercase">
+          <Zap className="w-3.5 h-3.5 fill-emerald-600 dark:fill-emerald-400" />
           <span>{t.badge}</span>
         </motion.div>
 
@@ -148,7 +150,7 @@ function Hero() {
             const colors = [
               "text-blue-600 dark:text-blue-400",
               "text-amber-500 dark:text-amber-400",
-              "text-emerald-500 dark:text-emerald-400"
+              "text-purple-600 dark:text-purple-400"
             ];
             
             return (
@@ -180,7 +182,7 @@ function Hero() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }}
           className="mt-12 flex flex-col sm:flex-row gap-5 w-full sm:w-auto">
-          <Link href="/login" className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-2xl text-lg font-bold transition-all flex items-center justify-center gap-2 shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 active:scale-[0.98]">
+          <Link href="/login" className="bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-4 rounded-2xl text-lg font-bold transition-all flex items-center justify-center gap-2 shadow-xl shadow-emerald-500/25 hover:shadow-emerald-500/40 active:scale-[0.98]">
             {t.try} <ChevronRight className="w-5 h-5" />
           </Link>
           <button className="bg-white/40 dark:bg-slate-800/40 hover:bg-white/60 dark:hover:bg-slate-700/60 text-slate-900 dark:text-white border border-slate-200/50 dark:border-slate-700/50 px-10 py-4 rounded-2xl text-lg font-bold transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md backdrop-blur-md active:scale-[0.98]">
@@ -209,7 +211,7 @@ function DashboardMockup() {
               <div className="w-3 h-3 rounded-full bg-slate-200 dark:bg-slate-700" />
             </div>
             <div className="ml-6 text-[11px] font-bold text-slate-400 dark:text-slate-500 flex items-center gap-2 uppercase tracking-widest">
-              <ShieldCheck className="w-4 h-4 text-blue-500" /> Secure AI Connection
+              <ShieldCheck className="w-4 h-4 text-emerald-500" /> Secure AI Connection
             </div>
           </div>
 
@@ -222,11 +224,11 @@ function DashboardMockup() {
               <SidebarItem icon={<Activity />}  label="Metabolic Status" />
               <SidebarItem icon={<Target />}    label="Goals & Tracking" />
               <div className="mt-auto">
-                <div className="bg-blue-600 rounded-2xl p-5 shadow-xl shadow-blue-500/20">
+                <div className="bg-emerald-600 rounded-2xl p-5 shadow-xl shadow-emerald-500/20">
                   <div className="flex items-center gap-2 text-white font-bold mb-2 text-sm">
                     <Bot className="w-5 h-5" /> AI Coach
                   </div>
-                  <p className="text-[11px] text-blue-50 leading-relaxed font-medium">{t.coach}</p>
+                  <p className="text-[11px] text-emerald-50 leading-relaxed font-medium">{t.coach}</p>
                 </div>
               </div>
             </div>
@@ -245,7 +247,7 @@ function DashboardMockup() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
                 <StatCard title={t.stat1} value="1,840" subtitle={t.stat1s} icon={<Flame className="w-5 h-5 text-orange-500" />} />
-                <StatCard title={t.stat2} value="A+"    subtitle={t.stat2s} icon={<Star  className="w-5 h-5 text-blue-500"  />} />
+                <StatCard title={t.stat2} value="A+"    subtitle={t.stat2s} icon={<Star  className="w-5 h-5 text-emerald-500"  />} />
                 <StatCard title={t.stat3} value="High"  subtitle={t.stat3s} icon={<Zap   className="w-5 h-5 text-amber-500" />} />
               </div>
 
@@ -295,7 +297,7 @@ function DashboardMockup() {
                     ))}
                   </div>
                   <div className="mt-10 pt-6 border-t border-slate-200 dark:border-slate-700">
-                    <button className="w-full text-center text-xs text-blue-600 dark:text-blue-400 font-bold hover:text-blue-700 dark:hover:text-blue-300 flex justify-center items-center gap-2 uppercase tracking-widest transition-colors">
+                    <button className="w-full text-center text-xs text-emerald-600 dark:text-emerald-400 font-bold hover:text-emerald-700 dark:hover:text-emerald-300 flex justify-center items-center gap-2 uppercase tracking-widest transition-colors">
                       {t.recalc} <Bot className="w-4 h-4" />
                     </button>
                   </div>
@@ -326,10 +328,10 @@ function Integrations() {
           <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 mb-12 uppercase tracking-[0.3em]">{t.integrations}</p>
           <div className="flex flex-wrap justify-center gap-10 md:gap-20 items-center opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
             {[
-              { icon: <Cpu className="w-6 h-6 text-blue-600" />, label: "Meta Llama" },
-              { icon: <Database className="w-6 h-6 text-blue-600" />, label: "Apple Health" },
-              { icon: <Activity className="w-6 h-6 text-blue-600" />, label: "Google Fit" },
-              { icon: <CloudCog className="w-6 h-6 text-blue-600" />, label: "OpenAI" },
+              { icon: <Cpu className="w-6 h-6 text-emerald-600" />, label: "Meta Llama" },
+              { icon: <Database className="w-6 h-6 text-emerald-600" />, label: "Apple Health" },
+              { icon: <Activity className="w-6 h-6 text-emerald-600" />, label: "Google Fit" },
+              { icon: <CloudCog className="w-6 h-6 text-emerald-600" />, label: "OpenAI" },
             ].map((item, i) => (
               <motion.div 
                 key={i}
@@ -349,8 +351,8 @@ function Integrations() {
 // ─── Features ─────────────────────────────────────────────────────────────────
 
 const FEAT_STYLES = [
-  { icon: <Brain    className="text-blue-600   w-6 h-6" />, bg: "bg-blue-50   dark:bg-blue-950/60"   },
-  { icon: <Target   className="text-indigo-600 w-6 h-6" />, bg: "bg-indigo-50 dark:bg-indigo-950/60" },
+  { icon: <Brain    className="text-emerald-600   w-6 h-6" />, bg: "bg-emerald-50   dark:bg-emerald-950/60"   },
+  { icon: <Target   className="text-teal-600 w-6 h-6" />, bg: "bg-teal-50 dark:bg-teal-950/60" },
   { icon: <Activity className="text-slate-600  w-6 h-6 dark:text-slate-300" />, bg: "bg-slate-100  dark:bg-slate-800/60"  },
 ];
 
@@ -386,7 +388,7 @@ function Features() {
             viewport={{ once: true }}
             transition={{ delay: i * 0.1, duration: 0.6 }}
             whileHover={{ y: -10 }}
-            className="p-10 rounded-[2.5rem] bg-white dark:bg-slate-900/80 border border-slate-100 dark:border-slate-800 hover:border-blue-100 dark:hover:border-blue-900 hover:shadow-2xl hover:shadow-blue-500/5 dark:hover:shadow-blue-500/10 transition-all group cursor-default"
+            className="p-10 rounded-[2.5rem] bg-white dark:bg-slate-900/80 border border-slate-100 dark:border-slate-800 hover:border-emerald-100 dark:hover:border-emerald-900 hover:shadow-2xl hover:shadow-emerald-500/5 dark:hover:shadow-emerald-500/10 transition-all group cursor-default"
           >
             <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-8 ${FEAT_STYLES[i].bg} shadow-sm group-hover:rotate-12 transition-transform duration-300`}>
               {FEAT_STYLES[i].icon}
@@ -456,13 +458,13 @@ function Pricing() {
           whileHover={{ y: -10 }}
           className="p-12 rounded-[3rem] bg-[#0F172A] border border-slate-800 text-left relative overflow-hidden shadow-[0_20px_50px_rgba(37,99,235,0.15)] group"
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 blur-[100px] rounded-full -mr-20 -mt-20 group-hover:bg-blue-600/30 transition-colors duration-700" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-600/20 blur-[100px] rounded-full -mr-20 -mt-20 group-hover:bg-emerald-600/30 transition-colors duration-700" />
           <div className="flex justify-between items-center relative z-10">
             <h3 className="text-3xl font-black text-white">Pro AI</h3>
             <motion.span 
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
-              className="text-[10px] font-black bg-blue-600 text-white px-4 py-1.5 rounded-full border border-blue-500 shadow-lg shadow-blue-500/40 uppercase tracking-widest"
+              className="text-[10px] font-black bg-emerald-600 text-white px-4 py-1.5 rounded-full border border-emerald-500 shadow-lg shadow-emerald-500/40 uppercase tracking-widest"
             >
               Most Popular
             </motion.span>
@@ -474,10 +476,10 @@ function Pricing() {
           </div>
           <ul className="space-y-5 mb-12 relative z-10">
             {t.pro_feats.map((f, i) => (
-              <li key={i} className="flex gap-4 text-slate-200 font-bold text-sm items-center"><CheckCircle2 className="text-blue-500 shrink-0 w-5 h-5" /> {f}</li>
+              <li key={i} className="flex gap-4 text-slate-200 font-bold text-sm items-center"><CheckCircle2 className="text-emerald-500 shrink-0 w-5 h-5" /> {f}</li>
             ))}
           </ul>
-          <button className="w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-black transition-all shadow-xl shadow-blue-600/20 uppercase tracking-widest text-xs relative z-10 active:scale-[0.98]">{t.pro_btn}</button>
+          <button className="w-full py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black transition-all shadow-xl shadow-emerald-600/20 uppercase tracking-widest text-xs relative z-10 active:scale-[0.98]">{t.pro_btn}</button>
         </motion.div>
       </div>
     </section>
@@ -498,8 +500,8 @@ function CTA() {
         className="max-w-5xl mx-auto text-center rounded-[3.5rem] bg-slate-900 dark:bg-slate-950 p-16 md:p-24 border border-slate-800 shadow-2xl relative overflow-hidden"
       >
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-blue-600/20 blur-[120px] rounded-full" />
-          <div className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] bg-indigo-600/20 blur-[120px] rounded-full" />
+          <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-emerald-600/20 blur-[120px] rounded-full" />
+          <div className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] bg-teal-600/20 blur-[120px] rounded-full" />
         </div>
         <div className="relative z-10">
           <motion.h2 
@@ -544,11 +546,11 @@ function SidebarItem({ icon, label, active = false }: { icon: React.ReactNode; l
       whileHover={{ x: 5 }}
       className={`flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
         active
-          ? "bg-blue-50 dark:bg-blue-950/60 shadow-sm border border-blue-100 dark:border-blue-900/60 text-blue-600 dark:text-blue-300"
+          ? "bg-emerald-50 dark:bg-emerald-950/60 shadow-sm border border-emerald-100 dark:border-emerald-900/60 text-emerald-600 dark:text-emerald-300"
           : "text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60"
       }`}
     >
-      <div className={`${active ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500"} w-5 h-5 transition-colors`}>{icon}</div>
+      <div className={`${active ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400 dark:text-slate-500"} w-5 h-5 transition-colors`}>{icon}</div>
       {label}
     </motion.div>
   );
@@ -558,14 +560,14 @@ function StatCard({ title, value, subtitle, icon }: { title: string; value: stri
   return (
     <motion.div 
       whileHover={{ y: -5 }}
-      className="bg-white dark:bg-slate-800/60 p-6 rounded-3xl border border-slate-100 dark:border-slate-700/50 shadow-sm flex items-start justify-between group hover:border-blue-100 dark:hover:border-blue-900 transition-colors cursor-default"
+      className="bg-white dark:bg-slate-800/60 p-6 rounded-3xl border border-slate-100 dark:border-slate-700/50 shadow-sm flex items-start justify-between group hover:border-emerald-100 dark:hover:border-emerald-900 transition-colors cursor-default"
     >
       <div>
         <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black mb-1.5 uppercase tracking-widest">{title}</div>
         <div className="text-3xl font-black text-slate-900 dark:text-white">{value}</div>
         <div className="text-[10px] text-slate-400 dark:text-slate-500 font-bold mt-1 uppercase tracking-wider group-hover:text-slate-500 dark:group-hover:text-slate-400 transition-colors">{subtitle}</div>
       </div>
-      <div className="bg-slate-50 dark:bg-slate-700/50 p-3 rounded-2xl group-hover:bg-blue-50 dark:group-hover:bg-blue-950/50 transition-colors group-hover:scale-110 duration-300">{icon}</div>
+      <div className="bg-slate-50 dark:bg-slate-700/50 p-3 rounded-2xl group-hover:bg-emerald-50 dark:group-hover:bg-emerald-950/50 transition-colors group-hover:scale-110 duration-300">{icon}</div>
     </motion.div>
   );
 }
@@ -574,7 +576,7 @@ function StatCard({ title, value, subtitle, icon }: { title: string; value: stri
 
 export default function Home() {
   return (
-    <main className="bg-transparent min-h-screen font-sans antialiased text-slate-900 dark:text-white selection:bg-blue-100 dark:selection:bg-blue-900/50 selection:text-blue-900 dark:selection:text-blue-200">
+    <main className="bg-transparent min-h-screen font-sans antialiased text-slate-900 dark:text-white selection:bg-emerald-100 dark:selection:bg-emerald-900/50 selection:text-emerald-900 dark:selection:text-emerald-200">
       <Navbar />
       <Hero />
       <DashboardMockup />

@@ -73,8 +73,8 @@ export default function LoginPage() {
       <div className="hidden lg:flex lg:w-1/2 relative bg-slate-50 dark:bg-black items-center justify-center p-12 overflow-hidden border-r border-slate-200 dark:border-slate-800/50 transition-colors duration-500">
         {/* Abstract Background Elements */}
         <div className="absolute top-0 left-0 w-full h-full">
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/10 dark:bg-blue-600/20 blur-[120px] rounded-full" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/10 dark:bg-indigo-600/20 blur-[120px] rounded-full" />
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-600/10 dark:bg-emerald-600/20 blur-[120px] rounded-full" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-teal-600/10 dark:bg-teal-600/20 blur-[120px] rounded-full" />
           <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-slate-200/40 dark:bg-slate-800/40 blur-[100px] rounded-full" />
         </div>
 
@@ -132,8 +132,8 @@ export default function LoginPage() {
               {/* Header of card */}
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-                    <Sparkles className="w-4 h-4 text-blue-500 dark:text-blue-400" />
+                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
                   </div>
                   <div className="h-4 w-32 bg-slate-200 dark:bg-white/10 rounded-full" />
                 </div>
@@ -147,7 +147,7 @@ export default function LoginPage() {
                     initial={{ width: 0 }}
                     animate={{ width: "70%" }}
                     transition={{ duration: 1.5, delay: 1 }}
-                    className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-500"
+                    className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500"
                   />
                 </div>
                 <div className="h-2 w-full bg-slate-100 dark:bg-white/5 rounded-full relative overflow-hidden">
@@ -155,7 +155,7 @@ export default function LoginPage() {
                     initial={{ width: 0 }}
                     animate={{ width: "45%" }}
                     transition={{ duration: 1.5, delay: 1.2 }}
-                    className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500"
+                    className="absolute inset-0 bg-gradient-to-r from-teal-500 to-lime-500"
                   />
                 </div>
                 <div className="h-2 w-full bg-slate-100 dark:bg-white/5 rounded-full relative overflow-hidden">
@@ -163,7 +163,7 @@ export default function LoginPage() {
                     initial={{ width: 0 }}
                     animate={{ width: "90%" }}
                     transition={{ duration: 1.5, delay: 1.4 }}
-                    className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600"
+                    className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-emerald-600"
                   />
                 </div>
               </div>
@@ -175,7 +175,7 @@ export default function LoginPage() {
                     <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-slate-100 dark:text-white/5" />
                     <motion.circle 
                       cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" 
-                      className="text-blue-500"
+                      className="text-emerald-500"
                       strokeDasharray="125.6"
                       initial={{ strokeDashoffset: 125.6 }}
                       animate={{ strokeDashoffset: 40 }}
@@ -194,7 +194,7 @@ export default function LoginPage() {
               <motion.div 
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-1/4 right-[-10px] w-12 h-12 bg-blue-600/30 rounded-full blur-xl" 
+                className="absolute top-1/4 right-[-10px] w-12 h-12 bg-emerald-600/30 rounded-full blur-xl" 
               />
             </div>
 
@@ -202,14 +202,14 @@ export default function LoginPage() {
             <motion.div 
               animate={{ y: [0, 8, 0] }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              className="absolute -bottom-6 -right-6 bg-blue-600/90 backdrop-blur-md p-4 rounded-xl shadow-xl border border-white/20 z-20"
+              className="absolute -bottom-6 -right-6 bg-emerald-600/90 backdrop-blur-md p-4 rounded-xl shadow-xl border border-white/20 z-20"
             >
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-white/20 rounded-lg">
                   <Shield className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <div className="text-[10px] text-blue-100 font-medium">{t.login.security}</div>
+                  <div className="text-[10px] text-emerald-100 font-medium">{t.login.security}</div>
                   <div className="text-xs text-white font-bold">Encrypted 256-bit</div>
                 </div>
               </div>
@@ -317,7 +317,7 @@ export default function LoginPage() {
             <div className="space-y-2">
               <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">{t.login.email_label}</label>
               <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 dark:text-slate-500 group-focus-within:text-blue-500 transition-colors">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 dark:text-slate-500 group-focus-within:text-emerald-500 transition-colors">
                   <Mail className="w-4.5 h-4.5" />
                 </div>
                 <input
@@ -325,7 +325,7 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pl-11 pr-4 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 shadow-sm"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pl-11 pr-4 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 shadow-sm"
                   placeholder={t.login.email_placeholder}
                 />
               </div>
@@ -336,7 +336,7 @@ export default function LoginPage() {
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t.login.password_label}</label>
               </div>
               <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 dark:text-slate-500 group-focus-within:text-blue-500 transition-colors">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 dark:text-slate-500 group-focus-within:text-emerald-500 transition-colors">
                   <Lock className="w-4.5 h-4.5" />
                 </div>
                 <input
@@ -344,7 +344,7 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pl-11 pr-12 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 shadow-sm"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pl-11 pr-12 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 shadow-sm"
                   placeholder={t.login.password_placeholder}
                 />
                 <button
@@ -367,13 +367,13 @@ export default function LoginPage() {
                 <input 
                   id="remember" 
                   type="checkbox" 
-                  className="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-blue-600 focus:ring-blue-500" 
+                  className="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-emerald-600 focus:ring-emerald-500" 
                 />
                 <label htmlFor="remember" className="text-sm text-slate-500 dark:text-slate-400 font-medium cursor-pointer">
                   {t.login.remember}
                 </label>
               </div>
-              <Link href="#" className="text-xs font-semibold text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
+              <Link href="#" className="text-xs font-semibold text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300 transition-colors">
                 {t.login.forgot}
               </Link>
             </div>
@@ -381,7 +381,7 @@ export default function LoginPage() {
             <Button 
               type="submit" 
               disabled={isLoading}
-              className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed group cursor-pointer"
+              className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed group cursor-pointer"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -397,7 +397,7 @@ export default function LoginPage() {
           {/* Footer */}
           <p className="mt-8 text-center text-sm text-slate-500 dark:text-slate-400 font-medium">
             {t.login.no_account}{" "}
-            <Link href="#" className="text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 font-bold transition-colors inline-flex items-center gap-1 group">
+            <Link href="#" className="text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300 font-bold transition-colors inline-flex items-center gap-1 group">
               {t.login.create}
               <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </Link>
