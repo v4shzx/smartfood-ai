@@ -34,18 +34,43 @@ export const T = {
       { review: "El motor de predicción es impecable. Literalmente me dice qué comer antes de que mi energía caiga." },
       { review: "Minimalista, increíblemente rápido y los insights son accionables. Stripe para la nutrición es la comparación perfecta." },
     ],
-    price_title: "Precios simples y transparentes.",
-    price_sub: "Invierte en tu salud con insights impulsados por IA.",
-    basic_desc: "Seguimiento esencial y consejos básicos de IA.",
-    basic_feats: ["Escaneo manual de código de barras", "Objetivos de macros estándar", "Informes semanales de resumen"],
-    basic_btn: "Empezar Gratis",
-    pro_desc: "Todo el poder del motor metabólico.",
-    pro_feats: ["Generador de comidas predictivo", "Sincronización biométrica con apps", "Ajuste dinámico de macros IA", "Análisis continuo de hábitos"],
-    pro_btn: "Iniciar prueba gratuita",
+    price_title: "Planes de Servicio",
+    price_sub: "Elige el plan que mejor se adapte a tu negocio.",
+    pricing_plans: [
+      {
+        name: "Básico",
+        price: "$0",
+        unit: "MXN / mes",
+        desc: "Ideal para comenzar",
+        feats: ["Registro manual de ventas", "Predicción básica (clima + regresión)", "Dashboard con gráficas simples", "Historial de 30 días"],
+        btn: "Comenzar gratis",
+        popular: false
+      },
+      {
+        name: "Profesional",
+        price: "$299",
+        unit: "MXN / mes",
+        desc: "Para negocios en crecimiento",
+        feats: ["Todo lo de Básico", "Predicción avanzada con IA", "Recomendaciones inteligentes", "Análisis de tendencias", "Historial de hasta 1 año", "Exportación de reportes", "1 sucursal"],
+        btn: "Probar 7 días gratis",
+        popular: true
+      },
+      {
+        name: "Empresarial",
+        price: "$899",
+        unit: "MXN / mes",
+        desc: "Solución definitiva para empresas",
+        feats: ["Todo lo de Profesional", "Inventario inteligente", "Punto de venta (POS)", "Predicción en tiempo real", "Alertas automáticas", "Multiples sucursales", "Multiusuarios con roles", "Integraciones (API / ERP)"],
+        btn: "Comprar ahora",
+        popular: false
+      }
+    ],
+    popular_badge: "Más Popular",
     cta_title: "¿Listo para transformar tu salud?",
     cta_sub: "Únete a miles de personas optimizando su cuerpo con la plataforma de nutrición IA más avanzada.",
     cta_btn: "Probar SmartFood AI ahora",
     footer: "Construido con inteligencia.",
+    footer_dev: "Diseñado y desarrollado por Alejandro Balderas Rios",
     dash_title: "Perspectivas Diarias",
     dash_sub: "Tendencias metabólicas predichas por IA para hoy.",
     dash_accuracy: "94% Precisión",
@@ -100,18 +125,43 @@ export const T = {
       { review: "The prediction engine is flawless. It literally tells me what to eat before my energy crashes during long training weeks." },
       { review: "Minimalist, incredibly fast, and the insights are actually actionable. Stripe for nutrition is the perfect comparison." },
     ],
-    price_title: "Simple, transparent pricing.",
-    price_sub: "Invest in your health with AI-powered insights.",
-    basic_desc: "Essential tracking & basic AI tips.",
-    basic_feats: ["Manual barcode scanning", "Standard macro targets", "Weekly summary reports"],
-    basic_btn: "Get Started Free",
-    pro_desc: "Full power of the metabolic engine.",
-    pro_feats: ["Auto-predictive meal generator", "Health app biometric syndication", "Dynamic macro adjustment AI", "Continuous habit analytics"],
-    pro_btn: "Start Free Trial",
+    price_title: "Service Plans",
+    price_sub: "Choose the plan that best fits your business.",
+    pricing_plans: [
+      {
+        name: "Basic",
+        price: "$0",
+        unit: "MXN / mo",
+        desc: "Ideal to get started",
+        feats: ["Manual sales logging", "Basic prediction (weather + regression)", "Dashboard with simple charts", "30-day history"],
+        btn: "Start for free",
+        popular: false
+      },
+      {
+        name: "Professional",
+        price: "$299",
+        unit: "MXN / mo",
+        desc: "For growing businesses",
+        feats: ["Everything in Starter", "Advanced AI prediction", "Smart recommendations", "Trend analysis", "Up to 1-year history", "Report export", "1 branch"],
+        btn: "Try 7 days for free",
+        popular: true
+      },
+      {
+        name: "Enterprise",
+        price: "$899",
+        unit: "MXN / mo",
+        desc: "Complete solution to scale",
+        feats: ["Everything in Growth", "Smart inventory", "Point of Sale (POS)", "Real-time prediction", "Automatic alerts", "Multiple branches", "Multi-user with roles", "Integrations (API / ERP)"],
+        btn: "Buy now",
+        popular: false
+      }
+    ],
+    popular_badge: "Most Popular",
     cta_title: "Ready to transform your health?",
     cta_sub: "Join thousands of high-performers optimizing their bodies using the most advanced AI nutrition platform ever built.",
     cta_btn: "Try SmartFood AI Now",
     footer: "Crafted with intelligence.",
+    footer_dev: "Designed and developed by Alejandro Balderas Rios",
     dash_title: "Daily Insights",
     dash_sub: "AI-predicted metabolic trends for today.",
     dash_accuracy: "94% Accuracy",
@@ -166,18 +216,43 @@ export const T = {
       { review: "Le moteur de prédiction est impeccable. Il me dit littéralement quoi manger avant que mon énergie ne chute." },
       { review: "Minimaliste, incroyablement rapide, et les insights sont vraiment exploitables. Stripe pour la nutrition est la comparaison parfaite." },
     ],
-    price_title: "Tarification simple et transparente.",
-    price_sub: "Investissez dans votre santé avec des insights propulsés par l'IA.",
-    basic_desc: "Suivi essentiel et conseils IA de base.",
-    basic_feats: ["Scan de code-barres manuel", "Objectifs de macros standards", "Rapports hebdomadaires récapitulatifs"],
-    basic_btn: "Commencer Gratuitement",
-    pro_desc: "Toute la puissance du moteur métabolique.",
-    pro_feats: ["Générateur de repas prédictif", "Synchronisation biométrique des apps", "Ajustement dynamique des macros IA", "Analyse continue des habitudes"],
-    pro_btn: "Démarrer l'essai gratuit",
+    price_title: "Plans de Service",
+    price_sub: "Choisissez le plan qui convient le mieux à votre entreprise.",
+    pricing_plans: [
+      {
+        name: "Basique",
+        price: "$0",
+        unit: "MXN / mois",
+        desc: "Idéal pour commencer",
+        feats: ["Enregistrement manuel des ventes", "Prédiction de base (météo + régression)", "Tableau de bord avec graphiques simples", "Historique de 30 jours"],
+        btn: "Commencer gratuitement",
+        popular: false
+      },
+      {
+        name: "Professionnel",
+        price: "$299",
+        unit: "MXN / mois",
+        desc: "Pour les entreprises en croissance",
+        feats: ["Tout ce qui est dans Starter", "Prédiction IA avancée", "Recommandations intelligentes", "Analyse des tendances", "Jusqu'à 1 an d'historique", "Exportation de rapports", "1 succursale"],
+        btn: "Essayer 7 jours gratuitement",
+        popular: true
+      },
+      {
+        name: "Entreprise",
+        price: "$899",
+        unit: "MXN / mois",
+        desc: "Solution complète pour passer à l'échelle",
+        feats: ["Tout ce qui est dans Growth", "Inventaire intelligent", "Point de Vente (POS)", "Prédiction en temps réel", "Alertes automatiques", "Plusieurs succursales", "Multi-utilisateurs avec rôles", "Intégrations (API / ERP)"],
+        btn: "Acheter maintenant",
+        popular: false
+      }
+    ],
+    popular_badge: "Plus Populaire",
     cta_title: "Prêt à transformer votre santé ?",
     cta_sub: "Rejoignez des milliers de personnes qui optimisent leur corps grâce à la plateforme de nutrition IA la plus avancée.",
     cta_btn: "Essayer SmartFood AI maintenant",
     footer: "Conçu avec intelligence.",
+    footer_dev: "Conçu et développé par Alejandro Balderas Rios",
     dash_title: "Aperçus Quotidiens",
     dash_sub: "Tendances métaboliques prédites par IA pour aujourd'hui.",
     dash_accuracy: "94% de Précision",
@@ -216,7 +291,7 @@ export const T = {
 export type Translations = typeof T["en"];
 
 const LangCtx = createContext<{ lang: Lang; t: Translations; setLang: (l: Lang) => void }>({
-  lang: "es", t: T["es"] as unknown as Translations, setLang: () => {},
+  lang: "es", t: T["es"] as unknown as Translations, setLang: () => { },
 });
 
 export function LangProvider({ children }: { children: React.ReactNode }) {
@@ -239,7 +314,7 @@ export function LangSwitcher() {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -259,26 +334,26 @@ export function LangSwitcher() {
   const FlagIcon = ({ code }: { code: Lang }) => {
     if (code === "es") return (
       <svg viewBox="0 0 512 512" className="w-4 h-4 rounded-full shadow-sm border border-slate-200 dark:border-slate-800 shrink-0">
-        <path fill="#AA151B" d="M0 0h512v512H0z"/>
-        <path fill="#F1BF00" d="M0 128h512v256H0z"/>
-        <path fill="#AA151B" d="M0 0v128h512V0zm0 384v128h512V384z"/>
+        <path fill="#AA151B" d="M0 0h512v512H0z" />
+        <path fill="#F1BF00" d="M0 128h512v256H0z" />
+        <path fill="#AA151B" d="M0 0v128h512V0zm0 384v128h512V384z" />
       </svg>
     );
     if (code === "en") return (
       <svg viewBox="0 0 512 512" className="w-4 h-4 rounded-full shadow-sm border border-slate-200 dark:border-slate-800 shrink-0">
-        <path fill="#012169" d="M0 0h512v512H0z"/>
-        <path fill="#FFF" d="m0 0 512 512m0-512L0 512"/>
-        <path stroke="#FFF" strokeWidth="64" d="m0 0 512 512m0-512L0 512"/>
-        <path stroke="#C8102E" strokeWidth="40" d="m0 0 512 512m0-512L0 512"/>
-        <path stroke="#FFF" strokeWidth="96" d="M256 0v512M0 256h512"/>
-        <path stroke="#C8102E" strokeWidth="60" d="M256 0v512M0 256h512"/>
+        <path fill="#012169" d="M0 0h512v512H0z" />
+        <path fill="#FFF" d="m0 0 512 512m0-512L0 512" />
+        <path stroke="#FFF" strokeWidth="64" d="m0 0 512 512m0-512L0 512" />
+        <path stroke="#C8102E" strokeWidth="40" d="m0 0 512 512m0-512L0 512" />
+        <path stroke="#FFF" strokeWidth="96" d="M256 0v512M0 256h512" />
+        <path stroke="#C8102E" strokeWidth="60" d="M256 0v512M0 256h512" />
       </svg>
     );
     if (code === "fr") return (
       <svg viewBox="0 0 512 512" className="w-4 h-4 rounded-full shadow-sm border border-slate-200 dark:border-slate-800 shrink-0">
-        <path fill="#002395" d="M0 0h171v512H0z"/>
-        <path fill="#FFF" d="M171 0h170v512H171z"/>
-        <path fill="#ED2939" d="M341 0h171v512H341z"/>
+        <path fill="#002395" d="M0 0h171v512H0z" />
+        <path fill="#FFF" d="M171 0h170v512H171z" />
+        <path fill="#ED2939" d="M341 0h171v512H341z" />
       </svg>
     );
     return null;
@@ -312,11 +387,10 @@ export function LangSwitcher() {
                 key={l.code}
                 id={`lang-option-${l.code}`}
                 onClick={() => { setLang(l.code); setOpen(false); }}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 text-xs font-bold transition-all rounded-xl ${
-                  lang === l.code
-                    ? "bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400"
-                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200"
-                }`}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 text-xs font-bold transition-all rounded-xl ${lang === l.code
+                  ? "bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400"
+                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200"
+                  }`}
               >
                 <FlagIcon code={l.code} />
                 <span>{l.label}</span>

@@ -489,62 +489,81 @@ function Pricing() {
       >
         {t.price_sub}
       </motion.p>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
-        {/* Basic */}
-        <motion.div 
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          whileHover={{ y: -10 }}
-          className="p-12 rounded-[3rem] border border-slate-200 dark:border-slate-700 text-left bg-white dark:bg-slate-900/80 hover:shadow-xl dark:hover:shadow-slate-900/50 transition-all duration-500"
-        >
-          <h3 className="text-3xl font-black text-slate-900 dark:text-white">Basic</h3>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 text-sm font-bold uppercase tracking-widest">{t.basic_desc}</p>
-          <div className="my-10 flex items-baseline gap-1">
-            <span className="text-6xl font-black text-slate-900 dark:text-white">$0</span>
-            <span className="text-slate-400 dark:text-slate-500 font-bold text-lg">/mo</span>
-          </div>
-          <ul className="space-y-5 mb-12">
-            {t.basic_feats.map((f, i) => (
-              <li key={i} className="flex gap-4 text-slate-600 dark:text-slate-300 font-bold text-sm items-center"><CheckCircle2 className="text-slate-300 dark:text-slate-600 shrink-0 w-5 h-5" /> {f}</li>
-            ))}
-          </ul>
-          <button className="w-full py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 font-black text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-all uppercase tracking-widest text-xs active:scale-[0.98]">{t.basic_btn}</button>
-        </motion.div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        {t.pricing_plans.map((plan, idx) => (
+          <motion.div 
+            key={idx}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: idx * 0.1 }}
+            whileHover={{ y: -10 }}
+            className={cn(
+              "p-10 rounded-[3rem] border text-left relative overflow-hidden transition-all duration-500 flex flex-col h-full backdrop-blur-md",
+              plan.popular 
+                ? "bg-white/70 dark:bg-slate-900/80 border-emerald-500/50 dark:border-emerald-500/40 shadow-[0_20px_50px_rgba(16,185,129,0.15)] dark:shadow-[0_20px_50px_rgba(16,185,129,0.1)] group" 
+                : "bg-white/40 dark:bg-slate-900/40 border-slate-200/50 dark:border-slate-800/50 hover:bg-white/60 dark:hover:bg-slate-900/60 hover:shadow-2xl hover:shadow-slate-200/50 dark:hover:shadow-black/20"
+            )}
+          >
+            {plan.popular && (
+              <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 dark:bg-emerald-500/20 blur-[100px] rounded-full -mr-20 -mt-20 group-hover:bg-emerald-500/20 dark:group-hover:bg-emerald-500/30 transition-colors duration-700" />
+            )}
+            
+            <div className="flex justify-between items-start mb-4 relative z-10">
+              <div>
+                <h3 className="text-3xl font-black mb-1 text-slate-900 dark:text-white">
+                  {plan.name}
+                </h3>
+                <p className={cn("text-sm font-bold uppercase tracking-widest", plan.popular ? "text-emerald-600 dark:text-emerald-400" : "text-slate-500 dark:text-slate-400")}>
+                  {plan.desc}
+                </p>
+              </div>
+              {plan.popular && (
+                <motion.span 
+                  animate={{ scale: [1, 1.05, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="text-[10px] font-black bg-emerald-600 text-white px-4 py-1.5 rounded-full border border-emerald-500 shadow-lg shadow-emerald-500/40 uppercase tracking-widest"
+                >
+                  {t.popular_badge}
+                </motion.span>
+              )}
+            </div>
 
-        {/* Pro */}
-        <motion.div 
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          whileHover={{ y: -10 }}
-          className="p-12 rounded-[3rem] bg-white dark:bg-[#0F172A] border border-emerald-100 dark:border-slate-800 text-left relative overflow-hidden shadow-xl shadow-emerald-500/5 dark:shadow-[0_20px_50px_rgba(37,99,235,0.15)] group transition-colors duration-500"
-        >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 dark:bg-emerald-600/20 blur-[100px] rounded-full -mr-20 -mt-20 group-hover:bg-emerald-500/20 dark:group-hover:bg-emerald-600/30 transition-colors duration-700" />
-          <div className="flex justify-between items-center relative z-10">
-            <h3 className="text-3xl font-black text-slate-900 dark:text-white">Pro AI</h3>
-            <motion.span 
-              animate={{ scale: [1, 1.05, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="text-[10px] font-black bg-emerald-600 text-white px-4 py-1.5 rounded-full border border-emerald-500 shadow-lg shadow-emerald-500/40 uppercase tracking-widest"
+            <div className="my-10 flex items-baseline gap-1.5 relative z-10">
+              <span className="text-6xl font-black text-slate-900 dark:text-white">
+                {plan.price}
+              </span>
+              <div className="flex flex-col">
+                <span className={cn("font-black text-sm", plan.popular ? "text-emerald-600 dark:text-emerald-400" : "text-emerald-600")}>
+                  MXN
+                </span>
+                <span className="font-bold text-lg leading-none text-slate-400 dark:text-slate-500">
+                  /{plan.unit.split(" / ")[1]}
+                </span>
+              </div>
+            </div>
+
+            <ul className="space-y-4 mb-12 relative z-10 flex-grow">
+              {plan.feats.map((f, i) => (
+                <li key={i} className="flex gap-3 font-bold text-sm items-start text-slate-600 dark:text-slate-300">
+                  <CheckCircle2 className={cn("shrink-0 w-5 h-5", plan.popular ? "text-emerald-500" : "text-slate-300 dark:text-slate-600")} /> 
+                  <span className="leading-tight">{f}</span>
+                </li>
+              ))}
+            </ul>
+
+            <button 
+              className={cn(
+                "w-full py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-[0.98] relative z-10",
+                plan.popular 
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/20" 
+                  : "border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-100/50 dark:hover:bg-slate-800/50"
+              )}
             >
-              Most Popular
-            </motion.span>
-          </div>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 text-sm font-bold uppercase tracking-widest relative z-10">{t.pro_desc}</p>
-          <div className="my-10 flex items-baseline gap-1 relative z-10">
-            <span className="text-6xl font-black text-slate-900 dark:text-white">$12</span>
-            <span className="text-slate-500 font-bold text-lg">/mo</span>
-          </div>
-          <ul className="space-y-5 mb-12 relative z-10">
-            {t.pro_feats.map((f, i) => (
-              <li key={i} className="flex gap-4 text-slate-600 dark:text-slate-200 font-bold text-sm items-center"><CheckCircle2 className="text-emerald-500 shrink-0 w-5 h-5" /> {f}</li>
-            ))}
-          </ul>
-          <button className="w-full py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black transition-all shadow-xl shadow-emerald-600/20 uppercase tracking-widest text-xs relative z-10 active:scale-[0.98]">{t.pro_btn}</button>
-        </motion.div>
+              {plan.btn}
+            </button>
+          </motion.div>
+        ))}
       </div>
     </section>
   );
@@ -639,6 +658,7 @@ function StatCard({ title, value, subtitle, icon }: { title: string; value: stri
 // ─── Footer ─────────────────────────────────────────────────────────────────────
 
 export default function Home() {
+  const { t } = useI18n();
   return (
     <main className="bg-transparent min-h-screen font-sans antialiased text-slate-900 dark:text-white selection:bg-emerald-100 dark:selection:bg-emerald-900/50 selection:text-emerald-900 dark:selection:text-emerald-200">
       <Navbar />
@@ -650,8 +670,11 @@ export default function Home() {
       <CTA />
       <footer className="py-16 border-t border-slate-100 dark:border-slate-800/60 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 text-center">
+          <p className="text-xs font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-4">
+            {t.footer}
+          </p>
           <p className="text-xs font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest" suppressHydrationWarning>
-            © {new Date().getFullYear()} Diseñado y desarrollado por Alejandro Balderas Rios
+            © {new Date().getFullYear()} {t.footer_dev}
           </p>
         </div>
       </footer>
