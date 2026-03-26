@@ -254,7 +254,7 @@ export function LangSwitcher() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  if (!mounted) return <div className="w-20 sm:w-24 h-8" />;
+  if (!mounted) return <div className="w-20 md:w-24 h-8" />;
 
   const FlagIcon = ({ code }: { code: Lang }) => {
     if (code === "es") return (
@@ -294,7 +294,7 @@ export function LangSwitcher() {
       >
         <Globe className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
         <FlagIcon code={current.code} />
-        <span className="hidden sm:inline font-bold">{current.code.toUpperCase()}</span>
+        <span className="hidden md:inline font-bold">{current.code.toUpperCase()}</span>
         <ChevronDown className={`w-3 h-3 text-slate-400 dark:text-slate-500 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </button>
 

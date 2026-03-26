@@ -64,7 +64,7 @@ function Navbar() {
 
   return (
     <nav className="fixed w-full z-50 bg-white/60 dark:bg-slate-900/70 backdrop-blur-2xl border-b border-slate-200/30 dark:border-slate-700/30 transition-all shadow-sm shadow-slate-900/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center gap-2.5">
@@ -86,7 +86,7 @@ function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             <LangSwitcher />
             <ThemeToggle />
-            <Link href="/login" className="bg-slate-900 dark:bg-emerald-600 hover:bg-slate-800 dark:hover:bg-emerald-700 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-slate-900/10 dark:shadow-emerald-500/20 active:scale-95">
+            <Link href="/login" className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-emerald-500/20 active:scale-95">
               {t.nav.cta}
             </Link>
           </div>
@@ -128,7 +128,7 @@ function Navbar() {
 function Hero() {
   const { t } = useI18n();
   return (
-    <section id="hero" className="pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10 flex flex-col items-center">
+    <section id="hero" className="pt-32 pb-24 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto relative z-10 flex flex-col items-center">
       <motion.div 
         initial={{ opacity: 0, y: 20 }} 
         animate={{ opacity: 1, y: 0 }} 
@@ -181,8 +181,8 @@ function Hero() {
         </motion.p>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-12 flex flex-col sm:flex-row gap-5 w-full sm:w-auto">
-          <Link href="/login" className="bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-4 rounded-2xl text-lg font-bold transition-all flex items-center justify-center gap-2 shadow-xl shadow-emerald-500/25 hover:shadow-emerald-500/40 active:scale-[0.98]">
+          className="mt-12 flex flex-col md:flex-row gap-5 w-full md:w-auto">
+          <Link href="/login" className="bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-4 rounded-2xl text-lg font-bold transition-all flex items-center justify-center gap-2 shadow-xl shadow-emerald-500/25 active:scale-[0.98]">
             {t.try} <ChevronRight className="w-5 h-5" />
           </Link>
           <button className="bg-white/40 dark:bg-slate-800/40 hover:bg-white/60 dark:hover:bg-slate-700/60 text-slate-900 dark:text-white border border-slate-200/50 dark:border-slate-700/50 px-10 py-4 rounded-2xl text-lg font-bold transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md backdrop-blur-md active:scale-[0.98]">
@@ -199,7 +199,7 @@ function Hero() {
 function DashboardMockup() {
   const { t } = useI18n();
   return (
-    <section id="demo" className="py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto relative">
+    <section id="demo" className="py-12 px-4 md:px-6 lg:px-8 max-w-6xl mx-auto relative">
       <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
         className="relative rounded-[2.5rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/60 shadow-2xl shadow-slate-200/60 dark:shadow-slate-900/80 overflow-hidden ring-1 ring-slate-900/5 dark:ring-white/5 p-2 backdrop-blur-sm">
         <div className="rounded-[2rem] bg-white dark:bg-slate-900 overflow-hidden border border-slate-200/60 dark:border-slate-700/40 shadow-inner">
@@ -359,7 +359,7 @@ const FEAT_STYLES = [
 function Features() {
   const { t } = useI18n();
   return (
-    <section id="features" className="py-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <section id="features" className="py-32 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto">
       <div className="text-center mb-20">
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}

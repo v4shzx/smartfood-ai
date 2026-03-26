@@ -219,7 +219,7 @@ export default function LoginPage() {
       </div>
 
       {/* --- Right Side: Login Form --- */}
-      <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-6 sm:p-12 relative bg-white dark:bg-slate-950 transition-colors duration-500">
+      <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-6 md:p-12 relative bg-white dark:bg-slate-950 transition-colors duration-500">
         {/* Back Link & Lang Switcher */}
         <div className="absolute top-8 left-8 lg:left-12 right-8 flex justify-between items-center">
           <Link href="/" className="group flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all duration-200">

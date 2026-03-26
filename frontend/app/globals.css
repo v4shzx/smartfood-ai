@@ -46,6 +46,13 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* ─── Simplified Responsive System (3 Sizes) ─── */
+  --breakpoint-sm: none;       /* Small removed for simplicity */
+  --breakpoint-md: 768px;      /* Tablet / Intermediate */
+  --breakpoint-lg: 1200px;     /* Desktop / Large */
+  --breakpoint-xl: none;       /* Extra Large removed */
+  --breakpoint-2xl: none;      /* 2XL removed */
 }
 
 :root {
