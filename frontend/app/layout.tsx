@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { LangProvider } from "@/lib/i18n";
 import { ThemeProvider } from "@/components/theme-provider";
 import { GlobalBackground } from "@/components/ui/global-background";
+import { AccessibilityButton } from "@/components/ui/accessibility-button";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -53,6 +54,7 @@ export default function RootLayout({
           <div className="relative z-10 w-full min-h-full flex flex-col">
             <LangProvider>{children}</LangProvider>
           </div>
+          <AccessibilityButton />
         </ThemeProvider>
       </body>
     </html>

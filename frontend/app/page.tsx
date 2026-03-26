@@ -520,11 +520,11 @@ function Pricing() {
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
           whileHover={{ y: -10 }}
-          className="p-12 rounded-[3rem] bg-[#0F172A] border border-slate-800 text-left relative overflow-hidden shadow-[0_20px_50px_rgba(37,99,235,0.15)] group"
+          className="p-12 rounded-[3rem] bg-white dark:bg-[#0F172A] border border-emerald-100 dark:border-slate-800 text-left relative overflow-hidden shadow-xl shadow-emerald-500/5 dark:shadow-[0_20px_50px_rgba(37,99,235,0.15)] group transition-colors duration-500"
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-600/20 blur-[100px] rounded-full -mr-20 -mt-20 group-hover:bg-emerald-600/30 transition-colors duration-700" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 dark:bg-emerald-600/20 blur-[100px] rounded-full -mr-20 -mt-20 group-hover:bg-emerald-500/20 dark:group-hover:bg-emerald-600/30 transition-colors duration-700" />
           <div className="flex justify-between items-center relative z-10">
-            <h3 className="text-3xl font-black text-white">Pro AI</h3>
+            <h3 className="text-3xl font-black text-slate-900 dark:text-white">Pro AI</h3>
             <motion.span 
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
@@ -533,14 +533,14 @@ function Pricing() {
               Most Popular
             </motion.span>
           </div>
-          <p className="text-slate-400 mt-3 text-sm font-bold uppercase tracking-widest relative z-10">{t.pro_desc}</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 text-sm font-bold uppercase tracking-widest relative z-10">{t.pro_desc}</p>
           <div className="my-10 flex items-baseline gap-1 relative z-10">
-            <span className="text-6xl font-black text-white">$12</span>
+            <span className="text-6xl font-black text-slate-900 dark:text-white">$12</span>
             <span className="text-slate-500 font-bold text-lg">/mo</span>
           </div>
           <ul className="space-y-5 mb-12 relative z-10">
             {t.pro_feats.map((f, i) => (
-              <li key={i} className="flex gap-4 text-slate-200 font-bold text-sm items-center"><CheckCircle2 className="text-emerald-500 shrink-0 w-5 h-5" /> {f}</li>
+              <li key={i} className="flex gap-4 text-slate-600 dark:text-slate-200 font-bold text-sm items-center"><CheckCircle2 className="text-emerald-500 shrink-0 w-5 h-5" /> {f}</li>
             ))}
           </ul>
           <button className="w-full py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black transition-all shadow-xl shadow-emerald-600/20 uppercase tracking-widest text-xs relative z-10 active:scale-[0.98]">{t.pro_btn}</button>
@@ -561,11 +561,11 @@ function CTA() {
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="max-w-5xl mx-auto text-center rounded-[3.5rem] bg-slate-900 dark:bg-slate-950 p-16 md:p-24 border border-slate-800 shadow-2xl relative overflow-hidden"
+        className="max-w-5xl mx-auto text-center rounded-[3.5rem] bg-emerald-50/50 dark:bg-slate-950 p-16 md:p-24 border border-emerald-100 dark:border-slate-800 shadow-2xl shadow-emerald-500/5 dark:shadow-none relative overflow-hidden transition-colors duration-500"
       >
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-emerald-600/20 blur-[120px] rounded-full" />
-          <div className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] bg-teal-600/20 blur-[120px] rounded-full" />
+          <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-emerald-400/20 dark:bg-emerald-600/20 blur-[120px] rounded-full" />
+          <div className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] bg-teal-400/20 dark:bg-teal-600/20 blur-[120px] rounded-full" />
         </div>
         <div className="relative z-10">
           <motion.h2 
@@ -573,7 +573,7 @@ function CTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-4xl md:text-6xl font-black text-white tracking-tight mb-8 leading-tight"
+            className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight mb-8 leading-tight"
           >
             {t.cta_title}
           </motion.h2>
@@ -582,7 +582,7 @@ function CTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
-            className="text-xl text-slate-400 max-w-2xl mx-auto mb-12 font-medium leading-relaxed"
+            className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-12 font-medium leading-relaxed"
           >
             {t.cta_sub}
           </motion.p>
@@ -592,7 +592,7 @@ function CTA() {
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
           >
-            <Link href="/login" className="bg-white hover:bg-slate-50 text-slate-900 px-12 py-5 rounded-2xl text-xl font-black transition-all inline-flex items-center gap-3 shadow-xl hover:shadow-2xl active:scale-95 group">
+            <Link href="/login" className="bg-emerald-600 dark:bg-white hover:bg-emerald-700 dark:hover:bg-slate-50 text-white dark:text-slate-900 px-12 py-5 rounded-2xl text-xl font-black transition-all inline-flex items-center gap-3 shadow-xl shadow-emerald-500/20 dark:shadow-none hover:shadow-2xl active:scale-95 group">
               {t.cta_btn} <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
