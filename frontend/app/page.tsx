@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 import {
   Brain, LineChart, Activity, Bot, Zap, ChevronRight, Menu, X,
   Star, CheckCircle2, Salad, Flame, ArrowUpRight, Cpu, Database,
@@ -61,6 +62,40 @@ const macroData = [
 function Navbar() {
   const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("hero");
+
+  React.useEffect(() => {
+    const sections = ["hero", "demo", "features", "pricing"];
+    const observerOptions = {
+      root: null,
+      rootMargin: "-20% 0px -70% 0px",
+      threshold: 0,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    sections.forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const navLinks = [
+    { href: "#hero", label: t.nav.home, id: "hero" },
+    { href: "#features", label: t.nav.features, id: "features" },
+    { href: "#demo", label: t.nav.platform, id: "demo" },
+    { href: "#pricing", label: t.nav.pricing, id: "pricing" },
+  ];
 
   return (
     <nav className="fixed w-full z-50 bg-white/60 dark:bg-slate-900/70 backdrop-blur-2xl border-b border-slate-200/30 dark:border-slate-700/30 transition-all shadow-sm shadow-slate-900/5">
@@ -76,10 +111,27 @@ function Navbar() {
 
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center gap-8">
-            <a href="#hero"         className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t.nav.home}</a>
-            <a href="#features"     className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t.nav.features}</a>
-            <a href="#demo"         className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t.nav.platform}</a>
-            <a href="#pricing"      className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">{t.nav.pricing}</a>
+            {navLinks.map((link) => (
+              <a
+                key={link.id}
+                href={link.href}
+                className={cn(
+                  "text-sm font-semibold transition-all relative py-1",
+                  activeSection === link.id
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400"
+                )}
+              >
+                {link.label}
+                {activeSection === link.id && (
+                  <motion.div
+                    layoutId="activeNav"
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-emerald-600 dark:bg-emerald-400 rounded-full"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </a>
+            ))}
           </div>
 
           {/* Desktop Right Controls */}
@@ -109,9 +161,21 @@ function Navbar() {
           animate={{ opacity: 1, y: 0 }}
           className="md:hidden bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 px-4 pt-2 pb-6 space-y-1 shadow-xl"
         >
-          <a href="#hero"         className="block px-3 py-3 text-base font-semibold text-slate-700 dark:text-slate-200">{t.nav.home}</a>
-          <a href="#features"     className="block px-3 py-3 text-base font-semibold text-slate-700 dark:text-slate-200">{t.nav.features}</a>
-          <a href="#pricing"      className="block px-3 py-3 text-base font-semibold text-slate-700 dark:text-slate-200">{t.nav.pricing}</a>
+          {navLinks.map((link) => (
+            <a
+              key={link.id}
+              href={link.href}
+              onClick={() => setIsOpen(false)}
+              className={cn(
+                "block px-3 py-3 text-base font-semibold transition-colors",
+                activeSection === link.id
+                  ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50/50 dark:bg-emerald-950/30 rounded-xl"
+                  : "text-slate-700 dark:text-slate-200"
+              )}
+            >
+              {link.label}
+            </a>
+          ))}
           <div className="border-t border-slate-100 dark:border-slate-800 mt-4 pt-4 flex flex-col gap-3">
             <Link href="/login" className="w-full bg-emerald-600 text-white px-3 py-3 rounded-xl text-base font-bold text-center shadow-lg shadow-emerald-500/20">
               {t.nav.cta}
@@ -258,7 +322,7 @@ function DashboardMockup() {
                     <div className="text-[10px] font-bold bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-700 uppercase tracking-wider">Last 7 Days</div>
                   </div>
                   <div className="h-52 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                       <AreaChart data={calorieData}>
                         <defs>
                           <linearGradient id="colorCal" x1="0" y1="0" x2="0" y2="1">
