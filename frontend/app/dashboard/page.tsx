@@ -206,13 +206,18 @@ export default function Dashboard() {
             <span className="font-bold text-lg">SmartFood</span>
           </div>
 
-          <div className="hidden md:flex items-center relative group max-w-md w-full ml-0 lg:ml-0">
-            <Search className="absolute left-4 w-4.5 h-4.5 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
-            <input 
-              type="text" 
-              placeholder={t.dashboard.search}
-              className="w-full bg-slate-50/50 dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl py-2.5 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium"
-            />
+          <div className="hidden md:flex flex-col gap-1">
+            <h2 className="text-lg font-black text-slate-900 dark:text-white tracking-tight leading-none">
+              {(() => {
+                const hour = new Date().getHours();
+                if (hour < 12) return t.dashboard.morning;
+                if (hour < 19) return t.dashboard.afternoon;
+                return t.dashboard.evening;
+              })()}
+            </h2>
+            <p className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-[0.2em]">
+              {new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })}
+            </p>
           </div>
 
           <div className="flex items-center gap-3">

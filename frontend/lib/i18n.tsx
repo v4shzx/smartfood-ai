@@ -139,6 +139,9 @@ export const T = {
       view_all: "Ver Todo",
       accept: "Aceptar Recomendación",
       details: "Detalles",
+      morning: "¡Buenos días, Alex!",
+      afternoon: "¡Buenas tardes, Alex!",
+      evening: "¡Buenas noches, Alex!",
     }
   },
   en: {
@@ -267,6 +270,9 @@ export const T = {
       view_all: "View All",
       accept: "Accept Recommendation",
       details: "Details",
+      morning: "Good morning, Alex!",
+      afternoon: "Good afternoon, Alex!",
+      evening: "Good evening, Alex!",
     }
   },
   fr: {
@@ -395,6 +401,9 @@ export const T = {
       view_all: "Voir Tout",
       accept: "Accepter la Recommandation",
       details: "Détails",
+      morning: "Bonjour, Alex !",
+      afternoon: "Bon après-midi, Alex !",
+      evening: "Bonsoir, Alex !",
     }
   },
 } as const;
