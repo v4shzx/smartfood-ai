@@ -544,7 +544,7 @@ function Pricing() {
               </div>
             </div>
 
-            <ul className="space-y-4 mb-12 relative z-10 flex-grow">
+            <ul className="space-y-4 mb-12 relative z-10 grow">
               {plan.feats.map((f, i) => (
                 <li key={i} className="flex gap-3 font-bold text-sm items-start text-slate-600 dark:text-slate-300">
                   <CheckCircle2 className={cn("shrink-0 w-5 h-5", plan.popular ? "text-emerald-500" : "text-slate-300 dark:text-slate-600")} /> 

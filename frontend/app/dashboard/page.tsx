@@ -141,11 +141,7 @@ export default function Dashboard() {
             <SidebarItem icon={<Target className="w-5 h-5" />} label={t.dashboard.goals} active={activeTab === "goals"} onClick={() => setActiveTab("goals")} />
           </div>
 
-          <div className="mt-10 space-y-2">
-            <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-2">{t.dashboard.settings}</div>
-            <SidebarItem icon={<User className="w-5 h-5" />} label={t.dashboard.profile} />
-            <SidebarItem icon={<Settings className="w-5 h-5" />} label={t.dashboard.preferences} />
-          </div>
+
         </div>
 
         <div className="mt-auto p-8 pt-4">
@@ -221,7 +217,7 @@ export default function Dashboard() {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-3 mr-2">
+            <div className="hidden md:flex items-center gap-3 mr-2">
               <LangSwitcher />
             </div>
             <ThemeToggle />
@@ -245,11 +241,18 @@ export default function Dashboard() {
                     exit={{ opacity: 0, y: 5, scale: 0.95 }}
                     className="absolute right-0 mt-3 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-black/50 p-2 z-50 backdrop-blur-xl"
                   >
-                    <div className="p-3 border-b border-slate-100 dark:border-slate-800 mb-2">
-                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.dashboard.profile}</p>
-                       <p className="text-xs font-bold text-slate-900 dark:text-white mt-0.5">Alex Balderas</p>
+                    <div className="space-y-1 mb-2">
+                      <button className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-xl transition-colors group">
+                         <User className="w-4 h-4 group-hover:text-emerald-500 transition-colors" />
+                         {t.dashboard.profile}
+                      </button>
+                      <button className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-xl transition-colors group">
+                         <Settings className="w-4 h-4 group-hover:text-emerald-500 transition-colors" />
+                         {t.dashboard.preferences}
+                      </button>
                     </div>
-                    <Link href="/" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 w-full px-4 py-3 text-xs font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-colors group">
+
+                    <Link href="/" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 w-full px-4 py-3 text-xs font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-colors group border-t border-slate-100 dark:border-slate-800 mt-1">
                        <LogOut className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                        {t.dashboard.logout}
                     </Link>
@@ -284,23 +287,23 @@ export default function Dashboard() {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard title={t.stat1} value="1,840" subtitle={t.stat1s} icon={<Flame className="w-6 h-6 text-orange-500" />} trend="+12%" />
             <StatCard title={t.stat2} value="A+" subtitle={t.stat2s} icon={<Star className="w-6 h-6 text-amber-500" />} />
             <StatCard title={t.stat3} value="High" subtitle={t.stat3s} icon={<Zap className="w-6 h-6 text-purple-500" />} trend="Critical" />
-            <div className="hidden xl:block">
+            <div className="hidden lg:block">
               <StatCard title="Metabolism" value="Stable" subtitle="Last sync 2m ago" icon={<Activity className="w-6 h-6 text-emerald-500" />} />
             </div>
           </div>
 
           {/* Charts Row */}
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Area Chart */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-              className="xl:col-span-2 bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm backdrop-blur-sm"
+              className="lg:col-span-2 bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm backdrop-blur-sm"
             >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
                 <div>
                   <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">{t.weekly}</h3>
                   <p className="text-xs text-slate-400 dark:text-slate-500 font-bold mt-1 uppercase tracking-widest">{t.dashboard.efficiency}</p>
@@ -425,7 +428,7 @@ export default function Dashboard() {
                 </div>
              </div>
 
-             <div className="bg-gradient-to-br from-emerald-600 to-teal-700 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
+             <div className="bg-linear-to-br from-emerald-600 to-teal-700 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
                 <div className="absolute top-0 right-0 p-8 opacity-20"><Brain className="w-32 h-32" /></div>
                 <div className="relative z-10 h-full flex flex-col">
                   <div className="flex items-center gap-2 mb-8 text-emerald-100 font-black text-[12px] uppercase tracking-[0.2em]">
