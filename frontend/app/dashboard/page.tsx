@@ -8,7 +8,7 @@ import {
   Brain, LineChart, Activity, Bot, Zap, ChevronRight, Menu, X,
   Star, Salad, Flame, ArrowUpRight, Target, LayoutDashboard,
   Settings, LogOut, Bell, Search, User, Filter, Share2, Download,
-  Sparkles, ArrowRight
+  Sparkles, ArrowRight, ShoppingCart, Store, Box, TrendingUp, Users, ClipboardList
 } from "lucide-react";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -126,38 +126,73 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex font-sans antialiased text-slate-900 dark:text-white transition-colors duration-500">
       {/* --- Sidebar Desktop --- */}
-      <aside className="hidden lg:flex w-72 flex-col bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-900 fixed h-screen z-40">
+      <aside className="hidden lg:flex w-72 flex-col bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-900 fixed h-screen z-40 overflow-y-auto custom-scrollbar">
         <div className="p-8 pb-4">
-          <div className="flex items-center gap-3 mb-10">
+          <div className="flex items-center gap-3 mb-8">
             <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain" />
             <span className="font-bold text-xl tracking-tight">SmartFood AI</span>
           </div>
-          
-          <div className="space-y-2">
-            <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-2">{t.dashboard.menu}</div>
-            <SidebarItem icon={<LayoutDashboard className="w-5 h-5" />} label={t.nav.platform} active={activeTab === "insights"} onClick={() => setActiveTab("insights")} />
-            <SidebarItem icon={<Salad className="w-5 h-5" />} label={t.dashboard.planner} active={activeTab === "planner"} onClick={() => setActiveTab("planner")} />
-            <SidebarItem icon={<Activity className="w-5 h-5" />} label={t.dashboard.metabolic} active={activeTab === "metabolic"} onClick={() => setActiveTab("metabolic")} />
-            <SidebarItem icon={<Target className="w-5 h-5" />} label={t.dashboard.goals} active={activeTab === "goals"} onClick={() => setActiveTab("goals")} />
-          </div>
 
-
-        </div>
-
-        <div className="mt-auto p-8 pt-4">
-          <div className="bg-emerald-600 dark:bg-emerald-600/90 rounded-[2rem] p-6 shadow-xl shadow-emerald-500/20 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl group-hover:scale-150 transition-transform duration-700" />
-            <div className="relative z-10">
-              <div className="flex items-center gap-2 text-white font-black mb-3 text-sm italic">
-                <Bot className="w-5 h-5" /> {t.dashboard.coach_title}
+          <div className="mb-10">
+            <div className="bg-emerald-600 dark:bg-emerald-600/90 rounded-[2rem] p-6 shadow-xl shadow-emerald-500/20 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl group-hover:scale-150 transition-transform duration-700" />
+              <div className="relative z-10">
+                <div className="flex items-center gap-2 text-white font-black mb-3 text-sm italic">
+                  <Bot className="w-5 h-5" /> {t.dashboard.coach_title}
+                </div>
+                <p className="text-[11px] text-emerald-50 leading-relaxed font-bold">
+                  {t.coach}
+                </p>
               </div>
-              <p className="text-[11px] text-emerald-50 leading-relaxed font-bold">
-                {t.coach}
-              </p>
             </div>
           </div>
           
+          <div className="space-y-6 pb-20">
+            <div>
+              <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.op_title}</div>
+              <div className="space-y-1">
+                <SidebarItem icon={<Zap className="w-5 h-5" />} label={t.dashboard.pos} active={activeTab === "pos"} onClick={() => setActiveTab("pos")} />
+                <SidebarItem icon={<ClipboardList className="w-5 h-5" />} label={t.dashboard.sales} active={activeTab === "sales"} onClick={() => setActiveTab("sales")} />
+                <SidebarItem icon={<Store className="w-5 h-5" />} label={t.dashboard.store} active={activeTab === "store"} onClick={() => setActiveTab("store")} />
+              </div>
+            </div>
+
+            <div>
+              <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.inv_title}</div>
+              <div className="space-y-1">
+                <SidebarItem icon={<Box className="w-5 h-5" />} label={t.dashboard.inventory} active={activeTab === "inventory"} onClick={() => setActiveTab("inventory")} />
+                <SidebarItem icon={<Share2 className="w-5 h-5" />} label={t.dashboard.suppliers} active={activeTab === "suppliers"} onClick={() => setActiveTab("suppliers")} />
+              </div>
+            </div>
+
+            <div>
+              <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.ana_title}</div>
+              <div className="space-y-1">
+                <SidebarItem icon={<LayoutDashboard className="w-5 h-5" />} label={t.dashboard.charts} active={activeTab === "charts"} onClick={() => setActiveTab("charts")} />
+                <SidebarItem icon={<TrendingUp className="w-5 h-5" />} label={t.dashboard.trends} active={activeTab === "trends"} onClick={() => setActiveTab("trends")} />
+                <SidebarItem icon={<Download className="w-5 h-5" />} label={t.dashboard.reports} active={activeTab === "reports"} onClick={() => setActiveTab("reports")} />
+              </div>
+            </div>
+
+            <div>
+              <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.ai_title}</div>
+              <div className="space-y-1">
+                <SidebarItem icon={<Brain className="w-5 h-5" />} label={t.dashboard.prediction} active={activeTab === "prediction"} onClick={() => setActiveTab("prediction")} />
+              </div>
+            </div>
+
+            <div>
+              <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.adm_title}</div>
+              <div className="space-y-1">
+                <SidebarItem icon={<Users className="w-5 h-5" />} label={t.dashboard.staff} active={activeTab === "staff"} onClick={() => setActiveTab("staff")} />
+              </div>
+            </div>
+          </div>
+
+
         </div>
+
+
       </aside>
 
       {/* --- Sidebar Mobile --- */}
@@ -171,21 +206,70 @@ export default function Dashboard() {
             />
             <motion.aside 
               initial={{ x: -280 }} animate={{ x: 0 }} exit={{ x: -280 }}
-              className="fixed top-0 bottom-0 left-0 w-[280px] bg-white dark:bg-slate-950 z-50 flex flex-col border-r border-slate-200 dark:border-slate-900 shadow-2xl"
+              className="fixed top-0 bottom-0 left-0 w-[280px] bg-white dark:bg-slate-950 z-50 flex flex-col border-r border-slate-200 dark:border-slate-900 shadow-2xl overflow-y-auto custom-scrollbar"
             >
               <div className="p-8">
-                <div className="flex justify-between items-center mb-10">
+                <div className="flex justify-between items-center mb-8">
                   <div className="flex items-center gap-3">
                     <img src="/logo.png" alt="Logo" className="w-7 h-7" />
                     <span className="font-bold text-lg">SmartFood</span>
                   </div>
                   <button onClick={() => setIsSidebarOpen(false)} className="p-2 rounded-xl bg-slate-50 dark:bg-slate-900"><X className="w-5 h-5" /></button>
                 </div>
-                <div className="space-y-1">
-                  <SidebarItem icon={<LayoutDashboard />} label={t.nav.platform} active />
-                  <SidebarItem icon={<Salad />} label="Meal Planner" />
-                  <SidebarItem icon={<Activity />} label="Metabolic" />
-                  <SidebarItem icon={<Target />} label="Goals" />
+
+                <div className="mb-10">
+                  <div className="bg-emerald-600 dark:bg-emerald-600/90 rounded-[2.5rem] p-6 shadow-xl shadow-emerald-500/20 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl group-hover:scale-150 transition-transform duration-700" />
+                    <div className="relative z-10">
+                      <div className="flex items-center gap-2 text-white font-black mb-3 text-sm italic">
+                        <Bot className="w-5 h-5" /> {t.dashboard.coach_title}
+                      </div>
+                      <p className="text-[11px] text-emerald-50 leading-relaxed font-bold">
+                        {t.coach}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-6 pb-10">
+                  <div>
+                    <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.op_title}</div>
+                    <div className="space-y-1">
+                      <SidebarItem icon={<Zap className="w-5 h-5" />} label={t.dashboard.pos} active={activeTab === "pos"} onClick={() => { setActiveTab("pos"); setIsSidebarOpen(false); }} />
+                      <SidebarItem icon={<ClipboardList className="w-5 h-5" />} label={t.dashboard.sales} active={activeTab === "sales"} onClick={() => { setActiveTab("sales"); setIsSidebarOpen(false); }} />
+                      <SidebarItem icon={<Store className="w-5 h-5" />} label={t.dashboard.store} active={activeTab === "store"} onClick={() => { setActiveTab("store"); setIsSidebarOpen(false); }} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.inv_title}</div>
+                    <div className="space-y-1">
+                      <SidebarItem icon={<Box className="w-5 h-5" />} label={t.dashboard.inventory} active={activeTab === "inventory"} onClick={() => { setActiveTab("inventory"); setIsSidebarOpen(false); }} />
+                      <SidebarItem icon={<Share2 className="w-5 h-5" />} label={t.dashboard.suppliers} active={activeTab === "suppliers"} onClick={() => { setActiveTab("suppliers"); setIsSidebarOpen(false); }} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.ana_title}</div>
+                    <div className="space-y-1">
+                      <SidebarItem icon={<LayoutDashboard className="w-5 h-5" />} label={t.dashboard.charts} active={activeTab === "charts"} onClick={() => { setActiveTab("charts"); setIsSidebarOpen(false); }} />
+                      <SidebarItem icon={<TrendingUp className="w-5 h-5" />} label={t.dashboard.trends} active={activeTab === "trends"} onClick={() => { setActiveTab("trends"); setIsSidebarOpen(false); }} />
+                      <SidebarItem icon={<Download className="w-5 h-5" />} label={t.dashboard.reports} active={activeTab === "reports"} onClick={() => { setActiveTab("reports"); setIsSidebarOpen(false); }} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.ai_title}</div>
+                    <div className="space-y-1">
+                      <SidebarItem icon={<Brain className="w-5 h-5" />} label={t.dashboard.prediction} active={activeTab === "prediction"} onClick={() => { setActiveTab("prediction"); setIsSidebarOpen(false); }} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.adm_title}</div>
+                    <div className="space-y-1">
+                      <SidebarItem icon={<Users className="w-5 h-5" />} label={t.dashboard.staff} active={activeTab === "staff"} onClick={() => { setActiveTab("staff"); setIsSidebarOpen(false); }} />
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.aside>
