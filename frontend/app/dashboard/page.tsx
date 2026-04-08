@@ -227,11 +227,9 @@ export default function Dashboard() {
             <div className="relative" ref={profileRef}>
               <div 
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="h-10 px-3 pr-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center gap-3 cursor-pointer hover:shadow-sm transition-all active:scale-95"
+                className="w-10 h-10 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center cursor-pointer hover:shadow-sm transition-all active:scale-95"
               >
-                <div className="w-7 h-7 rounded-lg bg-emerald-500 flex items-center justify-center font-bold text-white text-xs">AB</div>
-                <span className="hidden md:block text-xs font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">Alex B.</span>
-                <ChevronRight className={cn("w-3.5 h-3.5 text-slate-400 transition-transform", isProfileOpen ? "rotate-90" : "")} />
+                <div className="w-7 h-7 rounded-lg bg-emerald-500 flex items-center justify-center font-bold text-white text-[10px]">AB</div>
               </div>
 
               <AnimatePresence>
