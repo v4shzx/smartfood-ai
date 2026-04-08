@@ -115,6 +115,30 @@ export const T = {
       terms: "Términos de servicio",
       privacy: "Privacidad",
       security: "Seguridad"
+    },
+    dashboard: {
+      search: "Buscar datos de salud...",
+      logout: "Cerrar sesión",
+      planner: "Planificador",
+      metabolic: "Metabólico",
+      goals: "Objetivos",
+      metrics: "Métricas",
+      recent: "Actividad Reciente",
+      insight: "Sugerencia IA",
+      export: "Exportar",
+      add_meal: "Registrar Comida",
+      menu: "Menú Principal",
+      settings: "Ajustes",
+      profile: "Perfil",
+      preferences: "Preferencias",
+      coach_title: "Entrenador IA",
+      efficiency: "Eficiencia vs Objetivos",
+      intake: "Ingesta",
+      goal: "Objetivo",
+      breakdown: "Desglose Optimizado",
+      view_all: "Ver Todo",
+      accept: "Aceptar Recomendación",
+      details: "Detalles",
     }
   },
   en: {
@@ -219,6 +243,30 @@ export const T = {
       terms: "Terms of Service",
       privacy: "Privacy Policy",
       security: "Security"
+    },
+    dashboard: {
+      search: "Search health data...",
+      logout: "Log out",
+      planner: "Meal Planner",
+      metabolic: "Metabolic",
+      goals: "Goals",
+      metrics: "Metrics",
+      recent: "Recent Activity",
+      insight: "AI Insight",
+      export: "Export",
+      add_meal: "Log Meal",
+      menu: "Main Menu",
+      settings: "Settings",
+      profile: "Profile",
+      preferences: "Preferences",
+      coach_title: "AI Coach",
+      efficiency: "Efficiency vs Goals",
+      intake: "Intake",
+      goal: "Goal",
+      breakdown: "Optimized Breakdown",
+      view_all: "View All",
+      accept: "Accept Recommendation",
+      details: "Details",
     }
   },
   fr: {
@@ -323,6 +371,30 @@ export const T = {
       terms: "Conditions d'utilisation",
       privacy: "Confidentialité",
       security: "Sécurité"
+    },
+    dashboard: {
+      search: "Rechercher des données...",
+      logout: "Se déconnecter",
+      planner: "Planificateur",
+      metabolic: "Métabolique",
+      goals: "Objectifs",
+      metrics: "Mesures",
+      recent: "Activité Récente",
+      insight: "Insight IA",
+      export: "Exporter",
+      add_meal: "Enregistrer Repas",
+      menu: "Menu Principal",
+      settings: "Paramètres",
+      profile: "Profil",
+      preferences: "Préférences",
+      coach_title: "Coach IA",
+      efficiency: "Efficacité vs Objectifs",
+      intake: "Consommation",
+      goal: "Objectif",
+      breakdown: "Répartition Optimisée",
+      view_all: "Voir Tout",
+      accept: "Accepter la Recommandation",
+      details: "Détails",
     }
   },
 } as const;
@@ -335,10 +407,23 @@ const LangCtx = createContext<{ lang: Lang; t: Translations; setLang: (l: Lang) 
 
 export function LangProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLang] = useState<Lang>("es");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("app-lang") as Lang;
+    if (saved && (saved === "es" || saved === "en" || saved === "fr")) {
+      setLang(saved);
+    }
+  }, []);
+
+  const handleSetLang = (l: Lang) => {
+    setLang(l);
+    localStorage.setItem("app-lang", l);
+  };
+
   const t = T[lang] as unknown as Translations;
 
   return (
-    <LangCtx.Provider value={{ lang, t, setLang }}>
+    <LangCtx.Provider value={{ lang, t, setLang: handleSetLang }}>
       {children}
     </LangCtx.Provider>
   );

@@ -48,6 +48,19 @@ Plataforma administrativa que analiza ventas históricas y condiciones climátic
 
 
 
+## 🛠️ Guía de Desarrollo
+
+Para mantener la consistencia entre diferentes computadoras y evitar cambios innecesarios en el repositorio, sigue estas reglas:
+
+1. **Gestión de dependencias**: El archivo `package-lock.json` está bajo seguimiento de Git. **No lo ignores**.
+2. **Instalación limpia**: Cuando descargues el proyecto en una nueva computadora o cambies de rama, utiliza siempre:
+   ```bash
+   cd frontend
+   npm ci
+   ```
+   *Nota: `npm ci` es más rápido y asegura que instales exactamente las mismas versiones que están registradas en el repositorio, sin modificar el archivo de bloqueo.*
+3. **Nuevas librerías**: Usa `npm install <nombre>` solo cuando necesites agregar una nueva dependencia. En ese caso, sí deberás commitear los cambios resultantes en el `package-lock.json`.
+
 ---
 
 ## 👨‍💻 Autor

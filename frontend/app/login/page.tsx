@@ -22,6 +22,8 @@ import { useI18n, LangSwitcher } from "@/lib/i18n";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
 import { useTheme } from "next-themes";
 
+import { useRouter } from "next/navigation";
+
 // ─── Theme Toggle ─────────────────────────────────────────────────────────────
 
 function ThemeToggle() {
@@ -47,6 +49,7 @@ function ThemeToggle() {
 
 export default function LoginPage() {
   const { t } = useI18n();
+  const router = useRouter();
   const { resolvedTheme } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -62,7 +65,10 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
     // Simulate login
-    setTimeout(() => setIsLoading(false), 2000);
+    setTimeout(() => {
+      setIsLoading(false);
+      router.push("/dashboard");
+    }, 2000);
   };
 
   const isDark = mounted && resolvedTheme === "dark";
