@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
-  Brain, LineChart, Activity, Bot, Zap, ChevronRight, Menu, X,
+  Brain, LineChart, Activity, Bot, Zap, ChevronRight, ChevronLeft, Menu, X, Globe,
   Star, Salad, Flame, ArrowUpRight, Target, LayoutDashboard,
   Settings, LogOut, Bell, Search, User, Filter, Share2, Download,
   Sparkles, ArrowRight, ShoppingCart, Store, Box, TrendingUp, Users, ClipboardList
@@ -54,22 +54,23 @@ const macroData = [
 ];
 
 // --- Sidebar Item ---
-function SidebarItem({ icon, label, active = false, onClick }: { icon: React.ReactNode; label: string; active?: boolean; onClick?: () => void }) {
+function SidebarItem({ icon, label, active = false, isCollapsed = false, onClick }: { icon: React.ReactNode; label: string; active?: boolean; isCollapsed?: boolean; onClick?: () => void }) {
   return (
     <motion.div 
-      whileHover={{ x: 4 }}
+      whileHover={{ x: isCollapsed ? 0 : 4 }}
       onClick={onClick}
       className={cn(
         "flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer group",
         active
           ? "bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 shadow-sm"
-          : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50"
+          : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50",
+        isCollapsed && "justify-center px-0 w-12 h-12 mx-auto"
       )}
     >
-      <div className={cn("w-5 h-5 transition-colors", active ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300")}>
+      <div className={cn("w-5 h-5 transition-colors shrink-0", active ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300")}>
         {icon}
       </div>
-      {label}
+      {!isCollapsed && <span>{label}</span>}
     </motion.div>
   );
 }
@@ -103,6 +104,7 @@ export default function Dashboard() {
   const { resolvedTheme } = useTheme();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState("insights");
   const profileRef = React.useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
@@ -125,74 +127,109 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex font-sans antialiased text-slate-900 dark:text-white transition-colors duration-500">
-      {/* --- Sidebar Desktop --- */}
-      <aside className="hidden lg:flex w-72 flex-col bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-900 fixed h-screen z-40 overflow-y-auto custom-scrollbar">
-        <div className="p-8 pb-4">
-          <div className="flex items-center gap-3 mb-8">
-            <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain" />
-            <span className="font-bold text-xl tracking-tight">SmartFood AI</span>
-          </div>
-
-          <div className="mb-10">
-            <div className="bg-emerald-600 dark:bg-emerald-600/90 rounded-[2rem] p-6 shadow-xl shadow-emerald-500/20 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl group-hover:scale-150 transition-transform duration-700" />
-              <div className="relative z-10">
-                <div className="flex items-center gap-2 text-white font-black mb-3 text-sm italic">
-                  <Bot className="w-5 h-5" /> {t.dashboard.coach_title}
-                </div>
-                <p className="text-[11px] text-emerald-50 leading-relaxed font-bold">
-                  {t.coach}
-                </p>
+      <aside className={cn(
+        "hidden lg:flex flex-col bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-900 fixed h-screen z-40 transition-all duration-300 ease-in-out overflow-visible",
+        isCollapsed ? "w-24" : "w-72"
+      )}>
+        <div className={cn("p-8 pb-4 bg-white dark:bg-slate-950 transition-all overflow-visible", isCollapsed && "px-4")}>
+          <div className={cn("flex mb-10 transition-all overflow-visible", isCollapsed ? "flex-col items-center gap-4" : "items-center justify-between gap-3")}>
+            <div className="flex items-center gap-3">
+              <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain shrink-0" />
+              {!isCollapsed && <span className="font-bold text-xl tracking-tight">SmartFood AI</span>}
+            </div>
+            <div className="relative group shrink-0">
+              <button 
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-emerald-500 transition-colors"
+                aria-label={isCollapsed ? t.dashboard.expand : t.dashboard.collapse}
+              >
+                {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+              </button>
+              
+              {/* Tooltip */}
+              <div className={cn(
+                "absolute opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 whitespace-nowrap px-2 py-1 bg-slate-900 text-white text-[10px] font-bold rounded-lg shadow-xl border border-slate-700",
+                isCollapsed ? "left-12 top-1/2 -translate-y-1/2 ml-2" : "right-0 top-full mt-2"
+              )}>
+                {isCollapsed ? t.dashboard.expand : t.dashboard.collapse}
+                <div className={cn(
+                  "absolute bg-slate-900 border-slate-700 border-t border-l w-1.5 h-1.5 rotate-45",
+                  isCollapsed ? "left-[-4px] top-1/2 -translate-y-1/2" : "right-4 top-[-4px]"
+                )} />
               </div>
             </div>
           </div>
           
-          <div className="space-y-6 pb-20">
-            <div>
-              <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.op_title}</div>
-              <div className="space-y-1">
-                <SidebarItem icon={<Zap className="w-5 h-5" />} label={t.dashboard.pos} active={activeTab === "pos"} onClick={() => setActiveTab("pos")} />
-                <SidebarItem icon={<ClipboardList className="w-5 h-5" />} label={t.dashboard.sales} active={activeTab === "sales"} onClick={() => setActiveTab("sales")} />
-                <SidebarItem icon={<Store className="w-5 h-5" />} label={t.dashboard.store} active={activeTab === "store"} onClick={() => setActiveTab("store")} />
-              </div>
-            </div>
-
-            <div>
-              <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.inv_title}</div>
-              <div className="space-y-1">
-                <SidebarItem icon={<Box className="w-5 h-5" />} label={t.dashboard.inventory} active={activeTab === "inventory"} onClick={() => setActiveTab("inventory")} />
-                <SidebarItem icon={<Share2 className="w-5 h-5" />} label={t.dashboard.suppliers} active={activeTab === "suppliers"} onClick={() => setActiveTab("suppliers")} />
-              </div>
-            </div>
-
-            <div>
-              <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.ana_title}</div>
-              <div className="space-y-1">
-                <SidebarItem icon={<LayoutDashboard className="w-5 h-5" />} label={t.dashboard.charts} active={activeTab === "charts"} onClick={() => setActiveTab("charts")} />
-                <SidebarItem icon={<TrendingUp className="w-5 h-5" />} label={t.dashboard.trends} active={activeTab === "trends"} onClick={() => setActiveTab("trends")} />
-                <SidebarItem icon={<Download className="w-5 h-5" />} label={t.dashboard.reports} active={activeTab === "reports"} onClick={() => setActiveTab("reports")} />
-              </div>
-            </div>
-
-            <div>
-              <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.ai_title}</div>
-              <div className="space-y-1">
-                <SidebarItem icon={<Brain className="w-5 h-5" />} label={t.dashboard.prediction} active={activeTab === "prediction"} onClick={() => setActiveTab("prediction")} />
-              </div>
-            </div>
-
-            <div>
-              <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.adm_title}</div>
-              <div className="space-y-1">
-                <SidebarItem icon={<Users className="w-5 h-5" />} label={t.dashboard.staff} active={activeTab === "staff"} onClick={() => setActiveTab("staff")} />
+          <div className={cn("mb-10 transition-all", isCollapsed && "mb-6")}>
+            <div className={cn(
+              "bg-emerald-600 dark:bg-emerald-600/90 rounded-[2rem] shadow-xl shadow-emerald-500/20 relative overflow-hidden group transition-all",
+              isCollapsed ? "p-3 rounded-2xl" : "p-6"
+            )}>
+              <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl group-hover:scale-150 transition-transform duration-700" />
+              <div className="relative z-10 flex flex-col items-center">
+                <div className={cn("flex items-center gap-2 text-white font-black text-sm italic", !isCollapsed && "mb-3")}>
+                  <Bot className="w-5 h-5 shrink-0" /> {!isCollapsed && t.dashboard.coach_title}
+                </div>
+                {!isCollapsed && (
+                  <p className="text-[11px] text-emerald-50 leading-relaxed font-bold">
+                    {t.coach}
+                  </p>
+                )}
               </div>
             </div>
           </div>
-
-
         </div>
 
+        <div className={cn("flex-1 overflow-y-auto custom-scrollbar transition-all", isCollapsed ? "px-4" : "p-8 pt-0")}>
+          <div className="space-y-6 pb-20">
+            <div>
+              {!isCollapsed && <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.menu}</div>}
+              <div className="space-y-1">
+                <SidebarItem isCollapsed={isCollapsed} icon={<Globe className="w-5 h-5" />} label={t.dashboard.home} active={activeTab === "insights"} onClick={() => setActiveTab("insights")} />
+              </div>
+            </div>
 
+            <div>
+              {!isCollapsed && <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.op_title}</div>}
+              <div className="space-y-1">
+                <SidebarItem isCollapsed={isCollapsed} icon={<Zap className="w-5 h-5" />} label={t.dashboard.pos} active={activeTab === "pos"} onClick={() => setActiveTab("pos")} />
+                <SidebarItem isCollapsed={isCollapsed} icon={<ClipboardList className="w-5 h-5" />} label={t.dashboard.sales} active={activeTab === "sales"} onClick={() => setActiveTab("sales")} />
+                <SidebarItem isCollapsed={isCollapsed} icon={<Store className="w-5 h-5" />} label={t.dashboard.store} active={activeTab === "store"} onClick={() => setActiveTab("store")} />
+              </div>
+            </div>
+
+            <div>
+              {!isCollapsed && <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.inv_title}</div>}
+              <div className="space-y-1">
+                <SidebarItem isCollapsed={isCollapsed} icon={<Box className="w-5 h-5" />} label={t.dashboard.inventory} active={activeTab === "inventory"} onClick={() => setActiveTab("inventory")} />
+                <SidebarItem isCollapsed={isCollapsed} icon={<Share2 className="w-5 h-5" />} label={t.dashboard.suppliers} active={activeTab === "suppliers"} onClick={() => setActiveTab("suppliers")} />
+              </div>
+            </div>
+
+            <div>
+              {!isCollapsed && <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.ana_title}</div>}
+              <div className="space-y-1">
+                <SidebarItem isCollapsed={isCollapsed} icon={<LayoutDashboard className="w-5 h-5" />} label={t.dashboard.charts} active={activeTab === "charts"} onClick={() => setActiveTab("charts")} />
+                <SidebarItem isCollapsed={isCollapsed} icon={<TrendingUp className="w-5 h-5" />} label={t.dashboard.trends} active={activeTab === "trends"} onClick={() => setActiveTab("trends")} />
+                <SidebarItem isCollapsed={isCollapsed} icon={<Download className="w-5 h-5" />} label={t.dashboard.reports} active={activeTab === "reports"} onClick={() => setActiveTab("reports")} />
+              </div>
+            </div>
+
+            <div>
+              {!isCollapsed && <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.ai_title}</div>}
+              <div className="space-y-1">
+                <SidebarItem isCollapsed={isCollapsed} icon={<Brain className="w-5 h-5" />} label={t.dashboard.prediction} active={activeTab === "prediction"} onClick={() => setActiveTab("prediction")} />
+              </div>
+            </div>
+
+            <div>
+              {!isCollapsed && <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.adm_title}</div>}
+              <div className="space-y-1">
+                <SidebarItem isCollapsed={isCollapsed} icon={<Users className="w-5 h-5" />} label={t.dashboard.staff} active={activeTab === "staff"} onClick={() => setActiveTab("staff")} />
+              </div>
+            </div>
+          </div>
+        </div>
       </aside>
 
       {/* --- Sidebar Mobile --- */}
@@ -231,6 +268,13 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <div className="space-y-6 pb-10">
+                  <div>
+                    <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.menu}</div>
+                    <div className="space-y-1">
+                      <SidebarItem icon={<Globe className="w-5 h-5" />} label={t.dashboard.home} active={activeTab === "insights"} onClick={() => { setActiveTab("insights"); setIsSidebarOpen(false); }} />
+                    </div>
+                  </div>
+
                   <div>
                     <div className="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.2em] mb-1">{t.dashboard.op_title}</div>
                     <div className="space-y-1">
@@ -278,7 +322,10 @@ export default function Dashboard() {
       </AnimatePresence>
 
       {/* --- Main Content --- */}
-      <main className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden">
+      <main className={cn(
+        "flex-1 flex flex-col h-screen overflow-hidden transition-all duration-300 ease-in-out",
+        isCollapsed ? "lg:ml-24" : "lg:ml-72"
+      )}>
         {/* Header */}
         <header className="h-20 bg-white/40 dark:bg-slate-950/40 backdrop-blur-xl border-b border-slate-200 dark:border-slate-900 px-6 md:px-10 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-4 lg:hidden">

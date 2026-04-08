@@ -142,6 +142,7 @@ export const T = {
       morning: "¡Buenos días, Alex!",
       afternoon: "¡Buenas tardes, Alex!",
       evening: "¡Buenas noches, Alex!",
+      home: "Inicio",
       op_title: "Operación",
       pos: "Punto de Venta",
       sales: "Registro de Ventas",
@@ -157,6 +158,8 @@ export const T = {
       prediction: "Predicción",
       adm_title: "Administración",
       staff: "Personal",
+      collapse: "Colapsar menú",
+      expand: "Expandir menú",
     }
   },
   en: {
@@ -288,6 +291,7 @@ export const T = {
       morning: "Good morning, Alex!",
       afternoon: "Good afternoon, Alex!",
       evening: "Good evening, Alex!",
+      home: "Home",
       op_title: "Operations",
       pos: "Point of Sale",
       sales: "Sales Registry",
@@ -303,6 +307,8 @@ export const T = {
       prediction: "Prediction",
       adm_title: "Administration",
       staff: "Staff",
+      collapse: "Collapse menu",
+      expand: "Expand menu",
     }
   },
   fr: {
@@ -434,6 +440,7 @@ export const T = {
       morning: "Bonjour, Alex !",
       afternoon: "Bon après-midi, Alex !",
       evening: "Bonsoir, Alex !",
+      home: "Accueil",
       op_title: "Opérations",
       pos: "Point de Vente",
       sales: "Registre des Ventes",
@@ -449,6 +456,8 @@ export const T = {
       prediction: "Prédiction",
       adm_title: "Administration",
       staff: "Personnel",
+      collapse: "Réduire le menu",
+      expand: "Agrandir le menu",
     }
   },
 } as const;
