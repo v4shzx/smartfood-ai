@@ -1174,28 +1174,51 @@ export default function Dashboard() {
                       </div>
                     </div>
                   </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {posFilteredProducts.map((p) => (
-                      <button
-                        key={p.id}
-                        onClick={() => posAdd(p.id)}
-                        className="text-left p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-950/30 hover:bg-emerald-50/60 dark:hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all shadow-sm"
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="min-w-0">
-                            <div className="text-sm font-black text-slate-900 dark:text-white truncate">{p.name}</div>
-                            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mt-1">{p.category}</div>
+                  <div className="max-h-[820px] overflow-y-auto pr-3 -mr-3 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800 scroll-smooth">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {posFilteredProducts.map((p) => (
+                        <motion.button
+                          key={p.id}
+                          whileHover={{ y: -6, scale: 1.01 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => posAdd(p.id)}
+                          className="group relative flex flex-col h-full bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-xl hover:border-emerald-500/30 transition-all duration-300"
+                        >
+                          {/* Image Placeholder */}
+                          <div className="aspect-4/3 w-full bg-slate-100 dark:bg-slate-800/40 flex items-center justify-center relative">
+                            <div className="absolute inset-0 bg-linear-to-br from-transparent to-black/5 dark:to-black/20" />
+                            <div className="relative z-10 w-14 h-14 rounded-2xl bg-white/50 dark:bg-slate-900/30 backdrop-blur-sm border border-white/20 dark:border-slate-800/40 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                               <Store className="w-7 h-7 text-slate-400 dark:text-slate-600" />
+                            </div>
+                            
+                            <div className="absolute top-4 right-4 z-20">
+                              <div className="bg-white/90 dark:bg-slate-950/80 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-slate-200/50 dark:border-slate-800/50 shadow-sm">
+                                <span className="text-xs font-black text-emerald-600 dark:text-emerald-400">{formatCurrencyMXN(p.price)}</span>
+                              </div>
+                            </div>
                           </div>
-                          <div className="shrink-0 text-emerald-700 dark:text-emerald-300 font-black text-sm">{formatCurrencyMXN(p.price)}</div>
-                        </div>
-                        <div className="mt-4 flex items-center justify-between">
-                          <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Agregar</div>
-                          <ArrowUpRight className="w-4 h-4 text-slate-300" />
-                        </div>
-                      </button>
-                    ))}
+
+                          <div className="p-6 flex flex-col flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                               <div className="w-1 h-1 rounded-full bg-emerald-500" />
+                               <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{p.category}</span>
+                            </div>
+                            <h4 className="text-lg font-black text-slate-900 dark:text-white leading-tight mb-5 line-clamp-2">{p.name}</h4>
+                            
+                            <div className="mt-auto flex items-center justify-between">
+                              <div className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 group-hover:text-emerald-500 transition-colors">
+                                Añadir
+                              </div>
+                              <div className="w-9 h-9 rounded-2xl bg-slate-50 dark:bg-slate-800/30 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white shadow-sm transition-all duration-300">
+                                <Plus className="w-4 h-4" />
+                              </div>
+                            </div>
+                          </div>
+                        </motion.button>
+                      ))}
+                    </div>
                   </div>
+
                 </div>
 
                 {/* Cart */}
@@ -1577,47 +1600,61 @@ export default function Dashboard() {
                   <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">Productos</h3>
                   <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{storeFiltered.length} resultados</div>
                 </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                  {storeFiltered.map((p) => (
-                    <div key={p.id} className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="min-w-0">
-                          <div className="text-sm font-black text-slate-900 dark:text-white truncate">{p.name}</div>
-                          <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mt-1">{p.category}</div>
-                          <div className="text-sm font-black text-emerald-700 dark:text-emerald-300 mt-3">{formatCurrencyMXN(p.price)}</div>
-                        </div>
-                        <div className="shrink-0 flex flex-col items-end gap-2">
-                          <div
-                            className={cn(
-                              "text-[10px] font-black uppercase tracking-[0.2em] px-2 py-1 rounded-lg border",
-                              p.available
-                                ? "border-emerald-200 text-emerald-700 bg-emerald-50 dark:border-emerald-500/20 dark:text-emerald-200 dark:bg-emerald-500/10"
-                                : "border-slate-200 text-slate-500 bg-white dark:border-slate-800 dark:text-slate-400 dark:bg-slate-950/30"
-                            )}
-                          >
-                            {p.available ? "Activo" : "Inactivo"}
+                <div className="max-h-[820px] overflow-y-auto pr-3 -mr-3 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800 scroll-smooth">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {storeFiltered.map((p) => (
+                        <motion.div
+                          key={p.id}
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          className="group relative flex flex-col h-full bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl hover:border-emerald-500/30 transition-all duration-300"
+                        >
+                          {/* Image Placeholder */}
+                          <div className="aspect-4/3 w-full bg-slate-100 dark:bg-slate-800/40 flex items-center justify-center relative">
+                            <div className="absolute inset-0 bg-linear-to-br from-transparent to-black/5 dark:to-black/20" />
+                            <div className="relative z-10 w-14 h-14 rounded-2xl bg-white/50 dark:bg-slate-950/30 backdrop-blur-sm border border-white/20 dark:border-slate-800/40 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                               <PackageSearch className="w-7 h-7 text-slate-400 dark:text-slate-600" />
+                            </div>
+                            
+                            <div className="absolute top-4 right-4 z-20">
+                              <div className={cn(
+                                "text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-xl border backdrop-blur-md shadow-sm",
+                                p.available
+                                  ? "border-emerald-200/50 text-emerald-700 bg-emerald-50/80 dark:border-emerald-500/20 dark:text-emerald-200 dark:bg-emerald-500/20"
+                                  : "border-slate-200/50 text-slate-500 bg-white/80 dark:border-slate-800/50 dark:text-slate-400 dark:bg-slate-950/50"
+                              )}>
+                                {p.available ? "Activo" : "Inactivo"}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
 
-                      <div className="mt-5 flex items-center justify-between gap-3">
-                        <button
-                          onClick={() => storeOpenEdit(p.id)}
-                          className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-950/30 text-xs font-black uppercase tracking-widest"
-                        >
-                          <Pencil className="w-4 h-4" /> Editar
-                        </button>
-                        <button
-                          onClick={() => storeDelete(p.id)}
-                          className="flex items-center gap-2 px-4 py-2 rounded-xl border border-rose-200 dark:border-rose-500/20 bg-rose-50/60 dark:bg-rose-500/10 text-rose-700 dark:text-rose-200 text-xs font-black uppercase tracking-widest"
-                        >
-                          <Trash2 className="w-4 h-4" /> Eliminar
-                        </button>
-                      </div>
+                          <div className="p-6 flex flex-col flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                               <div className="w-1 h-1 rounded-full bg-emerald-500" />
+                               <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{p.category}</span>
+                            </div>
+                            <h4 className="text-lg font-black text-slate-900 dark:text-white leading-tight mb-2 line-clamp-1">{p.name}</h4>
+                            <div className="text-sm font-black text-emerald-600 dark:text-emerald-400 mb-6">{formatCurrencyMXN(p.price)}</div>
+                            
+                            <div className="mt-auto flex items-center justify-between gap-3 pt-4 border-t border-slate-100 dark:border-slate-800/50">
+                              <button
+                                onClick={() => storeOpenEdit(p.id)}
+                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/30 text-[10px] font-black uppercase tracking-wider hover:bg-white dark:hover:bg-slate-900 shadow-sm transition-all"
+                              >
+                                <Pencil className="w-3.5 h-3.5" /> Editar
+                              </button>
+                              <button
+                                onClick={() => storeDelete(p.id)}
+                                className="px-4 py-2.5 rounded-xl border border-rose-100 dark:border-rose-500/10 bg-rose-50/50 dark:bg-rose-500/5 text-rose-600 hover:bg-rose-600 hover:text-white transition-all shadow-sm"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
               </div>
 
               <AnimatePresence>
