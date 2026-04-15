@@ -272,9 +272,18 @@ export default function LoginPage() {
       <div className="hidden lg:flex lg:w-1/2 relative bg-slate-50 dark:bg-black items-center justify-center p-12 overflow-hidden transition-colors duration-500">
         {/* Abstract Background Elements */}
         <div className="absolute top-0 left-0 w-full h-full">
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-600/10 dark:bg-emerald-600/20 blur-[120px] rounded-full" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-teal-600/10 dark:bg-teal-600/20 blur-[120px] rounded-full" />
-          <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-slate-200/40 dark:bg-slate-800/40 blur-[100px] rounded-full" />
+          <div 
+            className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full" 
+            style={{ background: "radial-gradient(circle at center, rgba(5, 150, 105, 0.15), transparent 70%)" }}
+          />
+          <div 
+            className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full" 
+            style={{ background: "radial-gradient(circle at center, rgba(13, 148, 136, 0.15), transparent 70%)" }}
+          />
+          <div 
+            className="absolute top-[20%] right-[10%] w-[30%] h-[30%] rounded-full" 
+            style={{ background: "radial-gradient(circle at center, rgba(148, 163, 184, 0.25), transparent 70%)" }}
+          />
         </div>
 
         {/* Animated Flickering Grid Pattern */}

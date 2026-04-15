@@ -507,7 +507,12 @@ function Pricing() {
             )}
           >
             {plan.popular && (
-              <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 dark:bg-emerald-500/20 blur-[100px] rounded-full -mr-20 -mt-20 group-hover:bg-emerald-500/20 dark:group-hover:bg-emerald-500/30 transition-colors duration-700" />
+              <div 
+                className="absolute top-0 right-0 w-64 h-64 rounded-full -mr-20 -mt-20 group-hover:opacity-75 transition-opacity duration-700 pointer-events-none" 
+                style={{
+                  background: "radial-gradient(circle at center, rgba(16, 185, 129, 0.15), transparent 70%)"
+                }}
+              />
             )}
             
             <div className="flex justify-between items-start mb-4 relative z-10">
@@ -690,8 +695,14 @@ function CTA() {
         className="max-w-5xl mx-auto text-center rounded-[3.5rem] bg-emerald-50/50 dark:bg-slate-950 p-16 md:p-24 border border-emerald-100 dark:border-slate-800 shadow-2xl shadow-emerald-500/5 dark:shadow-none relative overflow-hidden transition-colors duration-500"
       >
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-emerald-400/20 dark:bg-emerald-600/20 blur-[120px] rounded-full" />
-          <div className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] bg-teal-400/20 dark:bg-teal-600/20 blur-[120px] rounded-full" />
+          <div 
+            className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full" 
+            style={{ background: "radial-gradient(circle at center, rgba(52, 211, 153, 0.15), transparent 70%)" }}
+          />
+          <div 
+            className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full" 
+            style={{ background: "radial-gradient(circle at center, rgba(45, 212, 191, 0.15), transparent 70%)" }}
+          />
         </div>
         <div className="relative z-10">
           <motion.h2 

@@ -45,7 +45,6 @@ export function GlobalBackground() {
         style={{
           background:
             "radial-gradient(circle at 40% 40%, oklch(0.65 0.18 145 / 0.18), transparent 70%)",
-          filter: "blur(60px)",
         }}
       />
 
@@ -55,7 +54,6 @@ export function GlobalBackground() {
         style={{
           background:
             "radial-gradient(circle at 60% 35%, oklch(0.55 0.2 165 / 0.16), transparent 70%)",
-          filter: "blur(80px)",
         }}
       />
 
@@ -65,7 +63,6 @@ export function GlobalBackground() {
         style={{
           background:
             "radial-gradient(ellipse at 50% 50%, oklch(0.6 0.15 155 / 0.09), transparent 65%)",
-          filter: "blur(90px)",
         }}
       />
 
@@ -75,7 +72,6 @@ export function GlobalBackground() {
         style={{
           background:
             "radial-gradient(circle at 40% 60%, oklch(0.70 0.16 180 / 0.13), transparent 70%)",
-          filter: "blur(70px)",
         }}
       />
 
@@ -85,7 +81,6 @@ export function GlobalBackground() {
         style={{
           background:
             "radial-gradient(circle at 55% 55%, oklch(0.62 0.17 135 / 0.12), transparent 68%)",
-          filter: "blur(75px)",
         }}
       />
 
