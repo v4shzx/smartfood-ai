@@ -48,7 +48,7 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 
   /* ─── Simplified Responsive System (3 Sizes) ─── */
-  --breakpoint-sm: none;       /* Small removed for simplicity */
+  --breakpoint-sm: 640px;      /* Mobile landscape / Small tablets */
   --breakpoint-md: 768px;      /* Tablet / Intermediate */
   --breakpoint-lg: 1200px;     /* Desktop / Large */
   --breakpoint-xl: none;       /* Extra Large removed */
@@ -242,12 +242,4 @@
 .blob-4 { animation: blob-float 20s ease-in-out infinite reverse; will-change: transform, opacity; }
 .blob-5 { animation: blob-drift 28s ease-in-out infinite reverse; will-change: transform, opacity; }
 
-/* Boost visibility in dark mode */
-.dark .blob-1,
-.dark .blob-2,
-.dark .blob-3,
-.dark .blob-4,
-.dark .blob-5 {
-  filter: blur(90px) brightness(2.5);
-  opacity: 0.9;
-}
+

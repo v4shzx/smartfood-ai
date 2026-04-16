@@ -185,11 +185,17 @@ function formatCurrencyMXN(value: number) {
 
 export default function Dashboard() {
   const { t } = useI18n();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState<DashboardTab>("home");
+
   const [posQuery, setPosQuery] = useState("");
   const [posDiscount, setPosDiscount] = useState(0);
   const [posCart, setPosCart] = useState<Record<string, number>>({});
@@ -242,6 +248,7 @@ export default function Dashboard() {
     { id: "m2", ts: "2026-04-15T08:30:00", itemId: "i2", type: "in", qty: 6, note: "Recepcion proveedor" },
     { id: "m3", ts: "2026-04-14T20:15:00", itemId: "i3", type: "adjust", qty: -1, note: "Merma" },
   ]);
+
   const [supQuery, setSupQuery] = useState("");
   const [supEditorOpen, setSupEditorOpen] = useState(false);
   const [supEditingId, setSupEditingId] = useState<string | null>(null);
@@ -722,6 +729,8 @@ export default function Dashboard() {
                         ? t.dashboard.prediction
                         : t.dashboard.staff;
 
+  if (!mounted) return null;
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex font-sans antialiased text-slate-900 dark:text-white transition-colors duration-500">
       {/* Desktop Sidebar */}
@@ -925,7 +934,7 @@ export default function Dashboard() {
 
           <div className="hidden md:flex flex-col gap-1">
             <h2 className="text-lg font-black text-slate-900 dark:text-white tracking-tight leading-none">{activeTitle}</h2>
-            <p className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-[0.2em]">
+            <p className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-[0.2em]" suppressHydrationWarning>
               {new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" })}
             </p>
           </div>
@@ -2712,22 +2721,6 @@ export default function Dashboard() {
           )}
         </div>
       </main>
-
-      <style jsx global>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 5px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(148, 163, 184, 0.1);
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(148, 163, 184, 0.2);
-        }
-      `}</style>
     </div>
   );
 }

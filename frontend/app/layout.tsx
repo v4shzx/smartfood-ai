@@ -38,7 +38,6 @@ export default function RootLayout({
         "antialiased",
         "scroll-smooth",
         geistSans.variable,
-        geistSans.variable,
         geistMono.variable,
         "font-sans",
         inter.variable
