@@ -71,6 +71,16 @@ Para mantener la consistencia entre diferentes computadoras y evitar cambios inn
      docker-compose up --build
      ```
 
+### 🌐 Acceso a los Servicios
+
+Una vez que los contenedores estén corriendo, puedes acceder a los siguientes servicios en tu navegador:
+
+- **Frontend (Aplicación)**: [http://localhost:3000](http://localhost:3000)
+- **Backend (API + Swagger/Docs)**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Gestor de Base de Datos (pgAdmin)**: [http://localhost:5050](http://localhost:5050)
+  - **Email**: `admin@smartfood.ai`
+  - **Password**: `admin`
+
 ---
 
 ## 👨‍💻 Autor
