@@ -61,6 +61,16 @@ Para mantener la consistencia entre diferentes computadoras y evitar cambios inn
    *Nota: `npm ci` es más rápido y asegura que instales exactamente las mismas versiones que están registradas en el repositorio, sin modificar el archivo de bloqueo.*
 3. **Nuevas librerías**: Usa `npm install <nombre>` solo cuando necesites agregar una nueva dependencia. En ese caso, sí deberás commitear los cambios resultantes en el `package-lock.json`.
 
+4. **Entornos de Docker**:
+   - Para **Desarrollo** (con hot-reload):
+     ```bash
+     docker-compose -f docker-compose.dev.yml up --build
+     ```
+   - Para **Producción**:
+     ```bash
+     docker-compose up --build
+     ```
+
 ---
 
 ## 👨‍💻 Autor
