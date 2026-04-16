@@ -41,9 +41,17 @@ export function useDashboard(t: any) {
 
   const [staffQuery, setStaffQuery] = useState("");
 
+  // Sales View States
+  const [salesQuery, setSalesQuery] = useState("");
+  const [salesMethod, setSalesMethod] = useState<"all" | "cash" | "card">("all");
+  const [salesDateFrom, setSalesDateFrom] = useState("");
+  const [salesDateTo, setSalesDateTo] = useState("");
+  const [selectedSaleId, setSelectedSaleId] = useState<string | null>(null);
+
   // POS State
   const [posCart, setPosCart] = useState<any[]>([]);
   const [posQuery, setPosQuery] = useState("");
+  const [posDiscount, setPosDiscount] = useState(0);
   const [posCategory, setPosCategory] = useState("all");
 
   // Editor States
@@ -182,6 +190,55 @@ export function useDashboard(t: any) {
   const staffFiltered = useMemo(() => {
     return staff.filter((u) => u.name.toLowerCase().includes(staffQuery.toLowerCase()) || u.role.toLowerCase().includes(staffQuery.toLowerCase()));
   }, [staff, staffQuery]);
+
+  const salesFiltered = useMemo(() => {
+    return salesHistory.filter((s) => {
+      // Basic mock filter
+      const matchQuery = s.id.toLowerCase().includes(salesQuery.toLowerCase());
+      const matchMethod = salesMethod === "all" || s.type.toLowerCase() === salesMethod.toLowerCase();
+      return matchQuery && matchMethod;
+    });
+  }, [salesHistory, salesQuery, salesMethod]);
+
+  const selectedSale = useMemo(() => {
+    if (!selectedSaleId) return null;
+    const s = salesHistory.find((x) => x.id === selectedSaleId);
+    if (!s) return null;
+    // Mocking lines for the detail view
+    return {
+      ...s,
+      method: s.type.toLowerCase() as "cash" | "card",
+      cashier: "Admin",
+      subtotal: s.total,
+      discount: 0,
+      lines: [
+        { name: "Taco al Pastor", qty: 3, price: 18 },
+        { name: "Horchata 500ml", qty: 1, price: 25 },
+      ]
+    };
+  }, [salesHistory, selectedSaleId]);
+
+  const posFilteredProducts = useMemo(() => {
+    return products.filter((p) => {
+      const matchQuery = p.name.toLowerCase().includes(posQuery.toLowerCase());
+      return matchQuery && p.available;
+    });
+  }, [products, posQuery]);
+
+  const posCartLines = useMemo(() => {
+    return posCart.map(item => ({
+      ...item,
+      qty: item.quantity
+    }));
+  }, [posCart]);
+
+  const posSubtotal = useMemo(() => {
+    return posCart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  }, [posCart]);
+
+  const posTotal = useMemo(() => {
+    return Math.max(0, posSubtotal - posDiscount);
+  }, [posSubtotal, posDiscount]);
 
   // Actions
   const addToCart = (product: any) => {
@@ -333,6 +390,27 @@ export function useDashboard(t: any) {
 
   const invSelected = useMemo(() => invItems.find(it => it.id === invSelectedId), [invItems, invSelectedId]);
 
+  const kpis = useMemo(() => ({
+    todayRevenue: salesHistory.reduce((acc, s) => acc + s.total, 0),
+    weekRevenue: salesHistory.reduce((acc, s) => acc + s.total, 0) * 5.4, // Simulacion
+    topProduct: { name: "Taco al Pastor", units: 142 },
+    criticalInventory: { 
+      items: invCritical.length, 
+      sku: invCritical[0]?.sku || "N/A", 
+      remaining: invCritical[0]?.onHand || 0 
+    }
+  }), [salesHistory, invCritical]);
+
+  const salesSeries = useMemo(() => [
+    { label: "Lun", value: 4200 },
+    { label: "Mar", value: 3800 },
+    { label: "Mie", value: 5100 },
+    { label: "Jue", value: 4600 },
+    { label: "Vie", value: 6800 },
+    { label: "Sab", value: 8200 },
+    { label: "Dom", value: 7400 },
+  ], []);
+
   return {
     activeTab, setActiveTab,
     storeQuery, setStoreQuery,
@@ -342,6 +420,7 @@ export function useDashboard(t: any) {
     storeFiltered,
     storeOpenCreate, storeOpenEdit, storeDelete,
     storeEditorOpen, storeEditingId, storeForm, setStoreForm, storeSave, setStoreEditorOpen,
+    pQuery: invQuery, // Alias if needed or consistent names
     invQuery, setInvQuery,
     invOnlyCritical, setInvOnlyCritical,
     invFiltered, invCritical,
@@ -361,7 +440,18 @@ export function useDashboard(t: any) {
     staffOpenCreate, staffOpenEdit, staffEditorOpen, setStaffEditorOpen,
     staffEditingId, staffForm, setStaffForm, staffSave,
     posCart, setPosCart, posQuery, setPosQuery, posCategory, setPosCategory,
+    posDiscount, setPosDiscount, posFilteredProducts, posCartLines, posSubtotal, posTotal,
+    posAdd: (id: string) => {
+      const p = products.find(x => x.id === id);
+      if (p) addToCart(p);
+    },
+    posDec: (id: string) => updateCartQuantity(id, -1),
+    posClear: () => setPosCart([]),
+    salesQuery, setSalesQuery, salesMethod, setSalesMethod,
+    salesDateFrom, setSalesDateFrom, salesDateTo, setSalesDateTo,
+    salesFiltered, selectedSaleId, setSelectedSaleId, selectedSale,
     addToCart, removeFromCart, updateCartQuantity, cartTotal,
-    salesHistory, trendsInsights, activeTitle, products
+    salesHistory, trendsInsights, activeTitle, products,
+    kpis, salesSeries
   };
 }

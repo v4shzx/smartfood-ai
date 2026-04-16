@@ -99,7 +99,7 @@ export default function Dashboard() {
                 label={t.dashboard.pos}
                 active={activeTab === "pos"}
                 isCollapsed={isSidebarCollapsed}
-                onClick={() => setActiveTab("home")} // Error en el original? Deberia ser "pos"
+                onClick={() => setActiveTab("pos")}
               />
               <SidebarItem
                 icon={<ClipboardList className="w-5 h-5" />}
@@ -267,29 +267,46 @@ export default function Dashboard() {
 
         {/* View Container */}
         <div className="p-8 md:p-12 space-y-12">
-          {activeTab === "home" && <HomeView t={t} salesHistory={dashboard.salesHistory} />}
+          {activeTab === "home" && (
+            <HomeView 
+              t={t} 
+              kpis={dashboard.kpis} 
+              salesSeries={dashboard.salesSeries} 
+              setActiveTab={setActiveTab} 
+            />
+          )}
           {activeTab === "pos" && (
-             <POSView
-               t={t}
-               posQuery={dashboard.posQuery}
-               setPosQuery={dashboard.setPosQuery}
-               posCategory={dashboard.posCategory}
-               setPosCategory={dashboard.setPosCategory}
-               storeCategories={dashboard.storeCategories}
-               storeFiltered={dashboard.storeFiltered}
-               addToCart={dashboard.addToCart}
-               posCart={dashboard.posCart}
-               updateCartQuantity={dashboard.updateCartQuantity}
-               removeFromCart={dashboard.removeFromCart}
-               cartTotal={dashboard.cartTotal}
-             />
+            <POSView
+              t={t}
+              posQuery={dashboard.posQuery}
+              setPosQuery={dashboard.setPosQuery}
+              posFilteredProducts={dashboard.posFilteredProducts}
+              posAdd={dashboard.posAdd}
+              posDec={dashboard.posDec}
+              posClear={dashboard.posClear}
+              posCartLines={dashboard.posCartLines}
+              posSubtotal={dashboard.posSubtotal}
+              posDiscount={dashboard.posDiscount}
+              setPosDiscount={dashboard.setPosDiscount}
+              posTotal={dashboard.posTotal}
+              setActiveTab={setActiveTab}
+            />
           )}
           {activeTab === "sales" && (
             <SalesView
               t={t}
-              salesHistory={dashboard.salesHistory}
-              formatCurrencyMXN={formatCurrencyMXN}
-              activeTab={dashboard.activeTab}
+              salesQuery={dashboard.salesQuery}
+              setSalesQuery={dashboard.setSalesQuery}
+              salesMethod={dashboard.salesMethod}
+              setSalesMethod={dashboard.setSalesMethod}
+              salesDateFrom={dashboard.salesDateFrom}
+              setSalesDateFrom={dashboard.setSalesDateFrom}
+              salesDateTo={dashboard.salesDateTo}
+              setSalesDateTo={dashboard.setSalesDateTo}
+              salesFiltered={dashboard.salesFiltered}
+              setSelectedSaleId={dashboard.setSelectedSaleId}
+              selectedSale={dashboard.selectedSale}
+              setActiveTab={setActiveTab}
             />
           )}
           {activeTab === "store" && (

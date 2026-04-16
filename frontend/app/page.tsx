@@ -425,12 +425,21 @@ function Features() {
   const { t } = useI18n();
   return (
     <section id="features" className="py-32 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto">
-      <div className="text-center mb-20">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="text-center mb-20 max-w-4xl mx-auto bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl rounded-[3rem] border border-white/20 dark:border-white/5 p-10 md:p-16 shadow-2xl shadow-slate-900/5 dark:shadow-black/20 relative overflow-hidden group"
+      >
+        {/* Decorative background glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none group-hover:bg-emerald-500/20 transition-colors" />
+
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight"
+          className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight relative z-10"
         >
           {t.feat_title}
         </motion.h2>
@@ -439,11 +448,11 @@ function Features() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
-          className="mt-6 text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed"
+          className="mt-6 text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed relative z-10"
         >
           {t.feat_sub}
         </motion.p>
-      </div>
+      </motion.div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {t.feats.map((f, i) => (
           <motion.div 
@@ -473,23 +482,32 @@ function Pricing() {
   const { t } = useI18n();
   return (
     <section id="pricing" className="py-32 px-4 max-w-7xl mx-auto text-center">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-6"
+        transition={{ duration: 0.8 }}
+        className="text-center mb-20 max-w-4xl mx-auto bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl rounded-[3rem] border border-white/20 dark:border-white/5 p-10 md:p-16 shadow-2xl shadow-slate-900/5 dark:shadow-black/20 relative overflow-hidden group"
       >
-        {t.price_title}
-      </motion.h2>
-      <motion.p 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.1 }}
-        className="text-slate-500 dark:text-slate-400 mb-16 text-lg font-medium"
-      >
-        {t.price_sub}
-      </motion.p>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none group-hover:bg-emerald-500/20 transition-colors" />
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white relative z-10"
+        >
+          {t.price_title}
+        </motion.h2>
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="mt-6 text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed relative z-10"
+        >
+          {t.price_sub}
+        </motion.p>
+      </motion.div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
         {t.pricing_plans.map((plan, idx) => (
           <motion.div 
@@ -592,90 +610,95 @@ function Contact() {
 
   return (
     <section id="contact" className="py-32 px-4 max-w-7xl mx-auto">
-      <div className="text-center mb-20">
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight"
-        >
-          {t.contact_title}
-        </motion.h2>
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="mt-6 text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium"
-        >
-          {t.contact_sub}
-        </motion.p>
-      </div>
-
       <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="max-w-3xl mx-auto bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl rounded-[3rem] border border-slate-200/50 dark:border-slate-800/50 p-8 md:p-12 shadow-2xl"
+        className="max-w-4xl mx-auto bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl rounded-[4rem] border border-white/20 dark:border-white/5 p-8 md:p-16 shadow-2xl shadow-slate-900/5 dark:shadow-black/20 relative overflow-hidden group"
       >
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Decorative background glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none group-hover:bg-emerald-500/15 transition-colors" />
+
+        <div className="text-center mb-16 relative z-10">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight"
+          >
+            {t.contact_title}
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="mt-6 text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed"
+          >
+            {t.contact_sub}
+          </motion.p>
+        </div>
+
+        <div className="max-w-3xl mx-auto relative z-10">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2 text-left">
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_form.name}</label>
+                <input
+                  type="text"
+                  required
+                  className="w-full bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-6 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                  placeholder={t.contact_form.placeholder_name}
+                />
+              </div>
+              <div className="space-y-2 text-left">
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_form.email}</label>
+                <input
+                  type="email"
+                  required
+                  className="w-full bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-6 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                  placeholder={t.contact_form.placeholder_email}
+                />
+              </div>
+            </div>
+
             <div className="space-y-2 text-left">
-              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_form.name}</label>
+              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_form.subject}</label>
               <input
                 type="text"
                 required
                 className="w-full bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-6 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
-                placeholder={t.contact_form.placeholder_name}
+                placeholder={t.contact_form.placeholder_subject}
               />
             </div>
+
             <div className="space-y-2 text-left">
-              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_form.email}</label>
-              <input
-                type="email"
+              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_form.message}</label>
+              <textarea
                 required
-                className="w-full bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-6 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
-                placeholder={t.contact_form.placeholder_email}
-              />
+                rows={5}
+                className="w-full bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-6 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none"
+                placeholder={t.contact_form.placeholder_message}
+              ></textarea>
             </div>
-          </div>
 
-          <div className="space-y-2 text-left">
-            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_form.subject}</label>
-            <input
-              type="text"
-              required
-              className="w-full bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-6 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
-              placeholder={t.contact_form.placeholder_subject}
-            />
-          </div>
-
-          <div className="space-y-2 text-left">
-            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_form.message}</label>
-            <textarea
-              required
-              rows={5}
-              className="w-full bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-6 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none"
-              placeholder={t.contact_form.placeholder_message}
-            ></textarea>
-          </div>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-5 rounded-2xl text-lg font-black transition-all shadow-xl shadow-emerald-500/25 active:scale-[0.98] disabled:opacity-70 flex items-center justify-center gap-3"
-          >
-            {isSubmitting ? (
-              <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
-            ) : (
-              <>
-                {t.contact_form.send}
-                <ChevronRight className="w-5 h-5" />
-              </>
-            )}
-          </button>
-        </form>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-5 rounded-2xl text-lg font-black transition-all shadow-xl shadow-emerald-500/25 active:scale-[0.98] disabled:opacity-70 flex items-center justify-center gap-3"
+            >
+              {isSubmitting ? (
+                <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <>
+                  {t.contact_form.send}
+                  <ChevronRight className="w-5 h-5" />
+                </>
+              )}
+            </button>
+          </form>
+        </div>
       </motion.div>
     </section>
   );
@@ -692,7 +715,7 @@ function CTA() {
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="max-w-5xl mx-auto text-center rounded-[3.5rem] bg-emerald-50/50 dark:bg-slate-950 p-16 md:p-24 border border-emerald-100 dark:border-slate-800 shadow-2xl shadow-emerald-500/5 dark:shadow-none relative overflow-hidden transition-colors duration-500"
+        className="max-w-5xl mx-auto text-center rounded-[3.5rem] bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl p-16 md:p-24 border border-white/20 dark:border-white/5 shadow-2xl shadow-slate-900/5 dark:shadow-black/20 relative overflow-hidden transition-colors duration-500"
       >
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div 
