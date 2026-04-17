@@ -103,7 +103,7 @@ export default function Dashboard() {
             <div className="mb-4">
               {!isSidebarCollapsed && (
                 <div className="px-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">
-                  General
+                  {t.dashboard.menu}
                 </div>
               )}
               <SidebarItem
@@ -163,7 +163,7 @@ export default function Dashboard() {
             <div className="mt-8 mb-4">
               {!isSidebarCollapsed && (
                 <div className="px-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">
-                  Análisis
+                  {t.dashboard.ana_title}
                 </div>
               )}
               <SidebarItem
@@ -212,7 +212,7 @@ export default function Dashboard() {
               <div className="mt-8 mb-4">
                 {!isSidebarCollapsed && (
                   <div className="px-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">
-                    Administración
+                    {t.dashboard.adm_title}
                   </div>
                 )}
                 <SidebarItem
@@ -237,7 +237,7 @@ export default function Dashboard() {
               ) : (
                 <div className="flex items-center gap-2 px-4 w-full">
                   <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Colapsar</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{t.dashboard.collapse}</span>
                 </div>
               )}
             </button>

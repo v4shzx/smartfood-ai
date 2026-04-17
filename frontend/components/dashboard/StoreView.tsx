@@ -60,9 +60,6 @@ export function StoreView({
     <>
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
-          <div className="flex items-center gap-2 mb-2 text-emerald-600 dark:text-emerald-400 font-black text-[10px] uppercase tracking-[0.3em]">
-            <Store className="w-3.5 h-3.5" /> {t.dashboard.store}
-          </div>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.store}</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-3 font-medium text-lg">Productos, categorias, precios e imagenes.</p>
         </motion.div>

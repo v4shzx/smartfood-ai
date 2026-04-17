@@ -70,9 +70,6 @@ export function AccountView({ t, handleLogout, students, mealPlans }: AccountVie
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-          <div className="flex items-center gap-2 mb-2 text-emerald-600 dark:text-emerald-400 font-black text-[10px] uppercase tracking-[0.3em]">
-            <User className="w-3.5 h-3.5" /> {t.dashboard.profile}
-          </div>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.account_title}</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-3 font-medium text-lg">{t.dashboard.account_sub}</p>
         </motion.div>
@@ -136,7 +133,7 @@ export function AccountView({ t, handleLogout, students, mealPlans }: AccountVie
               <div className="text-[10px] font-black uppercase tracking-[.25em] text-emerald-100 bg-white/10 w-fit px-3 py-1 rounded-full mb-6">Plan Pro Edition</div>
               <h4 className="text-xl font-black mb-2">{t.dashboard.billing_title}</h4>
               <p className="text-emerald-50/80 text-sm mb-6 leading-relaxed">
-                Tienes {students.length} alumnos registrados con planes de alimentación activos.
+                Gestionas inventario, ventas y predicciones de demanda con inteligencia artificial activa.
               </p>
               <button className="w-full py-3.5 bg-white text-emerald-700 rounded-2xl font-black text-xs uppercase tracking-[0.15em] hover:bg-emerald-50 transition-colors shadow-lg">
                 {t.dashboard.manage_billing}

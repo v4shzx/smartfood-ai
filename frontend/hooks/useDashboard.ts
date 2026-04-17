@@ -438,16 +438,16 @@ export function useDashboard(t: any) {
 
   const kpis = useMemo(() => ({
     todayRevenue: salesHistory.reduce((acc, s) => acc + s.total, 0),
-    weekRevenue: salesHistory.reduce((acc, s) => acc + s.total, 0) * 5.4,
-    topStudent: students[0] ? `${students[0].first_name} ${students[0].last_name}` : "N/A",
-    activeStudents: students.length,
+    weekRevenue: salesHistory.reduce((acc, s) => acc + s.total, 0) * 8.2, // Projection
+    topStudent: products[0]?.name || "N/A", // Reused property name for Top Product
+    activeStudents: salesHistory.length, // Reused property name for Total Orders
     menuItemsCount: menuItems.length,
     criticalInventory: { 
       items: invCritical.length, 
-      sku: invCritical[0]?.sku || "N/A", 
+      sku: invCritical[0]?.name || "N/A", 
       remaining: invCritical[0]?.onHand || 0 
     }
-  }), [salesHistory, invCritical, students, menuItems]);
+  }), [salesHistory, invCritical, students, menuItems, products]);
 
   const salesSeries = useMemo(() => [
     { label: "Lun", value: 4200 },

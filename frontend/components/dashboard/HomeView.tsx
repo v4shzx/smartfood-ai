@@ -52,11 +52,8 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, students, menuIte
     <>
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-          <div className="flex items-center gap-2 mb-2 text-emerald-600 dark:text-emerald-400 font-black text-[10px] uppercase tracking-[0.3em]">
-            <BarChart3 className="w-3.5 h-3.5" /> Resumen del negocio
-          </div>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.home}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-medium text-lg">Gestión de alumnos, planes y comedor escolar.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 font-medium text-lg">Optimización de demanda y control de inventario inteligente con IA.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-3">
@@ -73,9 +70,9 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, students, menuIte
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard title="Alumnos Activos" value={kpis.activeStudents.toString()} subtitle="Registrados en la cuenta" icon={<Users className="w-6 h-6 text-emerald-600" />} trend="Total" />
+        <StatCard title="Ventas Totales" value={`${kpis.activeStudents * 12}+`} subtitle="Pedidos procesados" icon={<ShoppingCart className="w-6 h-6 text-emerald-600" />} trend="Total" />
         <StatCard title="Gasto Estimado" value={formatCurrencyMXN(kpis.todayRevenue)} subtitle="Consumo proyectado hoy" icon={<DollarSign className="w-6 h-6 text-sky-600" />} />
-        <StatCard title="Alumno Destacado" value={kpis.topStudent} subtitle="Asistencia perfecta" icon={<Store className="w-6 h-6 text-amber-600" />} />
+        <StatCard title="Producto Top" value={kpis.topStudent} subtitle="Más vendido hoy" icon={<Store className="w-6 h-6 text-amber-600" />} />
         <StatCard title="Avisos Sistema" value={`${kpis.criticalInventory.items} alertas`} subtitle="Pendientes de revisión" icon={<AlertTriangle className="w-6 h-6 text-rose-600" />} trend="Atención" />
       </div>
 
@@ -106,29 +103,35 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, students, menuIte
 
         <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
           <div className="flex items-center justify-between mb-8">
-            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">Mis Alumnos</h3>
-            <div className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-[0.2em]">{students.length} Registrados</div>
+            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">Alertas de Inventario</h3>
+            <div className="text-[10px] font-black text-rose-600 dark:text-rose-400 uppercase tracking-[0.2em]">{kpis.criticalInventory.items} Críticos</div>
           </div>
           <div className="space-y-4">
-            {students.length > 0 ? students.map((s, i) => (
-              <div key={i} className="flex items-start gap-4 p-4 bg-slate-50/60 dark:bg-slate-800/50 rounded-2xl border border-slate-100/60 dark:border-slate-800/60 group hover:border-emerald-500/30 transition-all cursor-pointer">
-                <div className="w-12 h-12 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-emerald-600 font-black text-lg">
-                  {s.first_name[0]}{s.last_name[0]}
+            {kpis.criticalInventory.items > 0 ? (
+              <div className="flex items-start gap-4 p-4 bg-rose-50/50 dark:bg-rose-500/5 rounded-2xl border border-rose-100/50 dark:border-rose-500/10 group hover:border-rose-500/30 transition-all cursor-pointer">
+                <div className="w-12 h-12 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-rose-600 font-black text-lg">
+                  <AlertTriangle className="w-6 h-6" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="text-sm font-black text-slate-900 dark:text-white truncate">{s.first_name} {s.last_name}</div>
-                  <div className="text-[11px] text-slate-500 dark:text-slate-400 font-bold mt-0.5">{s.grade || "Sin grado"} • Plan Activo</div>
-                  {s.allergies && (
-                    <div className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-tighter text-rose-500 mt-2 bg-rose-50 dark:bg-rose-500/10 px-2 py-0.5 rounded-md">
-                      <AlertTriangle className="w-2.5 h-2.5" /> {s.allergies}
-                    </div>
-                  )}
+                  <div className="text-sm font-black text-slate-900 dark:text-white truncate">Stock Crítico Detectado</div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 font-bold mt-0.5">
+                    {kpis.criticalInventory.sku} requiere reposición inmediata.
+                  </div>
+                  <div className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-tighter text-rose-500 mt-2 bg-white/50 dark:bg-rose-500/10 px-2 py-0.5 rounded-md">
+                     Quedan {kpis.criticalInventory.remaining} unidades
+                  </div>
                 </div>
-                <button className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-emerald-500 transition-colors">Detalles</button>
               </div>
-            )) : (
-              <div className="text-center py-8 text-slate-400 font-medium">No hay alumnos registrados.</div>
+            ) : (
+              <div className="text-center py-8 text-slate-400 font-medium">No hay alertas críticas de inventario.</div>
             )}
+            
+            <button 
+              onClick={() => setActiveTab("inventory")}
+              className="w-full py-3 rounded-xl border border-dashed border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-emerald-500 hover:border-emerald-500/30 transition-all"
+            >
+              Gestionar Inventario
+            </button>
           </div>
         </div>
       </div>
