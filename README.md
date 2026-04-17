@@ -99,6 +99,20 @@ Los archivos SQL de referencia se han consolidado en el backend para una mejor o
 - **Esquema**: `schema.sql` (Define tablas de usuarios, productos, ventas, etc.)
 - **Semillas**: `seed_data.sql` (Datos de ejemplo para el Demo)
 
+### ⚙️ Configuración del entorno (`.env`)
+
+Antes de levantar los servicios, crea el archivo `.env` en `backend/` copiando el ejemplo:
+
+```bash
+# Windows (PowerShell)
+Copy-Item backend\.env.example backend\.env
+
+# Mac / Linux
+cp backend/.env.example backend/.env
+```
+
+> ⚠️ **Importante:** Las credenciales del `.env` **deben coincidir exactamente** con las del `docker-compose.yml`. Si alguna vez cambias `POSTGRES_PASSWORD`, debes bajar los servicios con `docker-compose down -v` (borra el volumen) y volver a levantar; de lo contrario PostgreSQL usará la contraseña almacenada en el volumen anterior y se producirá un error de autenticación.
+
 ### 🔍 Consultar datos en pgAdmin (Visual)
 
 1. **Registrar Servidor**: Clic derecho en `Servers` → `Register` → `Server`.
@@ -111,6 +125,26 @@ Los archivos SQL de referencia se han consolidado en el backend para una mejor o
      - **Password**: `postgres` _(o el valor de `POSTGRES_PASSWORD` en tu `.env`)_
 2. **Explorar tablas**: Navega por `Databases` → `smartfood` → `Schemas` → `public` → `Tables`.
 3. **Ver datos**: Clic derecho en una tabla → `View/Edit Data` → `All Rows`.
+
+---
+
+## 🔧 Solución de Problemas
+
+### ❌ `FATAL: password authentication failed for user "postgres"` en pgAdmin
+
+Este error ocurre cuando el volumen de Docker tiene una contraseña antigua que no coincide con la del `.env` / `docker-compose.yml`.
+
+**Solución (borra solo los datos, no el código):**
+
+```powershell
+# 1. Bajar contenedores Y eliminar el volumen de datos
+docker-compose down -v
+
+# 2. Volver a levantar (crea el volumen limpio con las credenciales correctas)
+docker-compose up -d
+```
+
+> En desarrollo esto es seguro porque los datos se recargan con `seed_data.sql`.
 
 ---
 
