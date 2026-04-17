@@ -16,6 +16,7 @@ export function useDashboard(t: any) {
     | "reports"
     | "prediction"
     | "staff"
+    | "account"
   >("home");
 
   // Filter & Search States
@@ -384,6 +385,7 @@ export function useDashboard(t: any) {
       case "reports": return t.dashboard.reports;
       case "prediction": return t.dashboard.prediction;
       case "staff": return t.dashboard.staff;
+      case "account": return t.dashboard.profile;
       default: return "";
     }
   }, [activeTab, t]);

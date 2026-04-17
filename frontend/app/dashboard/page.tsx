@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import {
   Bell,
   Box,
@@ -22,7 +23,7 @@ import {
   BarChart3,
   Download,
 } from "lucide-react";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, LangSwitcher } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 // Components
@@ -39,6 +40,7 @@ import { TrendsView } from "@/components/dashboard/ai/TrendsView";
 import { ReportsView } from "@/components/dashboard/ReportsView";
 import { PredictionView } from "@/components/dashboard/ai/PredictionView";
 import { StaffView } from "@/components/dashboard/StaffView";
+import { AccountView } from "@/components/dashboard/AccountView";
 
 // Hooks
 import { useDashboard } from "@/hooks/useDashboard";
@@ -46,9 +48,28 @@ import { useDashboard } from "@/hooks/useDashboard";
 export default function Dashboard() {
   const { t } = useI18n();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setIsUserMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
   
   const dashboard = useDashboard(t);
   const { activeTab, setActiveTab, activeTitle } = dashboard;
+  const router = useRouter();
+
+  const handleLogout = () => {
+    // Simulated logout logic
+    localStorage.removeItem("app-session"); // Assuming there's some session key
+    router.push("/login");
+  };
 
   return (
     <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-500 font-sans selection:bg-emerald-500/30">
@@ -233,34 +254,63 @@ export default function Dashboard() {
                 <Menu className="w-6 h-6" />
               </button>
             </div>
-            <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Live Server</span>
-            </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 md:gap-5">
+            <LangSwitcher />
             <ThemeToggle />
+            
+            <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block" />
+
             <button className="w-11 h-11 flex items-center justify-center rounded-2xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400 transition-all relative">
               <Bell className="w-4.5 h-4.5" />
               <span className="absolute top-2.5 right-3 w-2 h-2 rounded-full bg-rose-500 border-2 border-white dark:border-slate-950" />
             </button>
-            <div className="h-8 w-px bg-slate-200 dark:border-slate-800 mx-1" />
-            <div className="flex items-center gap-3 pl-2">
-              <div className="text-right hidden sm:block">
-                <div className="text-sm font-black text-slate-900 dark:text-white leading-tight">Admin</div>
-                <div className="text-[9px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Pro Role</div>
-              </div>
-              <div className="w-11 h-11 rounded-2xl bg-linear-to-br from-emerald-500 to-emerald-600 p-[1.5px]">
-                <div className="w-full h-full rounded-[14px] bg-white dark:bg-slate-950 flex items-center justify-center p-0.5 overflow-hidden">
-                  <div className="w-full h-full rounded-xl bg-slate-100 dark:bg-slate-900 flex items-center justify-center text-slate-400">
-                    <User className="w-5 h-5" />
-                  </div>
+
+            <div className="relative" ref={userMenuRef}>
+              <button 
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                className="flex items-center group ml-2"
+              >
+                <div className="w-11 h-11 rounded-2xl bg-emerald-600 flex items-center justify-center transition-all group-hover:scale-105 active:scale-95 shadow-lg shadow-emerald-600/20">
+                  <span className="text-xs font-black text-white uppercase tracking-wider">AD</span>
                 </div>
-              </div>
-              <button className="p-2.5 text-slate-400 hover:text-rose-500 transition-colors">
-                <LogOut className="w-5 h-5" />
               </button>
+
+              <AnimatePresence>
+                {isUserMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="absolute right-0 mt-3 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 overflow-hidden z-50 p-2 backdrop-blur-xl"
+                  >
+                    {/* User info removed as requested */}
+                    
+                    <button 
+                      onClick={() => {
+                        setActiveTab("account");
+                        setIsUserMenuOpen(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-xs font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all rounded-2xl"
+                    >
+                      <User className="w-4 h-4" />
+                      {t.dashboard.profile}
+                    </button>
+                    
+                    <div className="h-px bg-slate-100 dark:bg-slate-800/50 my-1" />
+                    
+                    <button 
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-xs font-black uppercase tracking-widest text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-all rounded-2xl"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      {t.dashboard.logout}
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </header>
@@ -419,6 +469,12 @@ export default function Dashboard() {
               setStaffForm={dashboard.setStaffForm}
               staffSave={dashboard.staffSave}
               staffClose={() => dashboard.setStaffEditorOpen(false)}
+            />
+          )}
+          {activeTab === "account" && (
+            <AccountView 
+              t={t} 
+              handleLogout={handleLogout} 
             />
           )}
         </div>
