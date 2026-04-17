@@ -37,9 +37,10 @@ async def login(
     sub_tier = getattr(user, "subscription_tier", None)
     if not sub_tier:
         # Pseudo-logic for demo based on email to allow testing different tiers
-        if "empresarial" in login_data.email.lower():
+        email_lower = login_data.email.lower()
+        if "empresarial" in email_lower:
             sub_tier = "empresarial"
-        elif "profesional" in login_data.email.lower():
+        elif "profesional" in email_lower or "comedordm" in email_lower:
             sub_tier = "profesional"
         else:
             sub_tier = "basico"

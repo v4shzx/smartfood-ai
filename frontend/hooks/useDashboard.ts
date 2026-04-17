@@ -129,11 +129,16 @@ export function useDashboard(t: any) {
     fetchData();
   }, [API_URL]);
   const [products, setProducts] = useState([
-    { id: "1", name: "Taco al Pastor", category: "Tacos", price: 18, available: true },
-    { id: "2", name: "Gringa", category: "Especialidades", price: 45, available: true },
-    { id: "3", name: "Horchata 500ml", category: "Bebidas", price: 25, available: true },
-    { id: "4", name: "Taco de Bistec", category: "Tacos", price: 20, available: false },
-    { id: "5", name: "Coca Cola 355ml", category: "Bebidas", price: 22, available: true },
+    { id: "p1", name: "Sándwich de jamón y queso", category: "Comida", price: 35, available: true },
+    { id: "p2", name: "Jugo natural de naranja", category: "Bebidas", price: 25, available: true },
+    { id: "p3", name: "Galletas de avena", category: "Snacks", price: 15, available: true },
+    { id: "p4", name: "Yogur con granola", category: "Desayuno", price: 30, available: true },
+    { id: "p5", name: "Palomitas de maíz", category: "Snacks", price: 12, available: true },
+    { id: "p6", name: "Barra de cereal casera", category: "Snacks", price: 18, available: true },
+    { id: "p7", name: "Fruta picada (manzana)", category: "Frutas", price: 10, available: true },
+    { id: "p8", name: "Mini pizza de pan pita", category: "Comida", price: 40, available: true },
+    { id: "p9", name: "Batido de fresa con leche", category: "Bebidas", price: 28, available: true },
+    { id: "p10", name: "Muffin de plátano", category: "Postres", price: 22, available: true },
   ]);
 
   const [invItems, setInvItems] = useState([
@@ -162,9 +167,12 @@ export function useDashboard(t: any) {
   ]);
 
   const salesHistory = useMemo(() => [
-    { id: "tk1", ts: Date.now() - 300000, total: 185, items: 4, type: "Card" },
-    { id: "tk2", ts: Date.now() - 1500000, total: 42, items: 2, type: "Cash" },
-    { id: "tk3", ts: Date.now() - 3600000, total: 210, items: 5, type: "Cash" },
+    { id: "tk-882", ts: Date.now() - 300000, total: 125, items: 3, type: "Card" },
+    { id: "tk-881", ts: Date.now() - 1500000, total: 45, items: 1, type: "Cash" },
+    { id: "tk-880", ts: Date.now() - 3600000, total: 210, items: 6, type: "Cash" },
+    { id: "tk-879", ts: Date.now() - 86400000, total: 1540, items: 42, type: "Mixed" },
+    { id: "tk-878", ts: Date.now() - 172800000, total: 1890, items: 51, type: "Mixed" },
+    { id: "tk-877", ts: Date.now() - 259200000, total: 1250, items: 34, type: "Mixed" },
   ], []);
 
   const trendsInsights = useMemo(() => [
