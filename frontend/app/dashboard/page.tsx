@@ -163,7 +163,7 @@ export default function Dashboard() {
             <div className="mt-8 mb-4">
               {!isSidebarCollapsed && (
                 <div className="px-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">
-                  Analytics
+                  Análisis
                 </div>
               )}
               <SidebarItem
@@ -212,7 +212,7 @@ export default function Dashboard() {
               <div className="mt-8 mb-4">
                 {!isSidebarCollapsed && (
                   <div className="px-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">
-                    Admin
+                    Administración
                   </div>
                 )}
                 <SidebarItem

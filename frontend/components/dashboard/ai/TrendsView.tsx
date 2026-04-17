@@ -55,22 +55,23 @@ export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
         </div>
 
         <div className="space-y-8">
-          <div className="bg-linear-to-br from-slate-900 to-slate-800 dark:from-slate-900 dark:to-slate-950 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-xl">
+          <div className="bg-slate-100 dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-800 rounded-[2.5rem] p-8 relative overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700">
             <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full -mr-10 -mt-10 blur-3xl" />
-            <h3 className="text-xl font-black mb-6 flex items-center gap-2">
-              <TrendingUp className="w-6 h-6 text-emerald-400" /> Oportunidades
+            <h3 className="text-xl font-black mb-6 flex items-center gap-2 text-slate-900 dark:text-white">
+              <TrendingUp className="w-6 h-6 text-emerald-500 dark:text-emerald-400" /> Oportunidades
             </h3>
             <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
-                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400 mb-1">Crossover</div>
-                <div className="text-sm font-bold">Activar promocion: Tacos + Bebida los martes para subir ticket promedio en horario valle.</div>
+              <div className="p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10">
+                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 mb-1">Crossover</div>
+                <div className="text-sm font-bold text-slate-700 dark:text-white">Activar promocion: Tacos + Bebida los martes para subir ticket promedio en horario valle.</div>
               </div>
-              <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
-                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400 mb-1">Stock</div>
-                <div className="text-sm font-bold">Ajustar pedido de Tortilla los viernes: la demanda sube 40% el fin de semana.</div>
+              <div className="p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10">
+                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 mb-1">Stock</div>
+                <div className="text-sm font-bold text-slate-700 dark:text-white">Ajustar pedido de Tortilla los viernes: la demanda sube 40% el fin de semana.</div>
               </div>
             </div>
           </div>
+
 
           <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
             <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm mb-8">Análisis de Alérgenos & Merma</h3>

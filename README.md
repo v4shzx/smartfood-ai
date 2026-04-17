@@ -101,25 +101,16 @@ Los archivos SQL de referencia se han consolidado en el backend para una mejor o
 
 ### 🔍 Consultar datos en pgAdmin (Visual)
 
-1. **Registrar Servidor**: Clic derecho en `Servers` -> `Register` -> `Server`.
-2. **Conexión**:
-   - **Host name**: `db`
-   - **Maintenance database**: `smartfood`
-   - **Username**: `postgres`
-   - **Password**: `postgres` (o el indicado en tu `.env`)
-3. **Explorar**: Navega por `Databases` -> `smartfood` -> `Schemas` -> `public` -> `Tables`.
-
-### 🔍 Consultar datos en pgAdmin (Visual)
-
-1. **Registrar Servidor**: Clic derecho en `Servers` -> `Register` -> `Server`.
-   - **General**: Name = `SmartFood DB`
+1. **Registrar Servidor**: Clic derecho en `Servers` → `Register` → `Server`.
+   - **General** → Name: `SmartFood DB`
    - **Connection**:
-     - Host name = `db` (¡Importante!)
-     - Maintenance database = `smartfood_db`
-     - Username = `smartfood`
-     - Password = `password`
-2. **Localizar Tablas**: Navega por `Databases` -> `smartfood_db` -> `Schemas` -> `public` -> `Tables`.
-3. **Ver Datos**: Clic derecho en una tabla (ej. `students`) -> `View/Edit Data` -> `All Rows`.
+     - **Host name**: `db` _(nombre del servicio Docker, no `localhost`)_
+     - **Port**: `5432`
+     - **Maintenance database**: `smartfood`
+     - **Username**: `postgres`
+     - **Password**: `postgres` _(o el valor de `POSTGRES_PASSWORD` en tu `.env`)_
+2. **Explorar tablas**: Navega por `Databases` → `smartfood` → `Schemas` → `public` → `Tables`.
+3. **Ver datos**: Clic derecho en una tabla → `View/Edit Data` → `All Rows`.
 
 ---
 
