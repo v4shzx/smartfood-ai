@@ -1,5 +1,8 @@
 -- Seed data for School Cafeteria (Comedor Escolar)
 
+-- Clean existing data to avoid duplicate key errors (FK order respected)
+TRUNCATE payments, subscriptions, menu_items, students, meal_plans, users CASCADE;
+
 -- 1. Insert Users (Parents)
 INSERT INTO users (id, full_name, email, password_hash, role) VALUES
 ('u1', 'Alejandro Balderas', 'alex@parent.com', 'hash123', 'parent'),
@@ -32,11 +35,11 @@ INSERT INTO subscriptions (id, student_id, plan_id, start_date, end_date, status
 
 -- 5. Insert Menus (Weekly Example)
 INSERT INTO menu_items (id, day_of_week, dish_name, description, calories, is_vegetarian) VALUES
-('m1', 'Monday', 'Pasta Boloñesa', 'Pasta con salsa de carne y queso parmesano', 450, 0),
-('m2', 'Tuesday', 'Pollo al Horno', 'Pechuga de pollo con puré de papa y brócoli', 380, 0),
-('m3', 'Wednesday', 'Tacos de Guiso', 'Tacos de canasta variados con frijoles', 520, 0),
-('m4', 'Thursday', 'Ensalada Cesar con Pollo', 'Lechuga, crotones, aderezo y tiras de pollo', 320, 0),
-('m5', 'Friday', 'Pizza de Vegetales', 'Pizza casera con pimientos, cebolla y champiñones', 400, 1);
+('m1', 'Monday', 'Pasta Boloñesa', 'Pasta con salsa de carne y queso parmesano', 450, FALSE),
+('m2', 'Tuesday', 'Pollo al Horno', 'Pechuga de pollo con puré de papa y brócoli', 380, FALSE),
+('m3', 'Wednesday', 'Tacos de Guiso', 'Tacos de canasta variados con frijoles', 520, FALSE),
+('m4', 'Thursday', 'Ensalada Cesar con Pollo', 'Lechuga, crotones, aderezo y tiras de pollo', 320, FALSE),
+('m5', 'Friday', 'Pizza de Vegetales', 'Pizza casera con pimientos, cebolla y champiñones', 400, TRUE);
 
 -- 6. Insert Payments
 INSERT INTO payments (id, subscription_id, amount, payment_method) VALUES

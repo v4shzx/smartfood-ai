@@ -83,6 +83,44 @@ Una vez que los contenedores estén corriendo, puedes acceder a los siguientes s
 
 ---
 
+## 🗄️ Gestión de Base de Datos
+
+Para inicializar y poblar la base de datos del **Comedor Escolar**, utiliza los siguientes comandos según tu entorno:
+
+### 🛠️ Inicialización (Docker)
+
+**Para Desarrollo (`dev`):**
+```bash
+# 1. Crear Tablas
+docker exec -i smartfood_db_dev psql -U smartfood -d smartfood_db < db/schema.sql
+
+# 2. Cargar Datos de Ejemplo (Seed)
+docker exec -i smartfood_db_dev psql -U smartfood -d smartfood_db < db/seed_data.sql
+```
+
+**Para Producción:**
+```bash
+# 1. Crear Tablas
+docker exec -i smartfood_db psql -U smartfood -d smartfood_db < db/schema.sql
+
+# 2. Cargar Datos de Ejemplo (Seed)
+docker exec -i smartfood_db psql -U smartfood -d smartfood_db < db/seed_data.sql
+```
+
+### 🔍 Consultar datos en pgAdmin (Visual)
+
+1. **Registrar Servidor**: Clic derecho en `Servers` -> `Register` -> `Server`.
+   - **General**: Name = `SmartFood DB`
+   - **Connection**:
+     - Host name = `db` (¡Importante!)
+     - Maintenance database = `smartfood_db`
+     - Username = `smartfood`
+     - Password = `password`
+2. **Localizar Tablas**: Navega por `Databases` -> `smartfood_db` -> `Schemas` -> `public` -> `Tables`.
+3. **Ver Datos**: Clic derecho en una tabla (ej. `students`) -> `View/Edit Data` -> `All Rows`.
+
+---
+
 ## 👨‍💻 Autor
 
 **Alejandro Balderas**
