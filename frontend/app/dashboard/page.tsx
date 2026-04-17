@@ -63,8 +63,8 @@ export default function Dashboard() {
           {/* Logo Section */}
           <div className="p-6">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-600 flex items-center justify-center text-white shrink-0 shadow-lg shadow-emerald-600/20 rotate-3">
-                <LayoutDashboard className="w-5 h-5" />
+              <div className="w-10 h-10 shrink-0">
+                <img src="/logo.png" alt="SmartFood Logo" className="w-full h-full object-contain" />
               </div>
               {!isSidebarCollapsed && (
                 <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
