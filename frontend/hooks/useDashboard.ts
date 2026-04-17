@@ -97,6 +97,7 @@ export function useDashboard(t: any) {
   const [students, setStudents] = useState<any[]>([]);
   const [menuItems, setMenuItems] = useState<any[]>([]);
   const [mealPlans, setMealPlans] = useState<any[]>([]);
+  const [stats, setStats] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
@@ -111,10 +112,11 @@ export function useDashboard(t: any) {
         setSubscriptionTier(tier.toLowerCase());
         console.log("Loading dashboard for user:", sessionUserId, "Tier:", tier);
 
-        const [studentsRes, menuRes, plansRes] = await Promise.all([
+        const [studentsRes, menuRes, plansRes, statsRes] = await Promise.all([
           fetch(`${API_URL}/cafeteria/students?parent_id=${sessionUserId}`).then(r => r.json()),
           fetch(`${API_URL}/cafeteria/menu`).then(r => r.json()),
-          fetch(`${API_URL}/cafeteria/plans`).then(r => r.json())
+          fetch(`${API_URL}/cafeteria/plans`).then(r => r.json()),
+          fetch(`${API_URL}/stats/`).then(r => r.json())
         ]);
 
         setStudents(Array.isArray(studentsRes) && studentsRes.length > 0 ? studentsRes : [
@@ -130,6 +132,7 @@ export function useDashboard(t: any) {
           { id: "p1", name: "Plan Básico", price_mxn: 0 },
           { id: "p2", name: "Plan Profesional", price_mxn: 299 }
         ]);
+        setStats(statsRes);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       } finally {
@@ -447,17 +450,17 @@ export function useDashboard(t: any) {
   const invSelected = useMemo(() => invItems.find(it => it.id === invSelectedId), [invItems, invSelectedId]);
 
   const kpis = useMemo(() => ({
-    todayRevenue: salesHistory.reduce((acc, s) => acc + s.total, 0),
-    weekRevenue: salesHistory.reduce((acc, s) => acc + s.total, 0) * 8.2, // Projection
-    topStudent: products[0]?.name || "N/A", // Reused property name for Top Product
-    activeStudents: salesHistory.length, // Reused property name for Total Orders
+    todayRevenue: stats?.todayRevenue || 0,
+    weekRevenue: stats?.weekRevenue || 0,
+    topStudent: stats?.topProduct || "N/A", // Label "Top Product" in UI
+    activeStudents: stats?.totalOrders || 0, // Label "Total Sales" in UI
     menuItemsCount: menuItems.length,
     criticalInventory: { 
-      items: invCritical.length, 
-      sku: invCritical[0]?.name || "N/A", 
-      remaining: invCritical[0]?.onHand || 0 
+      items: stats?.criticalInventory?.items || 0, 
+      sku: stats?.criticalInventory?.sku || "N/A", 
+      remaining: stats?.criticalInventory?.remaining || 0 
     }
-  }), [salesHistory, invCritical, students, menuItems, products]);
+  }), [stats, menuItems]);
 
   const salesSeries = useMemo(() => [
     { label: "Lun", value: 4200 },

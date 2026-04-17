@@ -65,6 +65,8 @@ CREATE TABLE IF NOT EXISTS products (
     name VARCHAR(100) NOT NULL,
     category VARCHAR(50),
     price DECIMAL(10, 2) NOT NULL,
+    on_hand INTEGER DEFAULT 0,
+    min_stock INTEGER DEFAULT 5,
     available BOOLEAN DEFAULT TRUE,
     image_url TEXT
 );

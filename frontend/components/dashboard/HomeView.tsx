@@ -70,10 +70,10 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, students, menuIte
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard title="Ventas Totales" value={`${kpis.activeStudents * 12}+`} subtitle="Pedidos procesados" icon={<ShoppingCart className="w-6 h-6 text-emerald-600" />} trend="Total" />
-        <StatCard title="Gasto Estimado" value={formatCurrencyMXN(kpis.todayRevenue)} subtitle="Consumo proyectado hoy" icon={<DollarSign className="w-6 h-6 text-sky-600" />} />
-        <StatCard title="Producto Top" value={kpis.topStudent} subtitle="Más vendido hoy" icon={<Store className="w-6 h-6 text-amber-600" />} />
-        <StatCard title="Avisos Sistema" value={`${kpis.criticalInventory.items} alertas`} subtitle="Pendientes de revisión" icon={<AlertTriangle className="w-6 h-6 text-rose-600" />} trend="Atención" />
+        <StatCard title="Pedidos Totales" value={`${kpis.activeStudents}`} subtitle="Procesados hoy" icon={<ShoppingCart className="w-6 h-6 text-emerald-600" />} trend="Hoy" />
+        <StatCard title="Ingresos Hoy" value={formatCurrencyMXN(kpis.todayRevenue)} subtitle="Ventas brutas" icon={<DollarSign className="w-6 h-6 text-sky-600" />} />
+        <StatCard title="Producto Top" value={kpis.topStudent} subtitle="Más vendido" icon={<Store className="w-6 h-6 text-amber-600" />} />
+        <StatCard title="Stock Crítico" value={`${kpis.criticalInventory.items} items`} subtitle="Requieren atención" icon={<AlertTriangle className="w-6 h-6 text-rose-600" />} trend="Alerta" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
