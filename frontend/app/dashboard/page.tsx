@@ -22,6 +22,10 @@ import {
   Users,
   BarChart3,
   Download,
+  CheckCircle2,
+  AlertCircle,
+  Info,
+  Clock,
 } from "lucide-react";
 import { useI18n, LangSwitcher } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -49,12 +53,23 @@ export default function Dashboard() {
   const { t } = useI18n();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const userMenuRef = React.useRef<HTMLDivElement>(null);
+  const notificationsRef = React.useRef<HTMLDivElement>(null);
+
+  const notifications = [
+    { id: 1, title: "Inventario Bajo", message: "Quedan pocos 'Tacos de Pollo'.", time: "Hace 5 min", type: "warning" },
+    { id: 2, title: "Venta Exitosa", message: "Nueva orden de $450.00 MXN.", time: "Hace 12 min", type: "success" },
+    { id: 3, title: "Nueva Predicción", message: "La IA sugiere subir stock de bebidas.", time: "Hace 1 hora", type: "info" },
+  ];
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
         setIsUserMenuOpen(false);
+      }
+      if (notificationsRef.current && !notificationsRef.current.contains(event.target as Node)) {
+        setIsNotificationsOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -268,10 +283,71 @@ export default function Dashboard() {
             
             <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block" />
 
-            <button className="w-11 h-11 flex items-center justify-center rounded-2xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400 transition-all relative">
-              <Bell className="w-4.5 h-4.5" />
-              <span className="absolute top-2.5 right-3 w-2 h-2 rounded-full bg-rose-500 border-2 border-white dark:border-slate-950" />
-            </button>
+            <div className="relative" ref={notificationsRef}>
+              <button 
+                onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                className="w-11 h-11 flex items-center justify-center rounded-2xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400 transition-all relative"
+              >
+                <Bell className="w-4.5 h-4.5" />
+                <span className="absolute top-2.5 right-3 w-2 h-2 rounded-full bg-rose-500 border-2 border-white dark:border-slate-950" />
+              </button>
+
+              <AnimatePresence>
+                {isNotificationsOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="absolute right-0 mt-3 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 overflow-hidden z-50 p-2 backdrop-blur-xl"
+                  >
+                    <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800/50 mb-2">
+                      <div className="text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white">Notificaciones</div>
+                    </div>
+                    
+                    <div className="max-h-[320px] overflow-y-auto no-scrollbar space-y-1">
+                      {notifications.map((n) => (
+                        <div 
+                          key={n.id}
+                          className="w-full flex items-start gap-3 p-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group cursor-default"
+                        >
+                          <div className={cn(
+                            "w-8 h-8 rounded-xl flex items-center justify-center shrink-0",
+                            n.type === "warning" ? "bg-amber-50 dark:bg-amber-500/10 text-amber-500" :
+                            n.type === "success" ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500" :
+                            "bg-blue-50 dark:bg-blue-500/10 text-blue-500"
+                          )}>
+                            {n.type === "warning" ? <AlertCircle className="w-4 h-4" /> :
+                             n.type === "success" ? <CheckCircle2 className="w-4 h-4" /> :
+                             <Info className="w-4 h-4" />}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-xs font-bold text-slate-900 dark:text-white truncate">{n.title}</div>
+                            <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">{n.message}</div>
+                            <div className="flex items-center gap-1 mt-2 text-[10px] text-slate-400">
+                              <Clock className="w-3 h-3" />
+                              {n.time}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <div className="mt-2 p-1">
+                      <button 
+                        onClick={() => {
+                          setActiveTab("reports");
+                          setIsNotificationsOpen(false);
+                        }}
+                        className="w-full py-2.5 text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 transition-all rounded-xl"
+                      >
+                        Ver todos los reportes
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
             <div className="relative" ref={userMenuRef}>
               <button 
