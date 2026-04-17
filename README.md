@@ -61,19 +61,27 @@ Para mantener la consistencia entre diferentes computadoras y evitar cambios inn
    *Nota: `npm ci` es más rápido y asegura que instales exactamente las mismas versiones que están registradas en el repositorio, sin modificar el archivo de bloqueo.*
 3. **Nuevas librerías**: Usa `npm install <nombre>` solo cuando necesites agregar una nueva dependencia. En ese caso, sí deberás commitear los cambios resultantes en el `package-lock.json`.
 
-4. **Entornos de Docker**:
-   - Para **Desarrollo** (con hot-reload):
-     ```bash
-     docker-compose -f docker-compose.dev.yml up --build
-     ```
-   - Para **Producción**:
-     ```bash
-     docker-compose up --build
-     ```
+## 🛠️ Guía de Inicio Rápido (Scripts Multiplataforma)
+
+Hemos simplificado el proceso de configuración mediante scripts que funcionan en Windows (PowerShell), Mac y Linux (Bash).
+
+### 🛠️ Entorno de Desarrollo (con Hot-Reload)
+Este script levanta la base de datos, espera a que esté lista, crea el esquema e inyecta los datos de prueba (Seed).
+
+- **Windows (PS)**: `.\scripts\launch-dev.ps1`
+- **Mac / Linux (Bash)**: `./scripts/launch-dev.sh` (Recuerda dar permisos con `chmod +x scripts/*.sh`)
+
+### 🚀 Despliegue de Producción
+Este script construye las imágenes finales, aplica las migraciones de Alembic y limpia archivos temporales.
+
+- **Windows (PS)**: `.\scripts\launch-prod.ps1`
+- **Mac / Linux (Bash)**: `./scripts/launch-prod.sh`
+
+---
 
 ### 🌐 Acceso a los Servicios
 
-Una vez que los contenedores estén corriendo, puedes acceder a los siguientes servicios en tu navegador:
+Una vez que los servicios estén activos:
 
 - **Frontend (Aplicación)**: [http://localhost:3000](http://localhost:3000)
 - **Backend (API + Swagger/Docs)**: [http://localhost:8000/docs](http://localhost:8000/docs)
@@ -85,27 +93,21 @@ Una vez que los contenedores estén corriendo, puedes acceder a los siguientes s
 
 ## 🗄️ Gestión de Base de Datos
 
-Para inicializar y poblar la base de datos del **Comedor Escolar**, utiliza los siguientes comandos según tu entorno:
+Los archivos SQL de referencia se han consolidado en el backend para una mejor organización.
 
-### 🛠️ Inicialización (Docker)
+- **Ubicación**: `backend/db/sql/`
+- **Esquema**: `schema.sql` (Define tablas de usuarios, productos, ventas, etc.)
+- **Semillas**: `seed_data.sql` (Datos de ejemplo para el Demo)
 
-**Para Desarrollo (`dev`):**
-```bash
-# 1. Crear Tablas
-docker exec -i smartfood_db_dev psql -U smartfood -d smartfood_db < db/schema.sql
+### 🔍 Consultar datos en pgAdmin (Visual)
 
-# 2. Cargar Datos de Ejemplo (Seed)
-docker exec -i smartfood_db_dev psql -U smartfood -d smartfood_db < db/seed_data.sql
-```
-
-**Para Producción:**
-```bash
-# 1. Crear Tablas
-docker exec -i smartfood_db psql -U smartfood -d smartfood_db < db/schema.sql
-
-# 2. Cargar Datos de Ejemplo (Seed)
-docker exec -i smartfood_db psql -U smartfood -d smartfood_db < db/seed_data.sql
-```
+1. **Registrar Servidor**: Clic derecho en `Servers` -> `Register` -> `Server`.
+2. **Conexión**:
+   - **Host name**: `db`
+   - **Maintenance database**: `smartfood`
+   - **Username**: `postgres`
+   - **Password**: `postgres` (o el indicado en tu `.env`)
+3. **Explorar**: Navega por `Databases` -> `smartfood` -> `Schemas` -> `public` -> `Tables`.
 
 ### 🔍 Consultar datos en pgAdmin (Visual)
 
