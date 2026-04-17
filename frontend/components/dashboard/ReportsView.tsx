@@ -36,7 +36,7 @@ export function ReportsView({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.reports}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-medium text-lg">Genera reportes y exporta.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">Genera reportes y exporta.</p>
         </motion.div>
       </div>
 
@@ -44,7 +44,7 @@ export function ReportsView({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/30">
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">Tipo</div>
-            <select value={reportsType} onChange={(e) => setReportsType(e.target.value as any)} className="w-full bg-transparent outline-none text-sm font-black text-slate-900 dark:text-white">
+            <select value={reportsType} onChange={(e) => setReportsType(e.target.value as any)} className="w-full bg-transparent outline-none text-sm font-normal text-slate-900 dark:text-white">
               <option value="sales">Ventas</option>
               <option value="inventory">Inventario</option>
               <option value="finance">Financiero</option>
@@ -52,7 +52,7 @@ export function ReportsView({
           </div>
           <div className="px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/30">
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">Rango</div>
-            <select value={reportsRange} onChange={(e) => setReportsRange(e.target.value as any)} className="w-full bg-transparent outline-none text-sm font-black text-slate-900 dark:text-white">
+            <select value={reportsRange} onChange={(e) => setReportsRange(e.target.value as any)} className="w-full bg-transparent outline-none text-sm font-normal text-slate-900 dark:text-white">
               <option value="today">Hoy</option>
               <option value="7d">7 dias</option>
               <option value="30d">30 dias</option>
@@ -73,13 +73,13 @@ export function ReportsView({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
             <div className="px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/30">
               <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">Desde</div>
-              <input type="date" value={reportsFrom} onChange={(e) => setReportsFrom(e.target.value)} className="w-full bg-transparent outline-none text-sm font-black text-slate-900 dark:text-white" />
+              <input type="date" value={reportsFrom} onChange={(e) => setReportsFrom(e.target.value)} className="w-full bg-transparent outline-none text-sm font-normal text-slate-900 dark:text-white" />
             </div>
             <div className="px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/30">
               <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">Hasta</div>
-              <input type="date" value={reportsTo} onChange={(e) => setReportsTo(e.target.value)} className="w-full bg-transparent outline-none text-sm font-black text-slate-900 dark:text-white" />
+              <input type="date" value={reportsTo} onChange={(e) => setReportsTo(e.target.value)} className="w-full bg-transparent outline-none text-sm font-normal text-slate-900 dark:text-white" />
             </div>
-            <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/30 flex items-center gap-2 text-slate-700 dark:text-slate-200 font-black text-sm">
+            <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/30 flex items-center gap-2 text-slate-700 dark:text-slate-200 font-normal text-sm">
               <CalendarRange className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Rango personalizado
             </div>
           </div>
@@ -116,7 +116,7 @@ export function ReportsView({
           <div className="space-y-3">
             {["Corte diario", "Semanal ejecutivo", "Inventario critico", "Ventas por producto"].map((x) => (
               <button key={x} className="w-full text-left p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-900/50 transition-all">
-                <div className="text-sm font-black text-slate-900 dark:text-white">{x}</div>
+                <div className="text-sm font-normal text-slate-900 dark:text-white">{x}</div>
                 <div className="text-[12px] text-slate-500 dark:text-slate-400 mt-1">Genera con un click.</div>
               </button>
             ))}

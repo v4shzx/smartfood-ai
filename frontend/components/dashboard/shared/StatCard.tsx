@@ -28,14 +28,14 @@ export function StatCard({
           {icon}
         </div>
         {trend && (
-          <span className="text-[10px] font-black bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-1 rounded-lg">
+          <span className="text-[10px] font-normal bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-1 rounded-lg">
             {trend}
           </span>
         )}
       </div>
-      <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">{title}</div>
+      <div className="text-slate-400 dark:text-slate-500 text-[10px] font-normal uppercase tracking-widest mb-1">{title}</div>
       <div className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{value}</div>
-      <div className="text-[10px] text-slate-400 dark:text-slate-500 font-bold mt-1.5 uppercase tracking-wider">{subtitle}</div>
+      <div className="text-[10px] text-slate-400 dark:text-slate-500 font-normal mt-1.5 uppercase tracking-wider">{subtitle}</div>
     </motion.div>
   );
 }

@@ -65,7 +65,7 @@ export function InventoryView({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.inventory}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-medium text-lg">Control de insumos, stock crítico y movimientos.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">Control de insumos, stock crítico y movimientos.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-3">
@@ -79,22 +79,22 @@ export function InventoryView({
         <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
           <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Stock Critico</div>
           <div className="text-3xl font-black text-rose-500 tracking-tight">{invCritical.length}</div>
-          <div className="text-[10px] text-slate-400 font-bold mt-1.5 uppercase tracking-wider">Insumos por agotar</div>
+          <div className="text-[10px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">Insumos por agotar</div>
         </div>
         <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
           <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Movimientos Hoy</div>
           <div className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">12</div>
-          <div className="text-[10px] text-slate-400 font-bold mt-1.5 uppercase tracking-wider">Entradas y salidas</div>
+          <div className="text-[10px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">Entradas y salidas</div>
         </div>
         <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
           <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Valor Estimado</div>
           <div className="text-3xl font-black text-emerald-600 tracking-tight">$14.2k</div>
-          <div className="text-[10px] text-slate-400 font-bold mt-1.5 uppercase tracking-wider">Costo total stock</div>
+          <div className="text-[10px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">Costo total stock</div>
         </div>
         <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
           <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Pendiente</div>
           <div className="text-3xl font-black text-sky-500 tracking-tight">2</div>
-          <div className="text-[10px] text-slate-400 font-bold mt-1.5 uppercase tracking-wider">Ordenes de compra</div>
+          <div className="text-[10px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">Ordenes de compra</div>
         </div>
       </div>
 
@@ -108,7 +108,7 @@ export function InventoryView({
                   value={invQuery}
                   onChange={(e) => setInvQuery(e.target.value)}
                   placeholder="Buscar por insumo o SKU..."
-                  className="w-full bg-transparent outline-none text-sm font-semibold text-slate-700 dark:text-slate-200"
+                  className="w-full bg-transparent outline-none text-sm font-normal text-slate-700 dark:text-slate-200"
                 />
               </div>
               <button
@@ -144,7 +144,7 @@ export function InventoryView({
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-black text-slate-900 dark:text-white truncate">{it.name}</span>
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{it.sku}</span>
+                        <span className="text-[10px] font-normal text-slate-400 uppercase tracking-widest">{it.sku}</span>
                       </div>
                       <div className="flex items-center gap-3 text-[12px] text-slate-500 dark:text-slate-400 mt-1">
                         <span>Actualizado: {new Date(it.updatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
@@ -204,7 +204,7 @@ export function InventoryView({
                 <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">
                   {new Date(m.ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </div>
-                <div className="text-sm font-black text-slate-900 dark:text-white">
+                <div className="text-sm font-normal text-slate-900 dark:text-white">
                   {m.type === "in" ? "+" : ""}{m.qty} {m.note}
                 </div>
               </div>
@@ -268,7 +268,7 @@ export function InventoryView({
                         type="number"
                         value={invMoveQty}
                         onChange={(e) => setInvMoveQty(Number(e.target.value))}
-                        className="w-full bg-transparent outline-none text-sm font-bold"
+                        className="w-full bg-transparent outline-none text-sm font-normal"
                       />
                     </div>
                   </div>
@@ -286,7 +286,7 @@ export function InventoryView({
                     value={invMoveNote}
                     onChange={(e) => setInvMoveNote(e.target.value)}
                     placeholder="Ej. Compra semanal, Merma por calor..."
-                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-bold focus:border-emerald-500/40 transition-all"
+                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-normal focus:border-emerald-500/40 transition-all"
                   />
                 </div>
 

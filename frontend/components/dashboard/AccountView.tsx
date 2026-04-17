@@ -71,7 +71,7 @@ export function AccountView({ t, handleLogout, students, mealPlans }: AccountVie
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.account_title}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-medium text-lg">{t.dashboard.account_sub}</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">{t.dashboard.account_sub}</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
@@ -118,7 +118,7 @@ export function AccountView({ t, handleLogout, students, mealPlans }: AccountVie
                   </div>
                   <div className="min-w-0">
                     <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Idioma</div>
-                    <div className="text-sm font-bold text-slate-700 dark:text-slate-200">Español (México)</div>
+                    <div className="text-sm font-normal text-slate-700 dark:text-slate-200">Español (México)</div>
                   </div>
                 </div>
               </div>
@@ -166,7 +166,7 @@ export function AccountView({ t, handleLogout, students, mealPlans }: AccountVie
                           type="email"
                           value={tempEmail}
                           onChange={(e) => setTempEmail(e.target.value)}
-                          className="w-full bg-white dark:bg-slate-950 border border-emerald-500/30 rounded-xl px-3 py-2 text-sm font-bold outline-none shadow-inner"
+                          className="w-full bg-white dark:bg-slate-950 border border-emerald-500/30 rounded-xl px-3 py-2 text-sm font-normal outline-none shadow-inner"
                           autoFocus
                         />
                         <button onClick={handleSaveEmail} className="p-2 bg-emerald-600 text-white rounded-xl shadow-lg shadow-emerald-500/20 active:scale-95 transition-all">
@@ -177,7 +177,7 @@ export function AccountView({ t, handleLogout, students, mealPlans }: AccountVie
                         </button>
                       </div>
                     ) : (
-                      <div className="text-sm font-black text-slate-900 dark:text-white truncate">{email}</div>
+                      <div className="text-sm font-normal text-slate-900 dark:text-white truncate">{email}</div>
                     )}
                   </div>
                 </div>
@@ -199,7 +199,7 @@ export function AccountView({ t, handleLogout, students, mealPlans }: AccountVie
                     </div>
                     <div>
                       <div className="text-sm font-black text-slate-900 dark:text-white">Cambiar Contraseña</div>
-                      <div className="text-[11px] text-slate-500 dark:text-slate-400 font-bold mt-0.5">Actualizada hace 2 meses</div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 font-normal mt-0.5">Actualizada hace 2 meses</div>
                     </div>
                   </div>
                   {!isEditingPassword && (
@@ -227,7 +227,7 @@ export function AccountView({ t, handleLogout, students, mealPlans }: AccountVie
                             type="password" 
                             value={passForm.current}
                             onChange={(e) => setPassForm({...passForm, current: e.target.value})}
-                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-emerald-500/50 transition-colors"
+                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors"
                             placeholder="••••••••"
                           />
                         </div>
@@ -237,7 +237,7 @@ export function AccountView({ t, handleLogout, students, mealPlans }: AccountVie
                             type="password" 
                             value={passForm.new}
                             onChange={(e) => setPassForm({...passForm, new: e.target.value})}
-                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-emerald-500/50 transition-colors"
+                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors"
                             placeholder="••••••••"
                           />
                         </div>
@@ -247,14 +247,14 @@ export function AccountView({ t, handleLogout, students, mealPlans }: AccountVie
                             type="password" 
                             value={passForm.confirm}
                             onChange={(e) => setPassForm({...passForm, confirm: e.target.value})}
-                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-emerald-500/50 transition-colors"
+                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors"
                             placeholder="••••••••"
                           />
                         </div>
                       </div>
 
                       {passError && (
-                        <div className="mt-4 text-xs font-bold text-rose-500 bg-rose-50 dark:bg-rose-500/10 px-4 py-2 rounded-lg border border-rose-100 dark:border-rose-500/20">
+                        <div className="mt-4 text-xs font-normal text-rose-500 bg-rose-50 dark:bg-rose-500/10 px-4 py-2 rounded-lg border border-rose-100 dark:border-rose-500/20">
                           {passError}
                         </div>
                       )}
@@ -288,7 +288,7 @@ export function AccountView({ t, handleLogout, students, mealPlans }: AccountVie
                   </div>
                   <div>
                     <div className="text-sm font-black text-slate-900 dark:text-white">{t.dashboard.notifications_title}</div>
-                    <div className="text-[11px] text-slate-500 dark:text-slate-400 font-bold mt-0.5">{t.dashboard.notifications_sub}</div>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 font-normal mt-0.5">{t.dashboard.notifications_sub}</div>
                   </div>
                 </div>
                 <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-emerald-500 transition-colors">{lang === 'es' ? 'Configurar' : (lang === 'fr' ? 'Configurer' : 'Configure')}</div>

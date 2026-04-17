@@ -45,7 +45,7 @@ export function StaffView({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.staff}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-medium text-lg">Roles, estado y ultima actividad.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">Roles, estado y ultima actividad.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-3">
@@ -60,7 +60,7 @@ export function StaffView({
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div>
               <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">Equipo</h3>
-              <p className="text-xs text-slate-400 dark:text-slate-500 font-bold mt-1 uppercase tracking-widest">Busqueda y roles</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 font-normal mt-1 uppercase tracking-widest">Busqueda y roles</p>
             </div>
             <div className="w-full md:w-[360px]">
               <div className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
@@ -76,15 +76,15 @@ export function StaffView({
                 <div className="min-w-0">
                   <div className="text-sm font-black text-slate-900 dark:text-white">{u.name}</div>
                   <div className="text-[12px] text-slate-500 dark:text-slate-400 mt-1">
-                    Rol: <span className="font-bold">{u.role}</span> · Ultima actividad:{" "}
-                    <span className="font-bold">{new Date(u.lastActiveAt).toLocaleString()}</span>
+                    Rol: <span className="font-normal">{u.role}</span> · Ultima actividad:{" "}
+                    <span className="font-normal">{new Date(u.lastActiveAt).toLocaleString()}</span>
                   </div>
                 </div>
                 <div className="shrink-0 flex items-center gap-2">
                   <div className={cn("text-[10px] font-black uppercase tracking-[0.2em] px-2 py-1 rounded-lg border", u.active ? "border-emerald-200 text-emerald-700 bg-emerald-50 dark:border-emerald-500/20 dark:text-emerald-200 dark:bg-emerald-500/10" : "border-slate-200 text-slate-500 bg-white dark:border-slate-800 dark:text-slate-400 dark:bg-slate-950/30")}>
                     {u.active ? "Activo" : "Inactivo"}
                   </div>
-                  <button onClick={() => staffOpenEdit(u.id)} className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-950/30 text-xs font-black uppercase tracking-widest">
+                  <button onClick={() => staffOpenEdit(u.id)} className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-950/30 text-xs font-normal uppercase tracking-widest">
                     <Pencil className="w-4 h-4" /> Editar
                   </button>
                 </div>

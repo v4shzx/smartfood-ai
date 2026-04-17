@@ -73,7 +73,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-500 font-sans selection:bg-emerald-500/30">
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-500 font-sans font-normal selection:bg-emerald-500/30">
       {/* Sidebar */}
       <aside
         className={cn(
@@ -237,7 +237,7 @@ export default function Dashboard() {
               ) : (
                 <div className="flex items-center gap-2 px-4 w-full">
                   <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{t.dashboard.collapse}</span>
+                  <span className="text-[10px] font-normal uppercase tracking-widest text-slate-500">{t.dashboard.collapse}</span>
                 </div>
               )}
             </button>
@@ -279,7 +279,7 @@ export default function Dashboard() {
                 className="flex items-center group ml-2"
               >
                 <div className="w-11 h-11 rounded-2xl bg-emerald-600 flex items-center justify-center transition-all group-hover:scale-105 active:scale-95 shadow-lg shadow-emerald-600/20">
-                  <span className="text-xs font-black text-white uppercase tracking-wider">AB</span>
+                  <span className="text-xs font-normal text-white uppercase tracking-wider">AB</span>
                 </div>
               </button>
 
@@ -299,7 +299,7 @@ export default function Dashboard() {
                         setActiveTab("account");
                         setIsUserMenuOpen(false);
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-xs font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all rounded-2xl"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-xs font-normal uppercase tracking-widest text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all rounded-2xl"
                     >
                       <User className="w-4 h-4" />
                       {t.dashboard.profile}
@@ -309,7 +309,7 @@ export default function Dashboard() {
                     
                     <button 
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-xs font-black uppercase tracking-widest text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-all rounded-2xl"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-xs font-normal uppercase tracking-widest text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-all rounded-2xl"
                     >
                       <LogOut className="w-4 h-4" />
                       {t.dashboard.logout}

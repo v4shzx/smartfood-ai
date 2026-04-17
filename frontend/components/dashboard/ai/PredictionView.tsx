@@ -37,7 +37,7 @@ export function PredictionView({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.prediction}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-medium text-lg">Demanda por hora y recomendaciones de stock.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">Demanda por hora y recomendaciones de stock.</p>
         </motion.div>
       </div>
 
@@ -46,12 +46,12 @@ export function PredictionView({
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div>
               <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">Prediccion hoy</h3>
-              <p className="text-xs text-slate-400 dark:text-slate-500 font-bold mt-1 uppercase tracking-widest">Tickets estimados por hora</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 font-normal mt-1 uppercase tracking-widest">Tickets estimados por hora</p>
             </div>
             <div className="flex items-center gap-2">
               <div className="px-4 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/30">
                 <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Escenario</div>
-                <select value={predictionScenario} onChange={(e) => setPredictionScenario(e.target.value as any)} className="bg-transparent outline-none text-sm font-black text-slate-900 dark:text-white w-full">
+                <select value={predictionScenario} onChange={(e) => setPredictionScenario(e.target.value as any)} className="bg-transparent outline-none text-sm font-normal text-slate-900 dark:text-white w-full">
                   <option value="baseline">Base</option>
                   <option value="promo">Promocion</option>
                   <option value="rain">Lluvia</option>
@@ -61,7 +61,7 @@ export function PredictionView({
                 <div className="px-4 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/30">
                   <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Lift</div>
                   <input type="range" min={0} max={40} value={predictionLift} onChange={(e) => setPredictionLift(Number(e.target.value))} className="w-40" />
-                  <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{predictionLift}%</div>
+                  <div className="text-[10px] font-normal uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{predictionLift}%</div>
                 </div>
               )}
             </div>

@@ -24,7 +24,7 @@ export function SidebarItem({
       whileHover={{ x: isCollapsed ? 0 : 4 }}
       onClick={onClick}
       className={cn(
-        "flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer group",
+        "flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-normal uppercase tracking-wider transition-all cursor-pointer group",
         active
           ? "bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 shadow-sm"
           : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50",

@@ -22,7 +22,7 @@ export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.trends}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-medium text-lg">Descubre patrones ocultos procesados por nuestro motor de IA.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">Descubre patrones ocultos procesados por nuestro motor de IA.</p>
         </motion.div>
       </div>
 
@@ -60,11 +60,11 @@ export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
             <div className="space-y-4">
               <div className="p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10">
                 <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 mb-1">Crossover</div>
-                <div className="text-sm font-bold text-slate-700 dark:text-white">Activar promocion: Tacos + Bebida los martes para subir ticket promedio en horario valle.</div>
+                <div className="text-sm font-normal text-slate-700 dark:text-white">Activar promocion: Tacos + Bebida los martes para subir ticket promedio en horario valle.</div>
               </div>
               <div className="p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10">
                 <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 mb-1">Stock</div>
-                <div className="text-sm font-bold text-slate-700 dark:text-white">Ajustar pedido de Tortilla los viernes: la demanda sube 40% el fin de semana.</div>
+                <div className="text-sm font-normal text-slate-700 dark:text-white">Ajustar pedido de Tortilla los viernes: la demanda sube 40% el fin de semana.</div>
               </div>
             </div>
           </div>
@@ -77,7 +77,7 @@ export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
                 <TrendingDown className="w-6 h-6" />
               </div>
               <div>
-                <div className="text-sm font-black text-rose-600 dark:text-rose-400 italic">Posible excedente detectado</div>
+                <div className="text-sm font-normal text-rose-600 dark:text-rose-400 italic">Posible excedente detectado</div>
                 <p className="text-[12px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
                   La proxima semana baja la demanda de Postres un 15% segun proyeccion climatica.
                 </p>

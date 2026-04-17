@@ -61,7 +61,7 @@ export function StoreView({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.store}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-medium text-lg">Productos, categorias, precios e imagenes.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">Productos, categorias, precios e imagenes.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-3">
@@ -93,7 +93,7 @@ export function StoreView({
               <select
                 value={storeCategory}
                 onChange={(e) => setStoreCategory(e.target.value as typeof storeCategory)}
-                className="w-full bg-transparent outline-none text-sm font-black text-slate-900 dark:text-white"
+                className="w-full bg-transparent outline-none text-sm font-normal text-slate-900 dark:text-white"
               >
                 <option value="all">Todas</option>
                 {storeCategories.map((c) => (
@@ -107,7 +107,7 @@ export function StoreView({
           <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
             <div>
               <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Disponibles</div>
-              <div className="text-sm font-black text-slate-900 dark:text-white">Solo activos</div>
+              <div className="text-sm font-normal text-slate-900 dark:text-white">Solo activos</div>
             </div>
             <button
               onClick={() => setStoreOnlyAvailable((v: boolean) => !v)}
@@ -143,7 +143,7 @@ export function StoreView({
               <Store className="w-10 h-10 text-slate-300" />
               {!p.available && (
                 <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] flex items-center justify-center">
-                  <span className="bg-white/10 border border-white/20 text-white text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">Agotado</span>
+                  <span className="bg-white/10 border border-white/20 text-white text-[10px] font-normal uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">Agotado</span>
                 </div>
               )}
             </div>
@@ -158,7 +158,7 @@ export function StoreView({
               <div className="mt-6 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
                 <button
                   onClick={() => storeOpenEdit(p.id)}
-                  className="flex-1 flex items-center justify-center gap-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all"
+                  className="flex-1 flex items-center justify-center gap-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 py-2.5 rounded-xl text-[10px] font-normal uppercase tracking-widest hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all"
                 >
                   <Pencil className="w-3.5 h-3.5" /> Editar
                 </button>
@@ -214,7 +214,7 @@ export function StoreView({
                     value={storeForm.name}
                     onChange={(e) => setStoreForm({ ...storeForm, name: e.target.value })}
                     placeholder="Ej. Taco al Pastor"
-                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-bold focus:border-emerald-500/40 transition-all"
+                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-normal focus:border-emerald-500/40 transition-all"
                   />
                 </div>
 
@@ -224,7 +224,7 @@ export function StoreView({
                     <select
                       value={storeForm.category}
                       onChange={(e) => setStoreForm({ ...storeForm, category: e.target.value as any })}
-                      className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-bold focus:border-emerald-500/40 transition-all"
+                      className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-normal focus:border-emerald-500/40 transition-all"
                     >
                       {storeCategories.map((c) => (
                         <option key={c} value={c}>{c}</option>
@@ -237,17 +237,16 @@ export function StoreView({
                       type="number"
                       value={storeForm.price}
                       onChange={(e) => setStoreForm({ ...storeForm, price: e.target.value })}
-                      className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-bold focus:border-emerald-500/40 transition-all"
+                      className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-normal focus:border-emerald-500/40 transition-all"
                     />
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
-                  <div>
-                    <div className="text-sm font-black text-slate-900 dark:text-white">Disponibilidad</div>
-                    <div className="text-[10px] font-black text-slate-400 uppercase mt-0.5">Mostrar en el POS</div>
-                  </div>
-                  <button
+                <div>
+                  <div className="text-sm font-normal text-slate-900 dark:text-white">Disponibilidad</div>
+                  <div className="text-[10px] font-normal text-slate-400 uppercase mt-0.5">Mostrar en el POS</div>
+                </div>                  <button
                     onClick={() => setStoreForm({ ...storeForm, available: !storeForm.available })}
                     className={cn(
                       "w-12 h-7 rounded-full border transition-all relative",

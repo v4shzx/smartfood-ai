@@ -47,16 +47,16 @@ export function SalesView({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.sales}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-medium text-lg">Historial, filtros y detalle por transaccion.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">Historial, filtros y detalle por transaccion.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-3">
-          <button className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest hover:border-emerald-500/40 transition-all shadow-sm">
+          <button className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-5 py-3 rounded-2xl text-xs font-normal uppercase tracking-widest hover:border-emerald-500/40 transition-all shadow-sm">
             <Download className="w-4 h-4" /> Exportar CSV
           </button>
           <button
             onClick={() => setActiveTab("pos")}
-            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20 active:scale-95 transition-all"
+            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-2xl text-xs font-normal uppercase tracking-widest shadow-lg shadow-emerald-500/20 active:scale-95 transition-all"
           >
             <ShoppingCart className="w-4 h-4" /> Ir a POS
           </button>

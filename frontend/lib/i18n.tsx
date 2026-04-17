@@ -20,7 +20,7 @@ export const T = {
     hero_p: "Con SmartFood, anticipa la demanda de alimentos usando IA y machine learning. Ajusta tu inventario automáticamente y visualiza todo con dashboards claros y accionables.",
     try: "Probar SmartFood AI",
     demo: "Ver Demo",
-    integrations: "Impulsado por pipelines modernos de Salud e IA",
+    integrations: "Impulsado por tecnologías de alto rendimiento y de nueva generación",
     feat_title: "Inteligencia en cada comida.",
     feat_sub: "Optimiza la gestión de tu inventario. Deja que la IA avanzada construya la estrategia perfecta para tu negocio.",
     feats: [
@@ -184,7 +184,7 @@ export const T = {
     hero_p: "With SmartFood, anticipate food demand using AI and machine learning. Automatically adjust your inventory and visualize everything with clear, actionable dashboards.",
     try: "Try SmartFood AI",
     demo: "View Demo",
-    integrations: "Powered by modern Health & AI pipelines",
+    integrations: "Powered by high-performance and next-generation technologies",
     feat_title: "Intelligence at every meal.",
     feat_sub: "Optimize your inventory management. Let advanced AI build the perfect strategy for your business.",
     feats: [
@@ -348,7 +348,7 @@ export const T = {
     hero_p: "Avec SmartFood, anticipez la demande alimentaire grâce à l'IA et au machine learning. Ajustez automatiquement votre inventaire et visualisez tout avec des tableaux de bord clairs et exploitables.",
     try: "Essayer SmartFood AI",
     demo: "Voir la Démo",
-    integrations: "Propulsé par des pipelines Santé et IA modernes",
+    integrations: "Propulsé par des technologies de haute performance et de nouvelle génération",
     feat_title: "L'intelligence à chaque repas.",
     feat_sub: "Optimisez la gestion de votre inventaire. Laissez l'IA construire la stratégie parfaite pour votre entreprise.",
     feats: [

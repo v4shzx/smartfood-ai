@@ -56,7 +56,7 @@ export function SuppliersView({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.suppliers}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-medium text-lg">Directorio de contacto, tiempos de entrega y notas.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">Directorio de contacto, tiempos de entrega y notas.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-3">
@@ -137,11 +137,11 @@ export function SuppliersView({
                 <div className="space-y-1">
                   <div className="flex items-center gap-3 text-slate-600 dark:text-slate-400">
                     <Phone className="w-4 h-4" />
-                    <span className="text-sm font-bold">{supSelected.phone}</span>
+                    <span className="text-sm font-normal">{supSelected.phone}</span>
                   </div>
                   <div className="flex items-center gap-3 text-slate-600 dark:text-slate-400">
                     <Mail className="w-4 h-4" />
-                    <span className="text-sm font-bold truncate">{supSelected.email}</span>
+                    <span className="text-sm font-normal truncate">{supSelected.email}</span>
                   </div>
                 </div>
 
@@ -162,14 +162,14 @@ export function SuppliersView({
 
                 <div className="space-y-2">
                   <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Notas</div>
-                  <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 text-[12px] text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+                  <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 text-[12px] text-slate-600 dark:text-slate-400 font-normal leading-relaxed">
                     {supSelected.notes || "Sin notas adicionales."}
                   </div>
                 </div>
 
                 <div className="pt-4 space-y-3">
                   <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Historial</div>
-                  <div className="text-[12px] font-bold text-slate-500">
+                  <div className="text-[12px] font-normal text-slate-500">
                     Ultima compra: {supSelected.lastPurchaseAt ? new Date(supSelected.lastPurchaseAt).toLocaleDateString() : "Nunca"}
                   </div>
                   <button className="w-full py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-90 active:scale-95 transition-all">
@@ -181,7 +181,7 @@ export function SuppliersView({
           ) : (
             <div className="py-20 text-center">
               <Building2 className="w-12 h-12 text-slate-200 dark:text-slate-800 mx-auto mb-4" />
-              <div className="text-sm font-black text-slate-400">Selecciona un proveedor para ver detalles</div>
+              <div className="text-sm font-normal text-slate-400">Selecciona un proveedor para ver detalles</div>
             </div>
           )}
         </div>
@@ -213,7 +213,7 @@ export function SuppliersView({
                   <input
                     value={supForm.name}
                     onChange={(e) => setSupForm({ ...supForm, name: e.target.value })}
-                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-bold focus:border-emerald-500/40 transition-all"
+                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-normal focus:border-emerald-500/40 transition-all"
                   />
                 </div>
 
@@ -223,7 +223,7 @@ export function SuppliersView({
                     <input
                       value={supForm.contact}
                       onChange={(e) => setSupForm({ ...supForm, contact: e.target.value })}
-                      className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-bold focus:border-emerald-500/40 transition-all"
+                      className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-normal focus:border-emerald-500/40 transition-all"
                     />
                   </div>
                   <div className="space-y-2">
@@ -232,7 +232,7 @@ export function SuppliersView({
                       type="number"
                       value={supForm.leadDays}
                       onChange={(e) => setSupForm({ ...supForm, leadDays: Number(e.target.value) })}
-                      className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-bold focus:border-emerald-500/40 transition-all"
+                      className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-normal focus:border-emerald-500/40 transition-all"
                     />
                   </div>
                 </div>
@@ -242,7 +242,7 @@ export function SuppliersView({
                   <input
                     value={supForm.phone}
                     onChange={(e) => setSupForm({ ...supForm, phone: e.target.value })}
-                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-bold focus:border-emerald-500/40 transition-all"
+                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-normal focus:border-emerald-500/40 transition-all"
                   />
                 </div>
 
@@ -251,7 +251,7 @@ export function SuppliersView({
                   <input
                     value={supForm.email}
                     onChange={(e) => setSupForm({ ...supForm, email: e.target.value })}
-                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-bold focus:border-emerald-500/40 transition-all"
+                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-normal focus:border-emerald-500/40 transition-all"
                   />
                 </div>
 
@@ -261,7 +261,7 @@ export function SuppliersView({
                     rows={3}
                     value={supForm.notes}
                     onChange={(e) => setSupForm({ ...supForm, notes: e.target.value })}
-                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-bold focus:border-emerald-500/40 transition-all resize-none"
+                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-normal focus:border-emerald-500/40 transition-all resize-none"
                   />
                 </div>
 
