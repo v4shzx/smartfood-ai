@@ -393,10 +393,10 @@ function Integrations() {
           <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 mb-12 uppercase tracking-[0.3em]">{t.integrations}</p>
           <div className="flex flex-wrap justify-center gap-10 md:gap-20 items-center opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
             {[
-              { icon: <Cpu className="w-6 h-6 text-emerald-600" />, label: "Meta Llama" },
-              { icon: <Database className="w-6 h-6 text-emerald-600" />, label: "Apple Health" },
-              { icon: <Activity className="w-6 h-6 text-emerald-600" />, label: "Google Fit" },
-              { icon: <CloudCog className="w-6 h-6 text-emerald-600" />, label: "OpenAI" },
+              { icon: <LineChart className="w-6 h-6 text-emerald-600" />, label: "Facebook Prophet" },
+              { icon: <Zap className="w-6 h-6 text-emerald-600" />, label: "FastAPI" },
+              { icon: <Database className="w-6 h-6 text-emerald-600" />, label: "PostgreSQL" },
+              { icon: <Cpu className="w-6 h-6 text-emerald-600" />, label: "Next.js" },
             ].map((item, i) => (
               <motion.div 
                 key={i}
