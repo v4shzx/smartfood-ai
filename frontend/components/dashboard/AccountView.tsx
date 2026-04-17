@@ -130,12 +130,25 @@ export function AccountView({ t, handleLogout, students, mealPlans }: AccountVie
               <CreditCard className="w-32 h-32" />
             </div>
             <div className="relative z-10">
-              <div className="text-[10px] font-black uppercase tracking-[.25em] text-emerald-100 bg-white/10 w-fit px-3 py-1 rounded-full mb-6">Plan Pro Edition</div>
-              <h4 className="text-xl font-black mb-2">{t.dashboard.billing_title}</h4>
-              <p className="text-emerald-50/80 text-sm mb-6 leading-relaxed">
-                Gestionas inventario, ventas y predicciones de demanda con inteligencia artificial activa.
-              </p>
-              <button className="w-full py-3.5 bg-white text-emerald-700 rounded-2xl font-black text-xs uppercase tracking-[0.15em] hover:bg-emerald-50 transition-colors shadow-lg">
+              <h4 className="text-xl font-black mb-6">{t.dashboard.billing_title}</h4>
+              
+              <div className="space-y-4 mb-8">
+                <div>
+                  <div className="text-[10px] font-black uppercase tracking-[.25em] text-emerald-100/60 mb-1">{t.dashboard.sub_type}</div>
+                  <div className="text-sm font-bold bg-white/10 w-fit px-3 py-1 rounded-lg">{t.dashboard.sub_pro}</div>
+                </div>
+                
+                <div>
+                  <div className="text-[10px] font-black uppercase tracking-[.25em] text-emerald-100/60 mb-1">{t.dashboard.sub_status}</div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <div className="text-sm font-bold">{t.dashboard.sub_active}</div>
+                  </div>
+                </div>
+              </div>
+
+              <button className="w-full py-3.5 bg-white text-emerald-700 rounded-2xl font-black text-xs uppercase tracking-[0.15em] hover:bg-emerald-50 transition-colors shadow-lg flex items-center justify-center gap-2">
+                <CreditCard className="w-4 h-4" />
                 {t.dashboard.manage_billing}
               </button>
             </div>

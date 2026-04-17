@@ -175,6 +175,12 @@ export const T = {
       manage_billing: "Gestionar Pago",
       notifications_title: "Notificaciones",
       notifications_sub: "Configurar alertas y reportes",
+      sub_type: "Tipo de Suscripción",
+      sub_status: "Estatus de Suscripción",
+      sub_active: "Activa",
+      sub_basic: "Plan Básico",
+      sub_pro: "Plan Profesional Edition",
+      sub_enterprise: "Plan Empresarial Pro",
     }
   },
   en: {
@@ -339,6 +345,12 @@ export const T = {
       manage_billing: "Manage Billing",
       notifications_title: "Notifications",
       notifications_sub: "Configure alerts and reports",
+      sub_type: "Subscription Type",
+      sub_status: "Subscription Status",
+      sub_active: "Active",
+      sub_basic: "Basic Plan",
+      sub_pro: "Professional Plan Edition",
+      sub_enterprise: "Enterprise Pro Plan",
     }
   },
   fr: {
@@ -503,6 +515,12 @@ export const T = {
       manage_billing: "Gérer le Paiement",
       notifications_title: "Notifications",
       notifications_sub: "Configurer les alertes et les rapports",
+      sub_type: "Type d'Abonnement",
+      sub_status: "Statut de l'Abonnement",
+      sub_active: "Actif",
+      sub_basic: "Plan Basique",
+      sub_pro: "Édition Plan Professionnel",
+      sub_enterprise: "Plan Entreprise Pro",
     }
   },
 } as const;
