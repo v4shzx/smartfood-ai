@@ -10,4 +10,5 @@ class LoginResponse(BaseModel):
     email: str
     full_name: str
     role: str
+    subscription_tier: str = "basico"
     status: str = "success"

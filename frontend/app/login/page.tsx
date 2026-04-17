@@ -86,6 +86,7 @@ export default function LoginPage() {
       // Success: Save Session
       localStorage.setItem("smartfood_user_id", data.user_id);
       localStorage.setItem("smartfood_user_name", data.full_name);
+      localStorage.setItem("smartfood_subscription_tier", data.subscription_tier || "basico");
       
       router.push("/dashboard");
     } catch (err: any) {

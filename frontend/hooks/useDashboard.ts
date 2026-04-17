@@ -4,6 +4,8 @@ import { useState, useMemo, useEffect } from "react";
 import { formatCurrencyMXN } from "@/lib/dashboard-utils";
 
 export function useDashboard(t: any) {
+  const [subscriptionTier, setSubscriptionTier] = useState<string>("basico");
+
   const [activeTab, setActiveTab] = useState<
     | "home"
     | "pos"
@@ -105,7 +107,9 @@ export function useDashboard(t: any) {
         setIsLoading(true);
         // Read the logged-in user ID from localStorage
         const sessionUserId = localStorage.getItem("smartfood_user_id") || "u_demo";
-        console.log("Loading dashboard for user:", sessionUserId);
+        const tier = localStorage.getItem("smartfood_subscription_tier") || "basico";
+        setSubscriptionTier(tier.toLowerCase());
+        console.log("Loading dashboard for user:", sessionUserId, "Tier:", tier);
 
         const [studentsRes, menuRes, plansRes] = await Promise.all([
           fetch(`${API_URL}/cafeteria/students?parent_id=${sessionUserId}`).then(r => r.json()),
@@ -489,6 +493,6 @@ export function useDashboard(t: any) {
     addToCart, removeFromCart, updateCartQuantity, cartTotal,
     salesHistory, trendsInsights, activeTitle, products,
     kpis, salesSeries,
-    students, menuItems, mealPlans, isLoading
+    students, menuItems, mealPlans, isLoading, subscriptionTier
   };
 }

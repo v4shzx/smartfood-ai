@@ -62,7 +62,8 @@ export default function Dashboard() {
   }, []);
   
   const dashboard = useDashboard(t);
-  const { activeTab, setActiveTab, activeTitle } = dashboard;
+  const { activeTab, setActiveTab, activeTitle, subscriptionTier } = dashboard;
+  const isProOrAbove = subscriptionTier === "profesional" || subscriptionTier === "empresarial";
   const router = useRouter();
 
   const handleLogout = () => {
@@ -128,34 +129,36 @@ export default function Dashboard() {
               />
             </div>
 
-            <div className="mt-8 mb-4">
-              {!isSidebarCollapsed && (
-                <div className="px-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">
-                  {t.dashboard.store}
-                </div>
-              )}
-              <SidebarItem
-                icon={<Store className="w-5 h-5" />}
-                label={t.dashboard.store}
-                active={activeTab === "store"}
-                isCollapsed={isSidebarCollapsed}
-                onClick={() => setActiveTab("store")}
-              />
-              <SidebarItem
-                icon={<Box className="w-5 h-5" />}
-                label={t.dashboard.inventory}
-                active={activeTab === "inventory"}
-                isCollapsed={isSidebarCollapsed}
-                onClick={() => setActiveTab("inventory")}
-              />
-              <SidebarItem
-                icon={<Truck className="w-5 h-5" />}
-                label={t.dashboard.suppliers}
-                active={activeTab === "suppliers"}
-                isCollapsed={isSidebarCollapsed}
-                onClick={() => setActiveTab("suppliers")}
-              />
-            </div>
+            {isProOrAbove && (
+              <div className="mt-8 mb-4">
+                {!isSidebarCollapsed && (
+                  <div className="px-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">
+                    {t.dashboard.store}
+                  </div>
+                )}
+                <SidebarItem
+                  icon={<Store className="w-5 h-5" />}
+                  label={t.dashboard.store}
+                  active={activeTab === "store"}
+                  isCollapsed={isSidebarCollapsed}
+                  onClick={() => setActiveTab("store")}
+                />
+                <SidebarItem
+                  icon={<Box className="w-5 h-5" />}
+                  label={t.dashboard.inventory}
+                  active={activeTab === "inventory"}
+                  isCollapsed={isSidebarCollapsed}
+                  onClick={() => setActiveTab("inventory")}
+                />
+                <SidebarItem
+                  icon={<Truck className="w-5 h-5" />}
+                  label={t.dashboard.suppliers}
+                  active={activeTab === "suppliers"}
+                  isCollapsed={isSidebarCollapsed}
+                  onClick={() => setActiveTab("suppliers")}
+                />
+              </div>
+            )}
 
             <div className="mt-8 mb-4">
               {!isSidebarCollapsed && (
@@ -170,13 +173,15 @@ export default function Dashboard() {
                 isCollapsed={isSidebarCollapsed}
                 onClick={() => setActiveTab("charts")}
               />
-              <SidebarItem
-                icon={<TrendingUp className="w-5 h-5" />}
-                label={t.dashboard.trends}
-                active={activeTab === "trends"}
-                isCollapsed={isSidebarCollapsed}
-                onClick={() => setActiveTab("trends")}
-              />
+              {isProOrAbove && (
+                <SidebarItem
+                  icon={<TrendingUp className="w-5 h-5" />}
+                  label={t.dashboard.trends}
+                  active={activeTab === "trends"}
+                  isCollapsed={isSidebarCollapsed}
+                  onClick={() => setActiveTab("trends")}
+                />
+              )}
               <SidebarItem
                 icon={<Download className="w-5 h-5" />}
                 label={t.dashboard.reports}
@@ -186,35 +191,39 @@ export default function Dashboard() {
               />
             </div>
 
-            <div className="mt-8 mb-4">
-              {!isSidebarCollapsed && (
-                <div className="px-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">
-                  {t.dashboard.aiEngine}
-                </div>
-              )}
-              <SidebarItem
-                icon={<Brain className="w-5 h-5" />}
-                label={t.dashboard.prediction}
-                active={activeTab === "prediction"}
-                isCollapsed={isSidebarCollapsed}
-                onClick={() => setActiveTab("prediction")}
-              />
-            </div>
+            {isProOrAbove && (
+              <div className="mt-8 mb-4">
+                {!isSidebarCollapsed && (
+                  <div className="px-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">
+                    {t.dashboard.aiEngine}
+                  </div>
+                )}
+                <SidebarItem
+                  icon={<Brain className="w-5 h-5" />}
+                  label={t.dashboard.prediction}
+                  active={activeTab === "prediction"}
+                  isCollapsed={isSidebarCollapsed}
+                  onClick={() => setActiveTab("prediction")}
+                />
+              </div>
+            )}
 
-            <div className="mt-8 mb-4">
-              {!isSidebarCollapsed && (
-                <div className="px-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">
-                  Admin
-                </div>
-              )}
-              <SidebarItem
-                icon={<Users className="w-5 h-5" />}
-                label={t.dashboard.staff}
-                active={activeTab === "staff"}
-                isCollapsed={isSidebarCollapsed}
-                onClick={() => setActiveTab("staff")}
-              />
-            </div>
+            {isProOrAbove && (
+              <div className="mt-8 mb-4">
+                {!isSidebarCollapsed && (
+                  <div className="px-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">
+                    Admin
+                  </div>
+                )}
+                <SidebarItem
+                  icon={<Users className="w-5 h-5" />}
+                  label={t.dashboard.staff}
+                  active={activeTab === "staff"}
+                  isCollapsed={isSidebarCollapsed}
+                  onClick={() => setActiveTab("staff")}
+                />
+              </div>
+            )}
           </nav>
 
           {/* Sidebar Toggle */}

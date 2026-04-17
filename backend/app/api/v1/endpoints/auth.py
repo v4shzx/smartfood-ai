@@ -33,10 +33,22 @@ async def login(
             detail="Incorrect password"
         )
 
+    # For demo mapping or fallback if the model doesn't have the attribute yet
+    sub_tier = getattr(user, "subscription_tier", None)
+    if not sub_tier:
+        # Pseudo-logic for demo based on email to allow testing different tiers
+        if "empresarial" in login_data.email.lower():
+            sub_tier = "empresarial"
+        elif "profesional" in login_data.email.lower():
+            sub_tier = "profesional"
+        else:
+            sub_tier = "basico"
+
     return {
         "user_id": user.id,
         "email": user.email,
         "full_name": user.full_name,
         "role": user.role,
+        "subscription_tier": sub_tier,
         "status": "success"
     }
