@@ -16,6 +16,7 @@ import {
   ClipboardList,
   Brain,
   Zap,
+  Users
 } from "lucide-react";
 import {
   Area,
@@ -35,14 +36,18 @@ interface HomeViewProps {
   kpis: {
     todayRevenue: number;
     weekRevenue: number;
-    topProduct: { name: string; units: number };
+    topStudent: string;
+    activeStudents: number;
+    menuItemsCount: number;
     criticalInventory: { items: number; sku: string; remaining: number };
   };
   salesSeries: any[];
   setActiveTab: (tab: any) => void;
+  students: any[];
+  menuItems: any[];
 }
 
-export function HomeView({ t, kpis, salesSeries, setActiveTab }: HomeViewProps) {
+export function HomeView({ t, kpis, salesSeries, setActiveTab, students, menuItems }: HomeViewProps) {
   return (
     <>
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -51,7 +56,7 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab }: HomeViewProps) 
             <BarChart3 className="w-3.5 h-3.5" /> Resumen del negocio
           </div>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.home}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-medium text-lg">Ventas, alertas y accesos rapidos para operar hoy.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 font-medium text-lg">Gestión de alumnos, planes y comedor escolar.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-3">
@@ -68,10 +73,10 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab }: HomeViewProps) 
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard title="Ingresos hoy" value={formatCurrencyMXN(kpis.todayRevenue)} subtitle="Corte parcial del dia" icon={<DollarSign className="w-6 h-6 text-emerald-600" />} trend="+8%" />
-        <StatCard title="Ingresos semana" value={formatCurrencyMXN(kpis.weekRevenue)} subtitle="Ultimos 7 dias" icon={<TrendingUp className="w-6 h-6 text-sky-600" />} />
-        <StatCard title="Mas vendido" value={kpis.topProduct.name} subtitle={`${kpis.topProduct.units} unidades`} icon={<Store className="w-6 h-6 text-amber-600" />} />
-        <StatCard title="Inventario critico" value={`${kpis.criticalInventory.items} items`} subtitle={`${kpis.criticalInventory.sku}: ${kpis.criticalInventory.remaining} uds`} icon={<AlertTriangle className="w-6 h-6 text-rose-600" />} trend="Atencion" />
+        <StatCard title="Alumnos Activos" value={kpis.activeStudents.toString()} subtitle="Registrados en la cuenta" icon={<Users className="w-6 h-6 text-emerald-600" />} trend="Total" />
+        <StatCard title="Gasto Estimado" value={formatCurrencyMXN(kpis.todayRevenue)} subtitle="Consumo proyectado hoy" icon={<DollarSign className="w-6 h-6 text-sky-600" />} />
+        <StatCard title="Alumno Destacado" value={kpis.topStudent} subtitle="Asistencia perfecta" icon={<Store className="w-6 h-6 text-amber-600" />} />
+        <StatCard title="Avisos Sistema" value={`${kpis.criticalInventory.items} alertas`} subtitle="Pendientes de revisión" icon={<AlertTriangle className="w-6 h-6 text-rose-600" />} trend="Atención" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -101,32 +106,29 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab }: HomeViewProps) 
 
         <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
           <div className="flex items-center justify-between mb-8">
-            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">Alertas</h3>
-            <div className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-[0.2em]">Hoy</div>
+            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">Mis Alumnos</h3>
+            <div className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-[0.2em]">{students.length} Registrados</div>
           </div>
           <div className="space-y-4">
-            {[
-              { title: "Stock bajo", desc: "Tortilla 12cm esta por debajo del minimo.", tone: "rose" as const },
-              { title: "Anomalia de venta", desc: "Ticket promedio subio 18% vs ayer.", tone: "amber" as const },
-              { title: "Pendiente de proveedor", desc: "Entrega: Pollo (hoy, 5:00 PM).", tone: "sky" as const },
-            ].map((a, i) => (
-              <div key={i} className="flex items-start gap-4 p-4 bg-slate-50/60 dark:bg-slate-800/50 rounded-2xl border border-slate-100/60 dark:border-slate-800/60">
-                <div
-                  className={cn(
-                    "w-10 h-10 rounded-xl border flex items-center justify-center shrink-0",
-                    a.tone === "rose" && "bg-rose-50 border-rose-200 text-rose-600 dark:bg-rose-500/10 dark:border-rose-500/20 dark:text-rose-300",
-                    a.tone === "amber" && "bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-500/10 dark:border-amber-500/20 dark:text-amber-300",
-                    a.tone === "sky" && "bg-sky-50 border-sky-200 text-sky-700 dark:bg-sky-500/10 dark:border-sky-500/20 dark:text-sky-300"
+            {students.length > 0 ? students.map((s, i) => (
+              <div key={i} className="flex items-start gap-4 p-4 bg-slate-50/60 dark:bg-slate-800/50 rounded-2xl border border-slate-100/60 dark:border-slate-800/60 group hover:border-emerald-500/30 transition-all cursor-pointer">
+                <div className="w-12 h-12 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-emerald-600 font-black text-lg">
+                  {s.first_name[0]}{s.last_name[0]}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-black text-slate-900 dark:text-white truncate">{s.first_name} {s.last_name}</div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 font-bold mt-0.5">{s.grade || "Sin grado"} • Plan Activo</div>
+                  {s.allergies && (
+                    <div className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-tighter text-rose-500 mt-2 bg-rose-50 dark:bg-rose-500/10 px-2 py-0.5 rounded-md">
+                      <AlertTriangle className="w-2.5 h-2.5" /> {s.allergies}
+                    </div>
                   )}
-                >
-                  <Bell className="w-5 h-5" />
                 </div>
-                <div className="min-w-0">
-                  <div className="text-sm font-black text-slate-900 dark:text-white truncate">{a.title}</div>
-                  <div className="text-[12px] text-slate-500 dark:text-slate-400 leading-snug mt-1">{a.desc}</div>
-                </div>
+                <button className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-emerald-500 transition-colors">Detalles</button>
               </div>
-            ))}
+            )) : (
+              <div className="text-center py-8 text-slate-400 font-medium">No hay alumnos registrados.</div>
+            )}
           </div>
         </div>
       </div>
@@ -171,21 +173,19 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab }: HomeViewProps) 
               <Zap className="w-4 h-4" /> Predicciones recientes
             </div>
             <div className="space-y-4">
-              {[
-                { title: "Demanda alta (6:00 PM - 9:00 PM)", desc: "Aumenta produccion de tacos y refrescos.", badge: "Hoy" },
-                { title: "Riesgo de merma", desc: "Revisar inventario de vegetales antes del cierre.", badge: "48h" },
-                { title: "Reorden sugerido", desc: "Pollo: compra recomendada para 2 dias.", badge: "Semana" },
-              ].map((p, i) => (
+              {menuItems.length > 0 ? menuItems.map((m, i) => (
                 <div key={i} className="p-4 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
-                      <div className="text-sm font-black truncate">{p.title}</div>
-                      <div className="text-emerald-50/85 text-[12px] leading-snug mt-1">{p.desc}</div>
+                      <div className="text-sm font-black truncate">{m.dish_name}</div>
+                      <div className="text-emerald-50/85 text-[12px] leading-snug mt-1">{m.description}</div>
                     </div>
-                    <div className="shrink-0 text-[10px] font-black uppercase tracking-[0.2em] bg-white/15 px-2 py-1 rounded-lg">{p.badge}</div>
+                    <div className="shrink-0 text-[10px] font-black uppercase tracking-[0.2em] bg-white/15 px-2 py-1 rounded-lg">{m.day_of_week}</div>
                   </div>
                 </div>
-              ))}
+              )) : (
+                <div className="text-center py-4 text-emerald-100/60 font-medium">No hay menú publicado para esta semana.</div>
+              )}
             </div>
             <div className="mt-8">
               <button onClick={() => setActiveTab("prediction")} className="bg-white text-emerald-700 px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-emerald-50 transition-colors shadow-xl">

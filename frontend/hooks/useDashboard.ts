@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { formatCurrencyMXN } from "@/lib/dashboard-utils";
 
 export function useDashboard(t: any) {
@@ -91,7 +91,36 @@ export function useDashboard(t: any) {
     active: true,
   });
 
-  // Mock Data
+  // --- Real Data States ---
+  const [students, setStudents] = useState<any[]>([]);
+  const [menuItems, setMenuItems] = useState<any[]>([]);
+  const [mealPlans, setMealPlans] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setIsLoading(true);
+        // Use 'u1' as default parent_id for demonstration (Alejandro Balderas)
+        const [studentsRes, menuRes, plansRes] = await Promise.all([
+          fetch(`${API_URL}/cafeteria/students?parent_id=u1`).then(r => r.json()),
+          fetch(`${API_URL}/cafeteria/menu`).then(r => r.json()),
+          fetch(`${API_URL}/cafeteria/plans`).then(r => r.json())
+        ]);
+
+        setStudents(Array.isArray(studentsRes) ? studentsRes : []);
+        setMenuItems(Array.isArray(menuRes) ? menuRes : []);
+        setMealPlans(Array.isArray(plansRes) ? plansRes : []);
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchData();
+  }, [API_URL]);
   const [products, setProducts] = useState([
     { id: "1", name: "Taco al Pastor", category: "Tacos", price: 18, available: true },
     { id: "2", name: "Gringa", category: "Especialidades", price: 45, available: true },
@@ -394,14 +423,16 @@ export function useDashboard(t: any) {
 
   const kpis = useMemo(() => ({
     todayRevenue: salesHistory.reduce((acc, s) => acc + s.total, 0),
-    weekRevenue: salesHistory.reduce((acc, s) => acc + s.total, 0) * 5.4, // Simulacion
-    topProduct: { name: "Taco al Pastor", units: 142 },
+    weekRevenue: salesHistory.reduce((acc, s) => acc + s.total, 0) * 5.4,
+    topStudent: students[0] ? `${students[0].first_name} ${students[0].last_name}` : "N/A",
+    activeStudents: students.length,
+    menuItemsCount: menuItems.length,
     criticalInventory: { 
       items: invCritical.length, 
       sku: invCritical[0]?.sku || "N/A", 
       remaining: invCritical[0]?.onHand || 0 
     }
-  }), [salesHistory, invCritical]);
+  }), [salesHistory, invCritical, students, menuItems]);
 
   const salesSeries = useMemo(() => [
     { label: "Lun", value: 4200 },
@@ -454,6 +485,7 @@ export function useDashboard(t: any) {
     salesFiltered, selectedSaleId, setSelectedSaleId, selectedSale,
     addToCart, removeFromCart, updateCartQuantity, cartTotal,
     salesHistory, trendsInsights, activeTitle, products,
-    kpis, salesSeries
+    kpis, salesSeries,
+    students, menuItems, mealPlans, isLoading
   };
 }

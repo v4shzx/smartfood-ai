@@ -21,9 +21,11 @@ import { useI18n } from "@/lib/i18n";
 interface AccountViewProps {
   t: any;
   handleLogout: () => void;
+  students: any[];
+  mealPlans: any[];
 }
 
-export function AccountView({ t, handleLogout }: AccountViewProps) {
+export function AccountView({ t, handleLogout, students, mealPlans }: AccountViewProps) {
   const { lang } = useI18n();
   const [email, setEmail] = React.useState("admin@smartfood.ai");
   const [isEditingEmail, setIsEditingEmail] = React.useState(false);
@@ -133,7 +135,9 @@ export function AccountView({ t, handleLogout }: AccountViewProps) {
             <div className="relative z-10">
               <div className="text-[10px] font-black uppercase tracking-[.25em] text-emerald-100 bg-white/10 w-fit px-3 py-1 rounded-full mb-6">Plan Pro Edition</div>
               <h4 className="text-xl font-black mb-2">{t.dashboard.billing_title}</h4>
-              <p className="text-emerald-50/80 text-sm mb-6 leading-relaxed">{t.dashboard.billing_sub}</p>
+              <p className="text-emerald-50/80 text-sm mb-6 leading-relaxed">
+                Tienes {students.length} alumnos registrados con planes de alimentación activos.
+              </p>
               <button className="w-full py-3.5 bg-white text-emerald-700 rounded-2xl font-black text-xs uppercase tracking-[0.15em] hover:bg-emerald-50 transition-colors shadow-lg">
                 {t.dashboard.manage_billing}
               </button>

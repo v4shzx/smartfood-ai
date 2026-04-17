@@ -92,9 +92,6 @@ export default function Dashboard() {
                   <span className="font-black text-xl tracking-tight bg-clip-text text-transparent bg-linear-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400">
                     SmartFood
                   </span>
-                  <div className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mt-0.5">
-                    Pro Edition
-                  </div>
                 </motion.div>
               )}
             </div>
@@ -273,7 +270,7 @@ export default function Dashboard() {
                 className="flex items-center group ml-2"
               >
                 <div className="w-11 h-11 rounded-2xl bg-emerald-600 flex items-center justify-center transition-all group-hover:scale-105 active:scale-95 shadow-lg shadow-emerald-600/20">
-                  <span className="text-xs font-black text-white uppercase tracking-wider">AD</span>
+                  <span className="text-xs font-black text-white uppercase tracking-wider">AB</span>
                 </div>
               </button>
 
@@ -323,6 +320,8 @@ export default function Dashboard() {
               kpis={dashboard.kpis} 
               salesSeries={dashboard.salesSeries} 
               setActiveTab={setActiveTab} 
+              students={dashboard.students}
+              menuItems={dashboard.menuItems}
             />
           )}
           {activeTab === "pos" && (
@@ -475,6 +474,8 @@ export default function Dashboard() {
             <AccountView 
               t={t} 
               handleLogout={handleLogout} 
+              students={dashboard.students}
+              mealPlans={dashboard.mealPlans}
             />
           )}
         </div>
