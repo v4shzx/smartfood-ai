@@ -117,9 +117,19 @@ export function useDashboard(t: any) {
           fetch(`${API_URL}/cafeteria/plans`).then(r => r.json())
         ]);
 
-        setStudents(Array.isArray(studentsRes) ? studentsRes : []);
-        setMenuItems(Array.isArray(menuRes) ? menuRes : []);
-        setMealPlans(Array.isArray(plansRes) ? plansRes : []);
+        setStudents(Array.isArray(studentsRes) && studentsRes.length > 0 ? studentsRes : [
+          { id: "s1", first_name: "Juan", last_name: "Perez", grade: "5to Primaria" },
+          { id: "s2", first_name: "Maria", last_name: "Lopez", grade: "3ro Primaria" }
+        ]);
+        setMenuItems(Array.isArray(menuRes) && menuRes.length > 0 ? menuRes : [
+          { id: "m1", day_of_week: "Lunes", dish_name: "Tacos de Pollo", description: "Tacos con guarnición de arroz y frijoles." },
+          { id: "m2", day_of_week: "Martes", dish_name: "Pasta Alfredo", description: "Pasta cremosa con pollo y pan de ajo." },
+          { id: "m3", day_of_week: "Miércoles", dish_name: "Ensalada César", description: "Lechuga fresca con pollo a la plancha." }
+        ]);
+        setMealPlans(Array.isArray(plansRes) && plansRes.length > 0 ? plansRes : [
+          { id: "p1", name: "Plan Básico", price_mxn: 0 },
+          { id: "p2", name: "Plan Profesional", price_mxn: 299 }
+        ]);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       } finally {

@@ -3,7 +3,7 @@ import random
 from datetime import datetime, timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import AsyncSessionLocal as SessionLocal, engine, Base
-from app.models.cafeteria import SchoolUser, Student, MealPlan, Sale, Waste
+from app.models.cafeteria import SchoolUser, Student, MealPlan, Sale, Waste, MenuItem
 from app.models.product import Product
 
 async def seed():
@@ -16,7 +16,7 @@ async def seed():
         from sqlalchemy.future import select
         res = await session.execute(select(SchoolUser).where(SchoolUser.id == "u_demo"))
         if res.scalars().first():
-            print("Demo data already seeded or partially present. Skipping some steps.")
+            print("Demo data already seeded or partially present. Adding Menu Items if missing.")
         else:
             # 1. Demo User
             demo_user = SchoolUser(
@@ -94,8 +94,24 @@ async def seed():
                     )
                     session.add(waste)
 
-            await session.commit()
-            print("Demo data and one-week simulation seeded successfully!")
+        # 6. Seed Weekly Menu Items
+        menu_res = await session.execute(select(MenuItem))
+        if not menu_res.scalars().first():
+            menu_data = [
+                ("m1", "Lunes", "Tacos de Pollo", "Tacos de pollo con guarnición de arroz y frijoles.", 450, False),
+                ("m2", "Martes", "Pasta Alfredo", "Pasta cremosa con pollo y pan de ajo.", 600, False),
+                ("m3", "Miércoles", "Ensalada César", "Lechuga fresca, croutones, queso parmesano y aderezo.", 350, True),
+                ("m4", "Jueves", "Hamburguesa Mixta", "Hamburguesa de res y cerdo con papas fritas.", 750, False),
+                ("m5", "Viernes", "Filete de Pescado", "Filete de pescado al limón con verduras al vapor.", 400, False),
+            ]
+            for mid, day, name, desc, cal, veg in menu_data:
+                m = MenuItem(id=mid, day_of_week=day, dish_name=name, description=desc, calories=cal, is_vegetarian=veg)
+                session.add(m)
+            print("Menu items seeded!")
+
+        await session.commit()
+        print("Demo data and one-week simulation seeded successfully!")
+
 
 if __name__ == "__main__":
     asyncio.run(seed())
