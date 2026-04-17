@@ -52,8 +52,8 @@ export default function LoginPage() {
   const { t } = useI18n();
   const router = useRouter();
   const { resolvedTheme } = useTheme();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("comedordm@gmail.com");
+  const [password, setPassword] = useState("123456");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -192,6 +192,14 @@ export default function LoginPage() {
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-white dark:bg-slate-950 px-4 text-slate-400 dark:text-slate-500 font-medium tracking-wider transition-colors duration-500">{t.login.or}</span>
             </div>
+          </div>
+
+          {/* Demo Banner */}
+          <div className="mb-5 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 flex items-start gap-3">
+            <div className="w-2 h-2 mt-1.5 rounded-full bg-emerald-500 shrink-0 animate-pulse" />
+            <p className="text-xs text-emerald-700 dark:text-emerald-400 font-medium leading-relaxed">
+              <span className="font-bold">Cuenta Demo</span> — Las credenciales ya están rellenadas. Solo presiona <span className="font-bold">Iniciar sesión</span>.
+            </p>
           </div>
 
           {/* Error Message */}
