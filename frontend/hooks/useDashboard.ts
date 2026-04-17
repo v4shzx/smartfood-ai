@@ -103,9 +103,12 @@ export function useDashboard(t: any) {
     async function fetchData() {
       try {
         setIsLoading(true);
-        // Use 'u1' as default parent_id for demonstration (Alejandro Balderas)
+        // Read the logged-in user ID from localStorage
+        const sessionUserId = localStorage.getItem("smartfood_user_id") || "u_demo";
+        console.log("Loading dashboard for user:", sessionUserId);
+
         const [studentsRes, menuRes, plansRes] = await Promise.all([
-          fetch(`${API_URL}/cafeteria/students?parent_id=u1`).then(r => r.json()),
+          fetch(`${API_URL}/cafeteria/students?parent_id=${sessionUserId}`).then(r => r.json()),
           fetch(`${API_URL}/cafeteria/menu`).then(r => r.json()),
           fetch(`${API_URL}/cafeteria/plans`).then(r => r.json())
         ]);
