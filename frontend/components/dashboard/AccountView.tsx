@@ -13,7 +13,10 @@ import {
   Settings,
   CreditCard,
   Key,
-  X
+  X,
+  Trash2,
+  Plus,
+  CheckCircle2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
@@ -38,6 +41,124 @@ export function AccountView({ t, handleLogout, students, mealPlans }: AccountVie
     confirm: ""
   });
   const [passError, setPassError] = React.useState<string | null>(null);
+
+  const [isBillingLoading, setIsBillingLoading] = React.useState(false);
+  const [billingStatus, setBillingStatus] = React.useState<'idle' | 'success'>('idle');
+
+  const [cards, setCards] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    fetchCards();
+  }, []);
+
+  const fetchCards = async () => {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+      const res = await fetch(`${apiUrl}/payments/`);
+      if (res.ok) {
+        const data = await res.json();
+        setCards(data.map((c: any) => ({
+          id: c.id,
+          last4: c.last4,
+          brand: c.brand,
+          exp: `${c.exp_month}/${String(c.exp_year).slice(-2)}`,
+          isPrimary: c.is_primary
+        })));
+      }
+    } catch (error) {
+      console.error("Error fetching cards:", error);
+    }
+  };
+
+  const [isAddingCard, setIsAddingCard] = React.useState(false);
+  const [newCardForm, setNewCardForm] = React.useState({
+    number: "",
+    holder: "",
+    exp: "",
+    cvc: ""
+  });
+
+  const handleSaveCard = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsBillingLoading(true);
+    
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+      const [exp_month, exp_year] = (newCardForm.exp || "01/29").split('/').map(Number);
+      const res = await fetch(`${apiUrl}/payments/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          brand: "Visa",
+          last4: newCardForm.number.slice(-4),
+          exp_month: exp_month || 1,
+          exp_year: exp_year ? (exp_year < 100 ? 2000 + exp_year : exp_year) : 2029,
+          is_primary: cards.length === 0
+        })
+      });
+
+      if (res.ok) {
+        await fetchCards();
+        setIsAddingCard(false);
+        setNewCardForm({ number: "", holder: "", exp: "", cvc: "" });
+      }
+    } catch (error) {
+      console.error("Error saving card:", error);
+    } finally {
+      setIsBillingLoading(false);
+    }
+  };
+
+  const handleSetPrimary = async (id: string | number) => {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+      const res = await fetch(`${apiUrl}/payments/${id}/set-primary`, {
+        method: 'PATCH'
+      });
+      if (res.ok) {
+        fetchCards();
+      }
+    } catch (error) {
+      console.error("Error setting primary card:", error);
+    }
+  };
+
+  const handleRemoveCard = async (id: string | number) => {
+    const card = cards.find(c => c.id === id);
+    if (card?.isPrimary) {
+      alert("No puedes eliminar la tarjeta principal");
+      return;
+    }
+    
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+      const res = await fetch(`${apiUrl}/payments/${id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        fetchCards();
+      } else {
+        const err = await res.json();
+        alert(err.detail || "Error al eliminar la tarjeta");
+      }
+    } catch (error) {
+      console.error("Error removing card:", error);
+    }
+  };
+
+  const handleManageBilling = () => {
+    setIsBillingLoading(true);
+    // Simulate API call to generate Stripe Portal session
+    setTimeout(() => {
+      setIsBillingLoading(false);
+      setBillingStatus('success');
+      
+      // Reset after 3 seconds
+      setTimeout(() => setBillingStatus('idle'), 3000);
+      
+      // In a real app: window.location.href = portalUrl;
+    }, 1500);
+  };
 
   const handleSaveEmail = () => {
     setEmail(tempEmail);
@@ -147,9 +268,32 @@ export function AccountView({ t, handleLogout, students, mealPlans }: AccountVie
                 </div>
               </div>
 
-              <button className="w-full py-3.5 bg-white text-emerald-700 rounded-2xl font-black text-xs uppercase tracking-[0.15em] hover:bg-emerald-50 transition-colors shadow-lg flex items-center justify-center gap-2">
-                <CreditCard className="w-4 h-4" />
-                {t.dashboard.manage_billing}
+              <button 
+                onClick={handleManageBilling}
+                disabled={isBillingLoading || billingStatus === 'success'}
+                className={cn(
+                  "w-full py-3.5 rounded-2xl font-black text-xs uppercase tracking-[0.15em] transition-all shadow-lg flex items-center justify-center gap-2 active:scale-[0.98]",
+                  billingStatus === 'success' 
+                    ? "bg-emerald-400 text-white" 
+                    : "bg-white text-emerald-700 hover:bg-emerald-50 disabled:opacity-70"
+                )}
+              >
+                {isBillingLoading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-emerald-700/30 border-t-emerald-700 rounded-full animate-spin" />
+                    {lang === 'es' ? 'Procesando...' : (lang === 'fr' ? 'Traitement...' : 'Processing...')}
+                  </>
+                ) : billingStatus === 'success' ? (
+                  <>
+                    <ShieldCheck className="w-4 h-4" />
+                    {lang === 'es' ? 'Portal Listo' : (lang === 'fr' ? 'Portail Prêt' : 'Portal Ready')}
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="w-4 h-4" />
+                    {t.dashboard.manage_billing}
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -308,6 +452,194 @@ export function AccountView({ t, handleLogout, students, mealPlans }: AccountVie
               </button>
             </div>
           </div>
+
+          <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.payment_methods_title}</h3>
+              <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center text-slate-400">
+                <CreditCard className="w-4 h-4" />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {cards.map((card) => (
+                <div key={card.id} className={cn(
+                  "flex items-center justify-between p-5 rounded-[1.8rem] border transition-all",
+                  card.isPrimary 
+                    ? "bg-emerald-50/30 dark:bg-emerald-500/5 border-emerald-500/20" 
+                    : "bg-slate-50/40 dark:bg-slate-800/30 border-slate-100 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-900/60"
+                )}>
+                  <div className="flex items-center gap-5">
+                    <div className={cn(
+                      "w-12 h-12 rounded-2xl border flex items-center justify-center transition-colors",
+                      card.isPrimary 
+                        ? "bg-white dark:bg-slate-950 border-emerald-500/30 text-emerald-500" 
+                        : "bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-400"
+                    )}>
+                      <CreditCard className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-black text-slate-900 dark:text-white">{card.brand} •••• {card.last4}</span>
+                        {card.isPrimary && (
+                          <span className="text-[8px] font-black uppercase tracking-widest bg-emerald-500 text-white px-2 py-0.5 rounded-full">
+                            {t.dashboard.primary}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 font-normal mt-0.5">{t.dashboard.expires}: {card.exp}</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    {!card.isPrimary && (
+                      <button 
+                        onClick={() => handleSetPrimary(card.id)}
+                        className="p-2 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 rounded-xl transition-all"
+                        title={t.dashboard.primary}
+                      >
+                        <CheckCircle2 className="w-4 h-4" />
+                      </button>
+                    )}
+                    <button 
+                      onClick={() => handleRemoveCard(card.id)}
+                      className="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-xl transition-all"
+                      title={t.dashboard.remove}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+
+              <button 
+                onClick={() => setIsAddingCard(true)}
+                className="w-full flex items-center justify-center gap-3 p-5 rounded-[1.8rem] border border-dashed border-slate-200 dark:border-slate-800 text-slate-400 hover:text-emerald-500 hover:border-emerald-500/30 transition-all group"
+              >
+                <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center group-hover:bg-emerald-50 dark:group-hover:bg-emerald-500/10 transition-colors">
+                  <Plus className="w-4 h-4" />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest">{t.dashboard.add_card}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Add Card Modal */}
+          <AnimatePresence>
+            {isAddingCard && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md"
+              >
+                <motion.div 
+                  initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                  className="bg-white dark:bg-slate-900 w-full max-w-md rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-2xl overflow-hidden relative"
+                >
+                  <button 
+                    onClick={() => setIsAddingCard(false)}
+                    className="absolute top-6 right-6 p-2 text-slate-400 hover:text-rose-500 transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600">
+                      <CreditCard className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.add_card}</h3>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-normal mt-0.5">{t.dashboard.add_card_desc}</p>
+                    </div>
+                  </div>
+
+                  <form onSubmit={handleSaveCard} className="space-y-5">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{t.dashboard.card_holder}</label>
+                      <input 
+                        required
+                        type="text" 
+                        value={newCardForm.holder}
+                        onChange={(e) => setNewCardForm({...newCardForm, holder: e.target.value})}
+                        className="w-full bg-slate-50/50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors"
+                        placeholder="John Doe"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{t.dashboard.card_number}</label>
+                      <input 
+                        required
+                        type="text" 
+                        maxLength={16}
+                        value={newCardForm.number}
+                        onChange={(e) => setNewCardForm({...newCardForm, number: e.target.value.replace(/\D/g, '')})}
+                        className="w-full bg-slate-50/50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors"
+                        placeholder="•••• •••• •••• ••••"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{t.dashboard.expires}</label>
+                        <input 
+                          required
+                          type="text" 
+                          placeholder="MM/YY"
+                          maxLength={5}
+                          value={newCardForm.exp}
+                          onChange={(e) => setNewCardForm({...newCardForm, exp: e.target.value})}
+                          className="w-full bg-slate-50/50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{t.dashboard.card_cvc}</label>
+                        <input 
+                          required
+                          type="text" 
+                          maxLength={3}
+                          value={newCardForm.cvc}
+                          onChange={(e) => setNewCardForm({...newCardForm, cvc: e.target.value.replace(/\D/g, '')})}
+                          className="w-full bg-slate-50/50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors"
+                          placeholder="123"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="pt-4 flex items-center gap-3">
+                      <button 
+                        type="submit"
+                        disabled={isBillingLoading}
+                        className="flex-1 py-3.5 bg-emerald-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+                      >
+                        {isBillingLoading ? (
+                          <>
+                            <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            {lang === 'es' ? 'Guardando...' : (lang === 'fr' ? 'Enregistrement...' : 'Saving...')}
+                          </>
+                        ) : (
+                          <>
+                            <ShieldCheck className="w-4 h-4" />
+                            {t.dashboard.save_card}
+                          </>
+                        )}
+                      </button>
+                      <button 
+                        type="button"
+                        onClick={() => setIsAddingCard(false)}
+                        className="px-6 py-3.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 transition-all"
+                      >
+                        {lang === 'es' ? 'Cancelar' : (lang === 'fr' ? 'Annuler' : 'Cancel')}
+                      </button>
+                    </div>
+                  </form>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
             <div className="flex items-center justify-between mb-8">

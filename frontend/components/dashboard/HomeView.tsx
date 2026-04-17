@@ -101,10 +101,12 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, students, menuIte
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">Alertas de Inventario</h3>
-            <div className="text-[10px] font-normal text-rose-600 dark:text-rose-400 uppercase tracking-[0.2em]">{kpis.criticalInventory.items} Críticos</div>
+        <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm overflow-hidden">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
+            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm truncate max-w-[150px] sm:max-w-none">Alertas de Inventario</h3>
+            <div className="w-fit text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-[0.2em] bg-rose-50 dark:bg-rose-500/10 px-2 py-1 rounded-lg shrink-0 whitespace-nowrap">
+              {kpis.criticalInventory.items} Críticos
+            </div>
           </div>
           <div className="space-y-4">
             {kpis.criticalInventory.items > 0 ? (

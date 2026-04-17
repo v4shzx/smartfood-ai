@@ -93,6 +93,17 @@ CREATE TABLE IF NOT EXISTS waste (
 );
 
 -- 9. Subscription Payments (History)
+CREATE TABLE IF NOT EXISTS payment_methods (
+    id VARCHAR(50) PRIMARY KEY,
+    user_id VARCHAR(50) REFERENCES school_users(id),
+    brand VARCHAR(20) NOT NULL,
+    last4 VARCHAR(4) NOT NULL,
+    exp_month INTEGER NOT NULL,
+    exp_year INTEGER NOT NULL,
+    is_primary BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS payments (
     id VARCHAR(36) PRIMARY KEY,
     subscription_id VARCHAR(36) NOT NULL,

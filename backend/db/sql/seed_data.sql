@@ -41,3 +41,9 @@ INSERT INTO waste (id, product_id, quantity, reason, timestamp)
 VALUES 
 ('w1', 'p1', 2, 'Expired', NOW() - INTERVAL '1 day'),
 ('w2', 'p7', 3, 'Damaged', NOW() - INTERVAL '2 days');
+
+-- Seed for Payment Methods
+INSERT INTO payment_methods (id, user_id, brand, last4, exp_month, exp_year, is_primary) VALUES
+('pm_1', 'u_demo', 'Visa', '4242', 12, 2025, TRUE),
+('pm_2', 'u_demo', 'Mastercard', '8888', 8, 2024, FALSE)
+ON CONFLICT (id) DO NOTHING;
