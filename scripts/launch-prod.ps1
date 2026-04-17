@@ -25,4 +25,5 @@ Write-Host "`n🌟 ¡DESPLIEGUE COMPLETADO EXITOSAMENTE!" -ForegroundColor Green
 Write-Host "----------------------------------"
 Write-Host "🌍 App:     http://localhost:3000"
 Write-Host "🛠️  API Docs: http://localhost:8000/docs"
-Write-Host "----------------------------------`n"
+Write-Host "----------------------------------"
+Write-Host ""
