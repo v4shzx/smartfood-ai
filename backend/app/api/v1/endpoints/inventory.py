@@ -1,5 +1,5 @@
-from typing import List
-from fastapi import APIRouter, Depends
+from typing import List, Optional
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.core.database import get_db
@@ -22,11 +22,12 @@ class InventoryItemResponse(BaseModel):
         from_attributes = True
 
 @router.get("/", response_model=List[InventoryItemResponse])
-async def get_inventory(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Product))
+async def get_inventory(
+    owner_id: Optional[str] = Query("u_demo", description="Owner ID to filter inventory"),
+    db: AsyncSession = Depends(get_db)
+):
+    result = await db.execute(select(Product).where(Product.owner_id == owner_id))
     products = result.scalars().all()
-    # Mocking SKU and Unit since they are not in the current Product model, 
-    # but using real ID, Name and Stock values.
     return [
         InventoryItemResponse(
             id=p.id,
@@ -48,8 +49,11 @@ class MovementResponse(BaseModel):
     note: str
 
 @router.get("/movements", response_model=List[MovementResponse])
-async def get_movements(db: AsyncSession = Depends(get_db)):
-    # Simulating movements for now as they are not yet fully persisted in a dedicated table with all metadata
+async def get_movements(
+    owner_id: Optional[str] = Query("u_demo", description="Owner ID to filter movements"),
+    db: AsyncSession = Depends(get_db)
+):
+    # Simulating movements for now
     return [
         MovementResponse(id="m1", itemId="p1", type="out", qty=25, ts=datetime.now() - timedelta(hours=1), note="Ventas turno mañana"),
         MovementResponse(id="m2", itemId="p2", type="in", qty=20, ts=datetime.now() - timedelta(hours=2), note="Recepción proveedor")

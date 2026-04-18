@@ -61,7 +61,7 @@ export function StoreView({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.store}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">Productos, categorias, precios e imagenes.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">Productos, categorías y precios.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-3">
@@ -139,32 +139,29 @@ export function StoreView({
             animate={{ opacity: 1 }}
             className="group bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
           >
-            <div className="aspect-video w-full bg-slate-100 dark:bg-slate-800/50 flex items-center justify-center relative">
-              <Store className="w-10 h-10 text-slate-300" />
-              {!p.available && (
-                <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] flex items-center justify-center">
-                  <span className="bg-white/10 border border-white/20 text-white text-[10px] font-normal uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">Agotado</span>
+            <div className="p-8">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <div className={cn("w-1.5 h-1.5 rounded-full", p.available ? "bg-emerald-500" : "bg-rose-500")} />
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{p.category}</span>
                 </div>
-              )}
-            </div>
-            <div className="p-6">
-              <div className="flex items-center gap-2 mb-2">
-                <div className={cn("w-1.5 h-1.5 rounded-full", p.available ? "bg-emerald-500" : "bg-rose-500")} />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{p.category}</span>
+                {!p.available && (
+                   <span className="bg-rose-50 dark:bg-rose-500/10 text-rose-600 text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-lg">Agotado</span>
+                )}
               </div>
-              <h4 className="text-lg font-black text-slate-900 dark:text-white truncate">{p.name}</h4>
-              <div className="text-xl font-black text-emerald-600 dark:text-emerald-400 mt-1">{formatCurrencyMXN(p.price)}</div>
+              <h4 className="text-xl font-black text-slate-900 dark:text-white line-clamp-1">{p.name}</h4>
+              <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-2">{formatCurrencyMXN(p.price)}</div>
               
-              <div className="mt-6 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
+              <div className="mt-8 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
                 <button
                   onClick={() => storeOpenEdit(p.id)}
-                  className="flex-1 flex items-center justify-center gap-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 py-2.5 rounded-xl text-[10px] font-normal uppercase tracking-widest hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all"
+                  className="flex-1 flex items-center justify-center gap-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 py-3 rounded-2xl text-[10px] font-normal uppercase tracking-widest hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all"
                 >
                   <Pencil className="w-3.5 h-3.5" /> Editar
                 </button>
                 <button
                   onClick={() => storeDelete(p.id)}
-                  className="w-11 h-11 flex items-center justify-center bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 hover:border-rose-500/30 transition-all"
+                  className="w-12 h-12 flex items-center justify-center bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 hover:border-rose-500/30 transition-all"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>

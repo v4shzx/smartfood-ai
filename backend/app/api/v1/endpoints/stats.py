@@ -1,5 +1,5 @@
-from typing import Any, Dict
-from fastapi import APIRouter, Depends
+from typing import Any, Dict, Optional
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, desc
 from app.core.database import get_db
@@ -10,22 +10,25 @@ from datetime import datetime, timedelta
 router = APIRouter()
 
 @router.get("/")
-async def get_dashboard_stats(db: AsyncSession = Depends(get_db)) -> Any:
+async def get_dashboard_stats(
+    owner_id: Optional[str] = Query("u_demo", description="Owner ID to filter stats"),
+    db: AsyncSession = Depends(get_db)
+) -> Any:
     # 1. Today Revenue & Yesterday Revenue
     today = datetime.now().date()
     yesterday = today - timedelta(days=1)
     
-    query_today = select(func.sum(Sale.total_price)).where(func.date(Sale.timestamp) == today)
+    query_today = select(func.sum(Sale.total_price)).where(func.date(Sale.timestamp) == today, Sale.user_id == owner_id)
     result_today = await db.execute(query_today)
     today_revenue = result_today.scalar() or 0.0
 
-    query_yesterday = select(func.sum(Sale.total_price)).where(func.date(Sale.timestamp) == yesterday)
+    query_yesterday = select(func.sum(Sale.total_price)).where(func.date(Sale.timestamp) == yesterday, Sale.user_id == owner_id)
     result_yesterday = await db.execute(query_yesterday)
     yesterday_revenue = result_yesterday.scalar() or 0.0
 
     # 2. Week Revenue
     week_ago = datetime.now() - timedelta(days=7)
-    query_week = select(func.sum(Sale.total_price)).where(Sale.timestamp >= week_ago)
+    query_week = select(func.sum(Sale.total_price)).where(Sale.timestamp >= week_ago, Sale.user_id == owner_id)
     result_week = await db.execute(query_week)
     week_revenue = result_week.scalar() or 0.0
 
@@ -33,6 +36,7 @@ async def get_dashboard_stats(db: AsyncSession = Depends(get_db)) -> Any:
     query_top = (
         select(Product.name, func.sum(Sale.quantity).label("total_qty"))
         .join(Sale, Product.id == Sale.product_id)
+        .where(Sale.user_id == owner_id)
         .group_by(Product.name)
         .order_by(desc("total_qty"))
         .limit(1)
@@ -43,16 +47,16 @@ async def get_dashboard_stats(db: AsyncSession = Depends(get_db)) -> Any:
     top_product_qty = top_prod_row[1] if top_prod_row else 0
 
     # 4. Total Orders Today and Absolute Total
-    query_orders_today = select(func.count(Sale.id)).where(func.date(Sale.timestamp) == today)
+    query_orders_today = select(func.count(Sale.id)).where(func.date(Sale.timestamp) == today, Sale.user_id == owner_id)
     result_orders_today = await db.execute(query_orders_today)
     total_orders_today = result_orders_today.scalar() or 0
 
-    query_orders_total = select(func.count(Sale.id))
+    query_orders_total = select(func.count(Sale.id)).where(Sale.user_id == owner_id)
     result_orders_total = await db.execute(query_orders_total)
     total_orders_abs = result_orders_total.scalar() or 0
 
     # 5. Critical Inventory
-    query_crit = select(Product).where(Product.on_hand <= Product.min_stock)
+    query_crit = select(Product).where(Product.on_hand <= Product.min_stock, Product.owner_id == owner_id)
     result_crit = await db.execute(query_crit)
     crit_items = result_crit.scalars().all()
     
@@ -73,15 +77,17 @@ async def get_dashboard_stats(db: AsyncSession = Depends(get_db)) -> Any:
     }
 
 @router.get("/sales-series")
-async def get_sales_series(db: AsyncSession = Depends(get_db)) -> Any:
-    # Fetch last 7 days of sales aggregated by day
+async def get_sales_series(
+    owner_id: Optional[str] = Query("u_demo", description="Owner ID for series"),
+    db: AsyncSession = Depends(get_db)
+) -> Any:
     today = datetime.now().date()
     series = []
     days_map = {0: "Lun", 1: "Mar", 2: "Mie", 3: "Jue", 4: "Vie", 5: "Sab", 6: "Dom"}
     
     for i in range(6, -1, -1):
         day = today - timedelta(days=i)
-        query = select(func.sum(Sale.total_price)).where(func.date(Sale.timestamp) == day)
+        query = select(func.sum(Sale.total_price)).where(func.date(Sale.timestamp) == day, Sale.user_id == owner_id)
         result = await db.execute(query)
         total = result.scalar() or 0.0
         series.append({"label": days_map[day.weekday()], "value": total})
@@ -89,8 +95,7 @@ async def get_sales_series(db: AsyncSession = Depends(get_db)) -> Any:
     return series
 
 @router.get("/trends")
-async def get_trends(db: AsyncSession = Depends(get_db)) -> Any:
-    # Simulating trends logic based on real data would go here
+async def get_trends(owner_id: Optional[str] = Query("u_demo"), db: AsyncSession = Depends(get_db)) -> Any:
     return [
         { "title": "Pico de demanda", "desc": "Los viernes entre 12 PM y 2 PM las ventas suben 45%." },
         { "title": "Producto Estrella", "desc": "El Sándwich de jamón representa el 30% de tus ingresos." },
@@ -98,8 +103,7 @@ async def get_trends(db: AsyncSession = Depends(get_db)) -> Any:
     ]
 
 @router.get("/prediction")
-async def get_prediction(db: AsyncSession = Depends(get_db)) -> Any:
-    # Simulated prediction data
+async def get_prediction(owner_id: Optional[str] = Query("u_demo"), db: AsyncSession = Depends(get_db)) -> Any:
     list_pred = []
     for h in range(10, 25):
         val = int((datetime.now().hour + h) % 15 * 5 + 10)

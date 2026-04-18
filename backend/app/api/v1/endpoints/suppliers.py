@@ -1,48 +1,45 @@
-from typing import List
-from fastapi import APIRouter, Depends
+from typing import List, Optional
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 from app.core.database import get_db
+from app.models.supplier import Supplier
 from pydantic import BaseModel
-from datetime import datetime, timedelta
+from datetime import datetime
 
 router = APIRouter()
 
 class SupplierResponse(BaseModel):
     id: str
     name: str
-    contact: str
-    phone: str
-    email: str
+    contact: Optional[str]
+    phone: Optional[str]
+    email: Optional[str]
     leadDays: int
     rating: float
-    notes: str
-    lastPurchaseAt: datetime | None
+    notes: Optional[str]
+    lastPurchaseAt: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
 
 @router.get("/", response_model=List[SupplierResponse])
-async def get_suppliers(db: AsyncSession = Depends(get_db)):
-    # Mocking for now since there is no supplier model/table yet, 
-    # but providing it via API to the frontend.
+async def get_suppliers(
+    owner_id: Optional[str] = Query("u_demo", description="Owner ID to filter suppliers"),
+    db: AsyncSession = Depends(get_db)
+):
+    result = await db.execute(select(Supplier).where(Supplier.owner_id == owner_id))
+    suppliers = result.scalars().all()
     return [
         SupplierResponse(
-            id="s1", 
-            name="Cárnicos Express", 
-            contact="Juan Pérez", 
-            phone="555-0123", 
-            email="ventas@carnicosexp.com", 
-            leadDays=1, 
-            rating=4.8, 
-            notes="Excelente calidad, entrega antes de las 9 AM.", 
-            lastPurchaseAt=datetime.now() - timedelta(days=2)
-        ),
-        SupplierResponse(
-            id="s2", 
-            name="Tortillería La Abuela", 
-            contact="Doña María", 
-            phone="555-9876", 
-            email="pedidos@laabuela.mx", 
-            leadDays=0, 
-            rating=5.0, 
-            notes="Tortilla recién hecha, pedido diario.", 
-            lastPurchaseAt=datetime.now() - timedelta(hours=5)
-        )
+            id=s.id,
+            name=s.name,
+            contact=s.contact,
+            phone=s.phone,
+            email=s.email,
+            leadDays=s.lead_days,
+            rating=s.rating,
+            notes=s.notes,
+            lastPurchaseAt=None
+        ) for s in suppliers
     ]

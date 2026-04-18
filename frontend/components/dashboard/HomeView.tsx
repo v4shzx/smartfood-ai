@@ -43,11 +43,10 @@ interface HomeViewProps {
   };
   salesSeries: any[];
   setActiveTab: (tab: any) => void;
-  students: any[];
   menuItems: any[];
 }
 
-export function HomeView({ t, kpis, salesSeries, setActiveTab, students, menuItems }: HomeViewProps) {
+export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems }: HomeViewProps) {
   return (
     <>
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">

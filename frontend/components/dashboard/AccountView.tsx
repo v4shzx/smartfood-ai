@@ -24,11 +24,10 @@ import { useI18n } from "@/lib/i18n";
 interface AccountViewProps {
   t: any;
   handleLogout: () => void;
-  students: any[];
   mealPlans: any[];
 }
 
-export function AccountView({ t, handleLogout, students, mealPlans }: AccountViewProps) {
+export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
   const { lang } = useI18n();
   const [email, setEmail] = React.useState("admin@smartfood.ai");
   const [isEditingEmail, setIsEditingEmail] = React.useState(false);

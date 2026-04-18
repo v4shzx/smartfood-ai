@@ -59,6 +59,16 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
+  const demoUsers = [
+    { id: "u_demo", name: "Admin Profesional", email: "comedordm@gmail.com", pass: "123456" },
+    { id: "u_demo_basico", name: "Admin Básico", email: "demo_basico@smartfood.ai", pass: "123456" },
+  ];
+
+  const handleSelectDemo = (user: typeof demoUsers[0]) => {
+    setEmail(user.email);
+    setPassword(user.pass);
+  };
+
   React.useEffect(() => {
     setMounted(true);
   }, []);
@@ -194,12 +204,29 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Demo Banner */}
-          <div className="mb-5 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 flex items-start gap-3">
-            <div className="w-2 h-2 mt-1.5 rounded-full bg-emerald-500 shrink-0 animate-pulse" />
-            <p className="text-xs text-emerald-700 dark:text-emerald-400 font-medium leading-relaxed">
-              <span className="font-bold">Cuenta Demo</span> — Las credenciales ya están rellenadas. Solo presiona <span className="font-bold">Iniciar sesión</span>.
-            </p>
+          {/* Demo Selector */}
+          <div className="mb-8 space-y-3">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Accesos Rápidos Demo</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {demoUsers.map((u) => (
+                <button
+                  key={u.id}
+                  onClick={() => handleSelectDemo(u)}
+                  className={cn(
+                    "text-left p-3.5 rounded-2xl border transition-all active:scale-[0.98] cursor-pointer",
+                    email === u.email 
+                      ? "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-500/40 shadow-sm" 
+                      : "bg-slate-50/50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800 hover:border-emerald-500/20"
+                  )}
+                >
+                  <div className="text-[11px] font-black text-slate-900 dark:text-white truncate">{u.name}</div>
+                  <div className="text-[9px] text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">Auto-rellenar</div>
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Error Message */}
@@ -308,6 +335,9 @@ export default function LoginPage() {
           </p>
 
           <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-wrap justify-center gap-x-6 gap-y-2">
+            <Link href="/admin/users" className="text-xs font-black uppercase tracking-widest text-[#7C3AED] hover:text-[#4C1D95] transition-colors flex items-center gap-1.5">
+              <Shield className="w-3.5 h-3.5" /> Acceso Admin
+            </Link>
             <Link href="#" className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">{t.login.terms}</Link>
             <Link href="#" className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">{t.login.privacy}</Link>
             <Link href="#" className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">{t.login.security}</Link>

@@ -10,13 +10,6 @@ class SchoolUserBase(BaseModel):
     email: EmailStr
     role: str = "parent"
 
-class StudentBase(BaseModel):
-    first_name: str
-    last_name: str
-    grade: Optional[str] = None
-    allergies: Optional[str] = None
-    dietary_restrictions: Optional[str] = None
-
 class MealPlanBase(BaseModel):
     name: str
     description: Optional[str] = None
@@ -34,12 +27,6 @@ class MenuItemBase(BaseModel):
 
 # --- Response Schemas ---
 
-class StudentResponse(StudentBase):
-    id: str
-    
-    class Config:
-        from_attributes = True
-
 class MealPlanResponse(MealPlanBase):
     id: str
     
@@ -52,21 +39,9 @@ class MenuItemResponse(MenuItemBase):
     class Config:
         from_attributes = True
 
-class SubscriptionResponse(BaseModel):
-    id: str
-    student_id: str
-    plan_id: str
-    start_date: date
-    end_date: date
-    status: str
-    auto_renew: bool
-
-    class Config:
-        from_attributes = True
-
 class UserProfileResponse(SchoolUserBase):
     id: str
-    students: List[StudentResponse] = []
+    subscription_tier: Optional[str] = "basico"
 
     class Config:
         from_attributes = True

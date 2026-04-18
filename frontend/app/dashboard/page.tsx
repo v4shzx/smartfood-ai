@@ -406,7 +406,6 @@ export default function Dashboard() {
               kpis={dashboard.kpis} 
               salesSeries={dashboard.salesSeries} 
               setActiveTab={setActiveTab} 
-              students={dashboard.students}
               menuItems={dashboard.menuItems}
             />
           )}
@@ -561,7 +560,6 @@ export default function Dashboard() {
             <AccountView 
               t={t} 
               handleLogout={handleLogout} 
-              students={dashboard.students}
               mealPlans={dashboard.mealPlans}
             />
           )}

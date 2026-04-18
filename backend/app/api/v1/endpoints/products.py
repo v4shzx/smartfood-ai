@@ -21,6 +21,9 @@ class ProductResponse(BaseModel):
         from_attributes = True
 
 @router.get("/", response_model=List[ProductResponse])
-async def get_products(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Product))
+async def get_products(
+    owner_id: Optional[str] = Query("u_demo", description="Owner ID to filter products"),
+    db: AsyncSession = Depends(get_db)
+):
+    result = await db.execute(select(Product).where(Product.owner_id == owner_id))
     return result.scalars().all()

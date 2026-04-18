@@ -1,5 +1,5 @@
-from typing import List
-from fastapi import APIRouter, Depends
+from typing import List, Optional
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.core.database import get_db
@@ -26,6 +26,17 @@ class SaleResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class SaleItem(BaseModel):
+    product_id: str
+    quantity: int
+    price: float
+
+class CheckoutRequest(BaseModel):
+    user_id: str
+    items: List[SaleItem]
+    payment_method: str
+    discount: float
 
 @router.post("/checkout", response_model=SaleResponse)
 async def checkout(request: CheckoutRequest, db: AsyncSession = Depends(get_db)):
@@ -75,12 +86,13 @@ async def checkout(request: CheckoutRequest, db: AsyncSession = Depends(get_db))
     )
 
 @router.get("/", response_model=List[SaleResponse])
-async def get_sales(db: AsyncSession = Depends(get_db)):
-    # Group by ticket ID (first part of the id)
-    result = await db.execute(select(Sale).order_by(Sale.timestamp.desc()))
+async def get_sales(
+    owner_id: Optional[str] = Query("u_demo", description="Owner ID to filter sales"),
+    db: AsyncSession = Depends(get_db)
+):
+    result = await db.execute(select(Sale).where(Sale.user_id == owner_id).order_by(Sale.timestamp.desc()))
     all_sales = result.scalars().all()
     
-    # Simple grouping logic in memory for now
     grouped = {}
     for s in all_sales:
         ticket_id = s.id.split('_')[0] if 'sale_' in s.id else s.id
@@ -95,14 +107,12 @@ async def get_sales(db: AsyncSession = Depends(get_db)):
             }
         grouped[ticket_id]["total"] += s.total_price
         grouped[ticket_id]["items_count"] += s.quantity
-        # Fetching product name if needed, but for list view, items_count and total are enough
     
     return [SaleResponse(**v) for v in grouped.values()]
 
 @router.get("/{ticket_id}", response_model=SaleResponse)
 async def get_sale_detail(ticket_id: str, db: AsyncSession = Depends(get_db)):
     from app.models.product import Product
-    # Match all sales with this ticket prefix
     query = select(Sale, Product.name).join(Product, Sale.product_id == Product.id).where(Sale.id.like(f"{ticket_id}%"))
     result = await db.execute(query)
     rows = result.all()
@@ -125,6 +135,6 @@ async def get_sale_detail(ticket_id: str, db: AsyncSession = Depends(get_db)):
         items_count=sum(i.quantity for i, _ in rows),
         type=first_row.payment_method,
         items_detail=items_detail,
-        subtotal=total, # Simplified
+        subtotal=total,
         discount=0.0
     )

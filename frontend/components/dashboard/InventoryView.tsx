@@ -77,30 +77,20 @@ export function InventoryView({
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
-          <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Stock Critico</div>
+          <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Stock Crítico</div>
           <div className="text-3xl font-black text-rose-500 tracking-tight">{invCritical.length}</div>
           <div className="text-[10px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">Insumos por agotar</div>
         </div>
         <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
-          <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Movimientos Hoy</div>
-          <div className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">12</div>
-          <div className="text-[10px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">Entradas y salidas</div>
-        </div>
-        <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
-          <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Valor Estimado</div>
-          <div className="text-3xl font-black text-emerald-600 tracking-tight">$14.2k</div>
-          <div className="text-[10px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">Costo total stock</div>
-        </div>
-        <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
-          <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Pendiente</div>
-          <div className="text-3xl font-black text-sky-500 tracking-tight">2</div>
-          <div className="text-[10px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">Ordenes de compra</div>
+          <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Total SKU</div>
+          <div className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{invFiltered.length}</div>
+          <div className="text-[10px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">Productos en catálogo</div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
-        <div className="lg:col-span-2 space-y-8">
-          <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm">
+      <div className="grid grid-cols-1 gap-8 pb-10">
+        <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm">
+
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
               <div className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 flex-1">
                 <PackageSearch className="w-4 h-4 text-slate-400" />
@@ -184,35 +174,6 @@ export function InventoryView({
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm h-fit">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">Historial</h3>
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Recientes</div>
-          </div>
-          <div className="space-y-6">
-            {invMovements.map((m) => (
-              <div key={m.id} className="relative pl-6 border-l-2 border-slate-100 dark:border-slate-800/60 pb-1">
-                <div
-                  className={cn(
-                    "absolute -left-[9px] top-0 w-4 h-4 rounded-full border-2 border-white dark:border-slate-900",
-                    m.type === "in" ? "bg-emerald-500" : m.type === "out" ? "bg-amber-500" : "bg-slate-400"
-                  )}
-                />
-                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">
-                  {new Date(m.ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                </div>
-                <div className="text-sm font-normal text-slate-900 dark:text-white">
-                  {m.type === "in" ? "+" : ""}{m.qty} {m.note}
-                </div>
-              </div>
-            ))}
-          </div>
-          <button className="w-full mt-10 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2">
-            <History className="w-4 h-4" /> Ver log completo
-          </button>
         </div>
       </div>
 

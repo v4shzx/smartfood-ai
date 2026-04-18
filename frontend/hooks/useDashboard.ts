@@ -65,7 +65,6 @@ export function useDashboard(t: any) {
     category: "Tacos" as any,
     price: 0,
     available: true,
-    imageUrl: "",
   });
 
   const [invEditorOpen, setInvEditorOpen] = useState(false);
@@ -94,7 +93,6 @@ export function useDashboard(t: any) {
   });
 
   // --- Real Data States ---
-  const [students, setStudents] = useState<any[]>([]);
   const [menuItems, setMenuItems] = useState<any[]>([]);
   const [mealPlans, setMealPlans] = useState<any[]>([]);
   const [staff, setStaff] = useState<any[]>([]);
@@ -122,23 +120,21 @@ export function useDashboard(t: any) {
         setSubscriptionTier(tier.toLowerCase());
         console.log("Loading dashboard for user:", sessionUserId, "Tier:", tier);
 
-        const [studentsRes, menuRes, plansRes, statsRes, staffRes, productsRes, salesRes, invRes, movRes, supRes, seriesRes, trendsRes, predRes] = await Promise.all([
-          fetch(`${API_URL}/cafeteria/students?parent_id=${sessionUserId}`).then(r => r.json()),
-          fetch(`${API_URL}/cafeteria/menu`).then(r => r.json()),
-          fetch(`${API_URL}/cafeteria/plans`).then(r => r.json()),
-          fetch(`${API_URL}/stats/`).then(r => r.json()),
-          fetch(`${API_URL}/staff/`).then(r => r.json()),
-          fetch(`${API_URL}/products/`).then(r => r.json()),
-          fetch(`${API_URL}/sales/`).then(r => r.json()),
-          fetch(`${API_URL}/inventory/`).then(r => r.json()),
-          fetch(`${API_URL}/inventory/movements`).then(r => r.json()),
-          fetch(`${API_URL}/suppliers/`).then(r => r.json()),
-          fetch(`${API_URL}/stats/sales-series`).then(r => r.json()),
-          fetch(`${API_URL}/stats/trends`).then(r => r.json()),
-          fetch(`${API_URL}/stats/prediction`).then(r => r.json())
+        const [menuRes, plansRes, statsRes, staffRes, productsRes, salesRes, invRes, movRes, supRes, seriesRes, trendsRes, predRes] = await Promise.all([
+          fetch(`${API_URL}/cafeteria/menu?owner_id=${sessionUserId}`).then(r => r.json()),
+          fetch(`${API_URL}/cafeteria/plans?owner_id=${sessionUserId}`).then(r => r.json()),
+          fetch(`${API_URL}/stats/?owner_id=${sessionUserId}`).then(r => r.json()),
+          fetch(`${API_URL}/staff/?owner_id=${sessionUserId}`).then(r => r.json()),
+          fetch(`${API_URL}/products/?owner_id=${sessionUserId}`).then(r => r.json()),
+          fetch(`${API_URL}/sales/?owner_id=${sessionUserId}`).then(r => r.json()),
+          fetch(`${API_URL}/inventory/?owner_id=${sessionUserId}`).then(r => r.json()),
+          fetch(`${API_URL}/inventory/movements?owner_id=${sessionUserId}`).then(r => r.json()),
+          fetch(`${API_URL}/suppliers/?owner_id=${sessionUserId}`).then(r => r.json()),
+          fetch(`${API_URL}/stats/sales-series?owner_id=${sessionUserId}`).then(r => r.json()),
+          fetch(`${API_URL}/stats/trends?owner_id=${sessionUserId}`).then(r => r.json()),
+          fetch(`${API_URL}/stats/prediction?owner_id=${sessionUserId}`).then(r => r.json())
         ]);
 
-        setStudents(Array.isArray(studentsRes) ? studentsRes : []);
         setMenuItems(Array.isArray(menuRes) ? menuRes : []);
         setMealPlans(Array.isArray(plansRes) ? plansRes : []);
         setStats(statsRes);
@@ -297,7 +293,7 @@ export function useDashboard(t: any) {
   // Store Edits
   const storeOpenCreate = () => {
     setStoreEditingId(null);
-    setStoreForm({ name: "", category: "Tacos", price: 0, available: true, imageUrl: "" });
+    setStoreForm({ name: "", category: "Tacos", price: 0, available: true });
     setStoreEditorOpen(true);
   };
 
@@ -305,7 +301,12 @@ export function useDashboard(t: any) {
     const p = products.find((x) => x.id === id);
     if (!p) return;
     setStoreEditingId(id);
-    setStoreForm({ ...p, imageUrl: "" });
+    setStoreForm({ 
+      name: p.name,
+      category: p.category,
+      price: p.price,
+      available: p.available
+    });
     setStoreEditorOpen(true);
   };
 
@@ -523,7 +524,7 @@ export function useDashboard(t: any) {
     addToCart, removeFromCart, updateCartQuantity, cartTotal,
     salesHistory, trendsInsights, activeTitle, products,
     kpis, salesSeries,
-    students, menuItems, mealPlans, isLoading, subscriptionTier,
+    menuItems, mealPlans, isLoading, subscriptionTier,
     lastSaleForTicket, setLastSaleForTicket
   };
 }
