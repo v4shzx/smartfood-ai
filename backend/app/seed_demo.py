@@ -42,31 +42,31 @@ async def seed():
             await session.commit() # Commit users FIRST to avoid FK issues
             print("Users committed.")
 
-            # 2. Staff (Workers linked to owners)
+            # 2. Staff (Only for u_demo)
             staff_data = [
                 ("s_w1", "u_demo", "Pedro Gómez", "Cajero", "pedro@smartfood.ai"),
                 ("s_w2", "u_demo", "Chef Rodrigo", "Cocina", "rodrigo@smartfood.ai"),
                 ("s_w3", "u_demo", "Maria Luna", "Gerente", "maria@smartfood.ai"),
-                ("s_w4", "u_demo_basico", "Auxiliar Básico", "Ayudante", "aux@smartfood.ai"),
             ]
             for sid, oid, name, role, email in staff_data:
                 session.add(Staff(id=sid, owner_id=oid, full_name=name, role=role, email=email))
 
-            # 3. Inventory Items (Different for each owner)
+            # 3. Inventory Items (Only for u_demo)
             items_demo = [
                 ("p1", "Sándwich de jamón y queso", "Comida", 35.0),
                 ("p2", "Jugo natural de naranja", "Bebidas", 25.0),
                 ("p3", "Galletas de avena", "Snacks", 15.0),
-            ]
-            items_basico = [
-                ("pb1", "Taco de Pollo", "Tacos", 18.0),
-                ("pb2", "Agua de Horchata", "Bebidas", 20.0),
+                ("p4", "Yogur con granola", "Desayuno", 30.0),
+                ("p5", "Palomitas de maíz", "Snacks", 12.0),
+                ("p6", "Barra de cereal casera", "Snacks", 18.0),
+                ("p7", "Fruta picada (manzana)", "Frutas", 10.0),
+                ("p8", "Mini pizza de pan pita", "Comida", 40.0),
+                ("p9", "Batido de fresa con leche", "Bebidas", 28.0),
+                ("p10", "Muffin de plátano", "Postres", 22.0),
             ]
 
             for pid, name, cat, price in items_demo:
                 session.add(Product(id=pid, owner_id="u_demo", name=name, category=cat, price=price, available=True, on_hand=random.randint(10, 50)))
-            for pid, name, cat, price in items_basico:
-                session.add(Product(id=pid, owner_id="u_demo_basico", name=name, category=cat, price=price, available=True, on_hand=random.randint(10, 50)))
 
             # 4. Default Meal Plans
             plans = [
@@ -77,11 +77,10 @@ async def seed():
             for plan in plans:
                 session.add(plan)
             
-            # 5. Suppliers
+            # 5. Suppliers (Only for u_demo)
             suppliers_data = [
                 ("s1", "u_demo", "Cárnicos Express", "Juan Pérez", "555-0123", "ventas@carnicosexp.com", 1, 4.8),
                 ("s2", "u_demo", "Tortillería La Abuela", "Doña María", "555-9876", "pedidos@laabuela.mx", 0, 5.0),
-                ("s3", "u_demo_basico", "Salsas & Más", "Luis García", "555-5555", "lgarcia@salsasymas.com", 3, 4.2),
             ]
             for sid, oid, name, contact, phone, email, lead, rating in suppliers_data:
                 session.add(Supplier(id=sid, owner_id=oid, name=name, contact=contact, phone=phone, email=email, lead_days=lead, rating=rating))
@@ -91,35 +90,32 @@ async def seed():
         else:
             print(f"Users already exist ({user_count}), skipping initial seed.")
 
-        # 5. Simulate sales
-        print("Simulating sales and waste...")
-        owners = ["u_demo", "u_demo_basico"]
-        for oid in owners:
-            product_res = await session.execute(select(Product).where(Product.owner_id == oid))
-            products = product_res.scalars().all()
-            if products:
-                start_date = datetime(2026, 4, 1)
-                end_date = datetime(2026, 4, 23)
-                curr = start_date
-                while curr <= end_date:
-                    for _ in range(random.randint(5, 12)):
-                        p = random.choice(products)
-                        qty = random.randint(1, 4)
-                        session.add(Sale(
-                            id=f"sale_{oid}_{curr.strftime('%Y%m%d')}_{random.randint(0, 100000)}",
-                            user_id=oid, product_id=p.id, quantity=qty, total_price=p.price * qty,
-                            timestamp=curr + timedelta(hours=random.randint(8, 18)),
-                            payment_method=random.choice(["Cash", "Card"])
-                        ))
-                    curr += timedelta(days=1)
+        # 5. Simulate sales (Only for u_demo)
+        print("Simulating sales for u_demo...")
+        product_res = await session.execute(select(Product).where(Product.owner_id == "u_demo"))
+        products = product_res.scalars().all()
+        if products:
+            start_date = datetime(2026, 4, 1)
+            end_date = datetime(2026, 4, 23)
+            curr = start_date
+            while curr <= end_date:
+                for _ in range(random.randint(8, 20)):
+                    p = random.choice(products)
+                    qty = random.randint(1, 4)
+                    session.add(Sale(
+                        id=f"sale_u_demo_{curr.strftime('%Y%m%d')}_{random.randint(0, 100000)}",
+                        user_id="u_demo", product_id=p.id, quantity=qty, total_price=p.price * qty,
+                        timestamp=curr + timedelta(hours=random.randint(8, 18)),
+                        payment_method=random.choice(["Cash", "Card"])
+                    ))
+                curr += timedelta(days=1)
         
-        # 6. Menu Items
-        menu_res = await session.execute(select(MenuItem))
+        # 6. Menu Items (Only for u_demo)
+        menu_res = await session.execute(select(MenuItem).where(MenuItem.owner_id == "u_demo"))
         if not menu_res.scalars().first():
             menu_data = [
                 ("m1", "u_demo", "Lunes", "Tacos de Pollo", "Tacos de pollo con arroz.", 450, False),
                 ("m2", "u_demo", "Martes", "Pasta Alfredo", "Pasta cremosa.", 600, False),
-                ("mb1", "u_demo_basico", "Lunes", "Ensalada Básica", "Lechuga y tomate.", 200, True),
             ]
             for mid, oid, day, name, desc, cal, veg in menu_data:
                 session.add(MenuItem(id=mid, owner_id=oid, day_of_week=day, dish_name=name, description=desc, calories=cal, is_vegetarian=veg))
