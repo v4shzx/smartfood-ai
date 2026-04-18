@@ -416,16 +416,6 @@ export function useDashboard(t: any) {
     }
   }), [stats, menuItems]);
 
-  const salesSeries = useMemo(() => [
-    { label: "Lun", value: 4200 },
-    { label: "Mar", value: 3800 },
-    { label: "Mie", value: 5100 },
-    { label: "Jue", value: 4600 },
-    { label: "Vie", value: 6800 },
-    { label: "Sab", value: 8200 },
-    { label: "Dom", value: 7400 },
-  ], []);
-
   return {
     activeTab, setActiveTab,
     storeQuery, setStoreQuery,
