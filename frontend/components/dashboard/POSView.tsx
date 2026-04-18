@@ -203,9 +203,6 @@ export function POSView({
               <span>Pagar (Tarjeta)</span>
               <span>{formatCurrencyMXN(posTotal)}</span>
             </button>
-            <div className="text-[10px] font-normal uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mt-1">
-              Ticket/factura, promociones e integracion con inventario: siguiente iteracion.
-            </div>
           </div>
         </div>
       </div>

@@ -107,6 +107,7 @@ export function useDashboard(t: any) {
   const [trendsInsights, setTrendsInsights] = useState<any[]>([]);
   const [prediction, setPrediction] = useState<any[]>([]);
   const [stats, setStats] = useState<any>(null);
+  const [lastSaleForTicket, setLastSaleForTicket] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
@@ -212,23 +213,33 @@ export function useDashboard(t: any) {
     });
   }, [salesHistory, salesQuery, salesMethod]);
 
-  const selectedSale = useMemo(() => {
-    if (!selectedSaleId) return null;
-    const s = salesHistory.find((x) => x.id === selectedSaleId);
-    if (!s) return null;
-    // Mocking lines for the detail view
-    return {
-      ...s,
-      method: s.type.toLowerCase() as "cash" | "card",
-      cashier: "Admin",
-      subtotal: s.total,
-      discount: 0,
-      lines: [
-        { name: "Taco al Pastor", qty: 3, price: 18 },
-        { name: "Horchata 500ml", qty: 1, price: 25 },
-      ]
-    };
-  }, [salesHistory, selectedSaleId]);
+  useEffect(() => {
+    async function fetchSaleDetail() {
+      if (!selectedSaleId) {
+        setSelectedSale(null);
+        return;
+      }
+      // Check if it's already in the list with full details (rare for old sales)
+      const existing = salesHistory.find(s => s.id === selectedSaleId);
+      if (existing && existing.items_detail && existing.items_detail.length > 0) {
+        setSelectedSale(existing);
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/sales/${selectedSaleId}`);
+        if (res.ok) {
+          const detail = await res.json();
+          setSelectedSale(detail);
+        }
+      } catch (err) {
+        console.error("Error fetching sale detail:", err);
+      }
+    }
+    fetchSaleDetail();
+  }, [selectedSaleId, salesHistory, API_URL]);
+
+  const [selectedSale, setSelectedSale] = useState<any>(null);
 
   const posFilteredProducts = useMemo(() => {
     return products.filter((p) => {
@@ -482,6 +493,7 @@ export function useDashboard(t: any) {
           setSalesHistory(prev => [newSale, ...prev]);
           setPosCart([]);
           setPosDiscount(0);
+          setLastSaleForTicket(newSale); // Trigger ticket modal
           
           // Re-fetch stats to update dashboard KPIs
           const statsRes = await fetch(`${API_URL}/stats/`).then(r => r.json());
@@ -511,6 +523,7 @@ export function useDashboard(t: any) {
     addToCart, removeFromCart, updateCartQuantity, cartTotal,
     salesHistory, trendsInsights, activeTitle, products,
     kpis, salesSeries,
-    students, menuItems, mealPlans, isLoading, subscriptionTier
+    students, menuItems, mealPlans, isLoading, subscriptionTier,
+    lastSaleForTicket, setLastSaleForTicket
   };
 }

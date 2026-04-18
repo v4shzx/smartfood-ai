@@ -45,6 +45,7 @@ import { ReportsView } from "@/components/dashboard/ReportsView";
 import { PredictionView } from "@/components/dashboard/ai/PredictionView";
 import { StaffView } from "@/components/dashboard/StaffView";
 import { AccountView } from "@/components/dashboard/AccountView";
+import { TicketModal } from "@/components/dashboard/shared/TicketModal";
 
 // Hooks
 import { useDashboard } from "@/hooks/useDashboard";
@@ -566,6 +567,11 @@ export default function Dashboard() {
           )}
         </div>
       </main>
+
+      <TicketModal 
+        sale={dashboard.lastSaleForTicket} 
+        onClose={() => dashboard.setLastSaleForTicket(null)} 
+      />
     </div>
   );
 }

@@ -142,7 +142,7 @@ export function SalesView({
                       </div>
                       <div className="text-[12px] text-slate-500 dark:text-slate-400 mt-1">
                         {d.toLocaleString(undefined, { year: "numeric", month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit" })} · Cajero:{" "}
-                        <span className="font-bold">{s.cashier}</span> · Items: <span className="font-bold">{s.items}</span>
+                        <span className="font-bold">Admin</span> · Items: <span className="font-bold">{s.items_count}</span>
                       </div>
                     </div>
                     <div className="shrink-0 text-right">
@@ -211,15 +211,15 @@ export function SalesView({
               </div>
 
               <div className="space-y-3">
-                {selectedSale.lines.map((l: any, idx: number) => (
+                {selectedSale.items_detail?.map((l: any, idx: number) => (
                   <div key={idx} className="flex items-center justify-between p-4 rounded-2xl bg-slate-50/60 dark:bg-slate-800/30 border border-slate-100/60 dark:border-slate-800/60">
                     <div className="min-w-0">
                       <div className="text-sm font-black text-slate-900 dark:text-white truncate">{l.name}</div>
                       <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mt-1">
-                        {l.qty} x {formatCurrencyMXN(l.price)}
+                        {l.quantity} x {formatCurrencyMXN(l.price)}
                       </div>
                     </div>
-                    <div className="text-sm font-black text-slate-900 dark:text-white">{formatCurrencyMXN(l.qty * l.price)}</div>
+                    <div className="text-sm font-black text-slate-900 dark:text-white">{formatCurrencyMXN(l.quantity * l.price)}</div>
                   </div>
                 ))}
               </div>

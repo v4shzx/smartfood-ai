@@ -9,26 +9,23 @@ from datetime import datetime
 
 router = APIRouter()
 
+class TicketItem(BaseModel):
+    name: str
+    quantity: int
+    price: float
+
 class SaleResponse(BaseModel):
     id: str
     ts: datetime
     total: float
-    items: int
+    items_count: int
     type: str
+    items_detail: List[TicketItem] = []
+    subtotal: float = 0.0
+    discount: float = 0.0
 
     class Config:
         from_attributes = True
-
-class SaleItem(BaseModel):
-    product_id: str
-    quantity: int
-    price: float
-
-class CheckoutRequest(BaseModel):
-    user_id: str
-    items: List[SaleItem]
-    payment_method: str
-    discount: float
 
 @router.post("/checkout", response_model=SaleResponse)
 async def checkout(request: CheckoutRequest, db: AsyncSession = Depends(get_db)):
@@ -36,15 +33,10 @@ async def checkout(request: CheckoutRequest, db: AsyncSession = Depends(get_db))
     import uuid
     
     sale_id = f"sale_{uuid.uuid4().hex[:8]}"
-    total_qty = 0
-    total_price = 0
-    
-    # In a real multi-item system, we might need a SalesItems table.
-    # For now, following the existing single-product-per-sale record structure 
-    # but aggregating or creating multiple records.
+    items_detail = []
+    subtotal = sum(i.price * i.quantity for i in request.items)
     
     last_sale = None
-    
     for item in request.items:
         # 1. Update stock
         product_query = select(Product).where(Product.id == item.product_id)
@@ -54,6 +46,7 @@ async def checkout(request: CheckoutRequest, db: AsyncSession = Depends(get_db))
         if product:
             product.on_hand = max(0, product.on_hand - item.quantity)
             db.add(product)
+            items_detail.append(TicketItem(name=product.name, quantity=item.quantity, price=item.price))
         
         # 2. Create Sale record
         new_sale = Sale(
@@ -70,25 +63,68 @@ async def checkout(request: CheckoutRequest, db: AsyncSession = Depends(get_db))
     
     await db.commit()
     
-    # Return a summary (using the last item's timestamp for simplicity)
     return SaleResponse(
         id=sale_id,
-        ts=last_sale.timestamp,
-        total=sum(i.price * i.quantity for i in request.items) - request.discount,
-        items=sum(i.quantity for i in request.items),
-        type=request.payment_method
+        ts=last_sale.timestamp if last_sale else datetime.now(),
+        total=subtotal - request.discount,
+        items_count=sum(i.quantity for i in request.items),
+        type=request.payment_method,
+        items_detail=items_detail,
+        subtotal=subtotal,
+        discount=request.discount
     )
 
 @router.get("/", response_model=List[SaleResponse])
 async def get_sales(db: AsyncSession = Depends(get_db)):
+    # Group by ticket ID (first part of the id)
     result = await db.execute(select(Sale).order_by(Sale.timestamp.desc()))
-    sales = result.scalars().all()
-    return [
-        SaleResponse(
-            id=s.id,
-            ts=s.timestamp,
-            total=s.total_price,
-            items=s.quantity,
-            type=s.payment_method
-        ) for s in sales
-    ]
+    all_sales = result.scalars().all()
+    
+    # Simple grouping logic in memory for now
+    grouped = {}
+    for s in all_sales:
+        ticket_id = s.id.split('_')[0] if 'sale_' in s.id else s.id
+        if ticket_id not in grouped:
+            grouped[ticket_id] = {
+                "id": ticket_id,
+                "ts": s.timestamp,
+                "total": 0,
+                "items_count": 0,
+                "type": s.payment_method,
+                "items_detail": []
+            }
+        grouped[ticket_id]["total"] += s.total_price
+        grouped[ticket_id]["items_count"] += s.quantity
+        # Fetching product name if needed, but for list view, items_count and total are enough
+    
+    return [SaleResponse(**v) for v in grouped.values()]
+
+@router.get("/{ticket_id}", response_model=SaleResponse)
+async def get_sale_detail(ticket_id: str, db: AsyncSession = Depends(get_db)):
+    from app.models.product import Product
+    # Match all sales with this ticket prefix
+    query = select(Sale, Product.name).join(Product, Sale.product_id == Product.id).where(Sale.id.like(f"{ticket_id}%"))
+    result = await db.execute(query)
+    rows = result.all()
+    
+    if not rows:
+        raise HTTPException(status_code=404, detail="Sale not found")
+    
+    items_detail = []
+    total = 0
+    first_row = rows[0][0]
+    
+    for sale, prod_name in rows:
+        items_detail.append(TicketItem(name=prod_name, quantity=sale.quantity, price=sale.total_price / sale.quantity))
+        total += sale.total_price
+        
+    return SaleResponse(
+        id=ticket_id,
+        ts=first_row.timestamp,
+        total=total,
+        items_count=sum(i.quantity for i, _ in rows),
+        type=first_row.payment_method,
+        items_detail=items_detail,
+        subtotal=total, # Simplified
+        discount=0.0
+    )
