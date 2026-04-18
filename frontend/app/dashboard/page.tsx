@@ -129,13 +129,18 @@ export default function Dashboard() {
                 isCollapsed={isSidebarCollapsed}
                 onClick={() => setActiveTab("home")}
               />
-              <SidebarItem
-                icon={<ShoppingCart className="w-5 h-5" />}
-                label={t.dashboard.pos}
-                active={activeTab === "pos"}
-                isCollapsed={isSidebarCollapsed}
-                onClick={() => setActiveTab("pos")}
-              />
+              
+              {/* POS: Only for Pro+ */}
+              {isProOrAbove && (
+                <SidebarItem
+                  icon={<ShoppingCart className="w-5 h-5" />}
+                  label={t.dashboard.pos}
+                  active={activeTab === "pos"}
+                  isCollapsed={isSidebarCollapsed}
+                  onClick={() => setActiveTab("pos")}
+                />
+              )}
+
               <SidebarItem
                 icon={<ClipboardList className="w-5 h-5" />}
                 label={t.dashboard.sales}
@@ -145,6 +150,7 @@ export default function Dashboard() {
               />
             </div>
 
+            {/* Ops Section: Only for Pro+ */}
             {isProOrAbove && (
               <div className="mt-8 mb-4">
                 {!isSidebarCollapsed && (
@@ -189,15 +195,27 @@ export default function Dashboard() {
                 isCollapsed={isSidebarCollapsed}
                 onClick={() => setActiveTab("charts")}
               />
+              
+              {/* Advanced Analytics: Only for Pro+ */}
               {isProOrAbove && (
-                <SidebarItem
-                  icon={<TrendingUp className="w-5 h-5" />}
-                  label={t.dashboard.trends}
-                  active={activeTab === "trends"}
-                  isCollapsed={isSidebarCollapsed}
-                  onClick={() => setActiveTab("trends")}
-                />
+                <>
+                  <SidebarItem
+                    icon={<TrendingUp className="w-5 h-5" />}
+                    label={t.dashboard.trends}
+                    active={activeTab === "trends"}
+                    isCollapsed={isSidebarCollapsed}
+                    onClick={() => setActiveTab("trends")}
+                  />
+                  <SidebarItem
+                    icon={<Brain className="w-5 h-5" />}
+                    label={t.dashboard.prediction}
+                    active={activeTab === "prediction"}
+                    isCollapsed={isSidebarCollapsed}
+                    onClick={() => setActiveTab("prediction")}
+                  />
+                </>
               )}
+
               <SidebarItem
                 icon={<Download className="w-5 h-5" />}
                 label={t.dashboard.reports}
@@ -207,30 +225,15 @@ export default function Dashboard() {
               />
             </div>
 
-            {isProOrAbove && (
-              <div className="mt-8 mb-4">
-                {!isSidebarCollapsed && (
-                  <div className="px-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">
-                    {t.dashboard.aiEngine}
-                  </div>
-                )}
-                <SidebarItem
-                  icon={<Brain className="w-5 h-5" />}
-                  label={t.dashboard.prediction}
-                  active={activeTab === "prediction"}
-                  isCollapsed={isSidebarCollapsed}
-                  onClick={() => setActiveTab("prediction")}
-                />
-              </div>
-            )}
-
-            {isProOrAbove && (
-              <div className="mt-8 mb-4">
-                {!isSidebarCollapsed && (
-                  <div className="px-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">
-                    {t.dashboard.adm_title}
-                  </div>
-                )}
+            <div className="mt-8 mb-4">
+              {!isSidebarCollapsed && (
+                <div className="px-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">
+                  {t.dashboard.adm_title}
+                </div>
+              )}
+              
+              {/* Staff: Only for Pro+ */}
+              {isProOrAbove && (
                 <SidebarItem
                   icon={<Users className="w-5 h-5" />}
                   label={t.dashboard.staff}
@@ -238,8 +241,16 @@ export default function Dashboard() {
                   isCollapsed={isSidebarCollapsed}
                   onClick={() => setActiveTab("staff")}
                 />
-              </div>
-            )}
+              )}
+
+              <SidebarItem
+                icon={<User className="w-5 h-5" />}
+                label={t.dashboard.profile}
+                active={activeTab === "account"}
+                isCollapsed={isSidebarCollapsed}
+                onClick={() => setActiveTab("account")}
+              />
+            </div>
           </nav>
 
           {/* Sidebar Toggle */}
@@ -407,6 +418,7 @@ export default function Dashboard() {
               salesSeries={dashboard.salesSeries} 
               setActiveTab={setActiveTab} 
               menuItems={dashboard.menuItems}
+              subscriptionTier={subscriptionTier}
             />
           )}
           {activeTab === "pos" && (
