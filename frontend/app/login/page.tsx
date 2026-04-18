@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { useI18n, LangSwitcher } from "@/lib/i18n";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
 import { useTheme } from "next-themes";
+import { cn } from "@/lib/utils";
 
 import { useRouter } from "next/navigation";
 
