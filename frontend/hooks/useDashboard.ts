@@ -97,6 +97,15 @@ export function useDashboard(t: any) {
   const [students, setStudents] = useState<any[]>([]);
   const [menuItems, setMenuItems] = useState<any[]>([]);
   const [mealPlans, setMealPlans] = useState<any[]>([]);
+  const [staff, setStaff] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [salesHistory, setSalesHistory] = useState<any[]>([]);
+  const [invItems, setInvItems] = useState<any[]>([]);
+  const [invMovements, setInvMovements] = useState<any[]>([]);
+  const [suppliers, setSuppliers] = useState<any[]>([]);
+  const [salesSeries, setSalesSeries] = useState<any[]>([]);
+  const [trendsInsights, setTrendsInsights] = useState<any[]>([]);
+  const [prediction, setPrediction] = useState<any[]>([]);
   const [stats, setStats] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -112,27 +121,35 @@ export function useDashboard(t: any) {
         setSubscriptionTier(tier.toLowerCase());
         console.log("Loading dashboard for user:", sessionUserId, "Tier:", tier);
 
-        const [studentsRes, menuRes, plansRes, statsRes] = await Promise.all([
+        const [studentsRes, menuRes, plansRes, statsRes, staffRes, productsRes, salesRes, invRes, movRes, supRes, seriesRes, trendsRes, predRes] = await Promise.all([
           fetch(`${API_URL}/cafeteria/students?parent_id=${sessionUserId}`).then(r => r.json()),
           fetch(`${API_URL}/cafeteria/menu`).then(r => r.json()),
           fetch(`${API_URL}/cafeteria/plans`).then(r => r.json()),
-          fetch(`${API_URL}/stats/`).then(r => r.json())
+          fetch(`${API_URL}/stats/`).then(r => r.json()),
+          fetch(`${API_URL}/staff/`).then(r => r.json()),
+          fetch(`${API_URL}/products/`).then(r => r.json()),
+          fetch(`${API_URL}/sales/`).then(r => r.json()),
+          fetch(`${API_URL}/inventory/`).then(r => r.json()),
+          fetch(`${API_URL}/inventory/movements`).then(r => r.json()),
+          fetch(`${API_URL}/suppliers/`).then(r => r.json()),
+          fetch(`${API_URL}/stats/sales-series`).then(r => r.json()),
+          fetch(`${API_URL}/stats/trends`).then(r => r.json()),
+          fetch(`${API_URL}/stats/prediction`).then(r => r.json())
         ]);
 
-        setStudents(Array.isArray(studentsRes) && studentsRes.length > 0 ? studentsRes : [
-          { id: "s1", first_name: "Juan", last_name: "Perez", grade: "5to Primaria" },
-          { id: "s2", first_name: "Maria", last_name: "Lopez", grade: "3ro Primaria" }
-        ]);
-        setMenuItems(Array.isArray(menuRes) && menuRes.length > 0 ? menuRes : [
-          { id: "m1", day_of_week: "Lunes", dish_name: "Tacos de Pollo", description: "Tacos con guarnición de arroz y frijoles." },
-          { id: "m2", day_of_week: "Martes", dish_name: "Pasta Alfredo", description: "Pasta cremosa con pollo y pan de ajo." },
-          { id: "m3", day_of_week: "Miércoles", dish_name: "Ensalada César", description: "Lechuga fresca con pollo a la plancha." }
-        ]);
-        setMealPlans(Array.isArray(plansRes) && plansRes.length > 0 ? plansRes : [
-          { id: "p1", name: "Plan Básico", price_mxn: 0 },
-          { id: "p2", name: "Plan Profesional", price_mxn: 299 }
-        ]);
+        setStudents(Array.isArray(studentsRes) ? studentsRes : []);
+        setMenuItems(Array.isArray(menuRes) ? menuRes : []);
+        setMealPlans(Array.isArray(plansRes) ? plansRes : []);
         setStats(statsRes);
+        setStaff(Array.isArray(staffRes) ? staffRes : []);
+        setProducts(Array.isArray(productsRes) ? productsRes : []);
+        setSalesHistory(Array.isArray(salesRes) ? salesRes : []);
+        setInvItems(Array.isArray(invRes) ? invRes : []);
+        setInvMovements(Array.isArray(movRes) ? movRes : []);
+        setSuppliers(Array.isArray(supRes) ? supRes : []);
+        setSalesSeries(Array.isArray(seriesRes) ? seriesRes : []);
+        setTrendsInsights(Array.isArray(trendsRes) ? trendsRes : []);
+        setPrediction(Array.isArray(predRes) ? predRes : []);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       } finally {
@@ -141,59 +158,6 @@ export function useDashboard(t: any) {
     }
     fetchData();
   }, [API_URL]);
-  const [products, setProducts] = useState([
-    { id: "p1", name: "Sándwich de jamón y queso", category: "Comida", price: 35, available: true },
-    { id: "p2", name: "Jugo natural de naranja", category: "Bebidas", price: 25, available: true },
-    { id: "p3", name: "Galletas de avena", category: "Snacks", price: 15, available: true },
-    { id: "p4", name: "Yogur con granola", category: "Desayuno", price: 30, available: true },
-    { id: "p5", name: "Palomitas de maíz", category: "Snacks", price: 12, available: true },
-    { id: "p6", name: "Barra de cereal casera", category: "Snacks", price: 18, available: true },
-    { id: "p7", name: "Fruta picada (manzana)", category: "Frutas", price: 10, available: true },
-    { id: "p8", name: "Mini pizza de pan pita", category: "Comida", price: 40, available: true },
-    { id: "p9", name: "Batido de fresa con leche", category: "Bebidas", price: 28, available: true },
-    { id: "p10", name: "Muffin de plátano", category: "Postres", price: 22, available: true },
-  ]);
-
-  const [invItems, setInvItems] = useState([
-    { id: "i1", name: "Tortilla de Maiz", sku: "ING001", onHand: 50, min: 100, unit: "kg", updatedAt: Date.now() },
-    { id: "i2", name: "Carne al Pastor", sku: "ING002", onHand: 12.5, min: 10, unit: "kg", updatedAt: Date.now() },
-    { id: "i3", name: "Cebolla Blanca", sku: "ING003", onHand: 5, min: 3, unit: "kg", updatedAt: Date.now() },
-    { id: "i4", name: "Cilantro Fresco", sku: "ING004", onHand: 2, min: 5, unit: "manojo", updatedAt: Date.now() },
-  ]);
-
-  const [invMovements, setInvMovements] = useState([
-    { id: "m1", itemId: "i1", type: "out", qty: 25, ts: Date.now() - 3600000, note: "Ventas turno mañana" },
-    { id: "m2", itemId: "i2", type: "in", qty: 20, ts: Date.now() - 7200000, note: "Recepcion proveedor" },
-  ]);
-
-  const [suppliers, setSuppliers] = useState([
-    { id: "s1", name: "Carnicos Express", contact: "Juan Perez", phone: "555-0123", email: "ventas@carnicosexp.com", leadDays: 1, rating: 4.8, notes: "Excelente calidad, entrega antes de las 9 AM.", lastPurchaseAt: Date.now() - 86400000 * 2 },
-    { id: "s2", name: "Tortilleria La Abuela", contact: "Doña Maria", phone: "555-9876", email: "pedidos@laabuela.mx", leadDays: 0, rating: 5.0, notes: "Tortilla recien hecha, pedido diario.", lastPurchaseAt: Date.now() - 3600000 * 5 },
-    { id: "s3", name: "Salsas & Mas", contact: "Luis Garcia", phone: "555-5555", email: "lgarcia@salsasymas.com", leadDays: 3, rating: 4.2, notes: "Gran variedad de chiles secos.", lastPurchaseAt: null },
-  ]);
-
-  const [staff, setStaff] = useState([
-    { id: "u1", name: "Admin User", role: "Admin", active: true, lastActiveAt: Date.now() - 600000 },
-    { id: "u2", name: "Pedro Gomez", role: "Cajero", active: true, lastActiveAt: Date.now() - 3600000 },
-    { id: "u3", name: "Chef Rodrigo", role: "Cocina", active: true, lastActiveAt: Date.now() - 7200000 },
-    { id: "u4", name: "Maria Luna", role: "Gerente", active: false, lastActiveAt: Date.now() - 86400000 },
-  ]);
-
-  const salesHistory = useMemo(() => [
-    { id: "tk-882", ts: Date.now() - 300000, total: 125, items: 3, type: "Card" },
-    { id: "tk-881", ts: Date.now() - 1500000, total: 45, items: 1, type: "Cash" },
-    { id: "tk-880", ts: Date.now() - 3600000, total: 210, items: 6, type: "Cash" },
-    { id: "tk-879", ts: Date.now() - 86400000, total: 1540, items: 42, type: "Mixed" },
-    { id: "tk-878", ts: Date.now() - 172800000, total: 1890, items: 51, type: "Mixed" },
-    { id: "tk-877", ts: Date.now() - 259200000, total: 1250, items: 34, type: "Mixed" },
-  ], []);
-
-  const trendsInsights = useMemo(() => [
-    { title: "Pico de demanda", desc: "Los viernes entre 8 PM y 11 PM las ventas suben 45%." },
-    { title: "Producto Estrella", desc: "El Taco al Pastor representa el 38% de tus ingresos totales." },
-    { title: "Oportunidad Merma", desc: "Se detecto un 12% de exceso en compra de Cilantro los martes." },
-  ], []);
-
   // Computed Values
   const storeCategories = useMemo(() => Array.from(new Set(products.map((p) => p.category))), [products]);
 
@@ -234,16 +198,6 @@ export function useDashboard(t: any) {
     { name: "Horchata", val: 210 },
     { name: "Coca Cola", val: 180 },
   ], []);
-
-  const prediction = useMemo(() => {
-    const list = [];
-    const baseVal = predictionScenario === "promo" ? 1.4 : predictionScenario === "rain" ? 0.7 : 1;
-    for (let h = 10; h <= 24; h++) {
-      const val = Math.floor((Math.sin((h - 15) / 2) + 1.2) * 20 * baseVal * (1 + predictionLift / 100));
-      list.push({ hour: `${h}:00`, val });
-    }
-    return list;
-  }, [predictionScenario, predictionLift]);
 
   const staffFiltered = useMemo(() => {
     return staff.filter((u) => u.name.toLowerCase().includes(staffQuery.toLowerCase()) || u.role.toLowerCase().includes(staffQuery.toLowerCase()));

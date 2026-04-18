@@ -3,7 +3,8 @@ import random
 from datetime import datetime, timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import AsyncSessionLocal as SessionLocal, engine, Base
-from app.models.cafeteria import SchoolUser, Student, MealPlan, Sale, Waste, MenuItem
+from app.models.cafeteria import SchoolUser, Student, MealPlan, MenuItem
+from app.models.sales import Sale, Waste
 from app.models.product import Product
 
 async def seed():
@@ -12,22 +13,34 @@ async def seed():
         await conn.run_sync(Base.metadata.create_all)
 
     async with SessionLocal() as session:
-        # Check if demo user already exists
-        from sqlalchemy.future import select
-        res = await session.execute(select(SchoolUser).where(SchoolUser.id == "u_demo"))
-        if res.scalars().first():
-            print("Demo data already seeded or partially present. Adding Menu Items if missing.")
-        else:
-            # 1. Demo User
-            demo_user = SchoolUser(
-                id="u_demo",
-                email="comedordm@gmail.com",
-                full_name="Comedor DM",
-                password_hash="123456",
-                role="admin",
-                subscription_tier="profesional"
-            )
-            session.add(demo_user)
+        # Check if users and products exist
+        from sqlalchemy import func, select
+        u_count_res = await session.execute(select(func.count(SchoolUser.id)))
+        user_count = u_count_res.scalar() or 0
+        
+        p_count_res = await session.execute(select(func.count(Product.id)))
+        product_count = p_count_res.scalar() or 0
+        
+        if user_count == 0 or product_count == 0:
+            print(f"Seeding initial users ({user_count}) and products ({product_count})...")
+            # 1. Demo Users (Admin and Staff)
+            users_data = [
+                ("u_demo", "comedordm@gmail.com", "Comedor DM", "admin", "profesional"),
+                ("u_staff1", "pedro@smartfood.ai", "Pedro Gómez", "cajero", "basico"),
+                ("u_staff2", "rodrigo@smartfood.ai", "Chef Rodrigo", "cocina", "basico"),
+                ("u_staff3", "maria@smartfood.ai", "Maria Luna", "gerente", "basico"),
+            ]
+            
+            for uid, email, name, role, tier in users_data:
+                u = SchoolUser(
+                    id=uid,
+                    email=email,
+                    full_name=name,
+                    password_hash="123456",
+                    role=role,
+                    subscription_tier=tier
+                )
+                session.add(u)
 
             # 2. Inventory Items
             items_data = [
@@ -43,11 +56,9 @@ async def seed():
                 ("p10", "Muffin de plátano", "Postres", 22.0),
             ]
 
-            products = []
             for pid, name, cat, price in items_data:
                 p = Product(id=pid, name=name, category=cat, price=price, available=True)
                 session.add(p)
-                products.append(p)
 
             # 3. Add a student for the demo user
             student = Student(id="s_demo", first_name="Juan", last_name="Perez", grade="5to Primaria", parent_id="u_demo")
@@ -61,17 +72,32 @@ async def seed():
             ]
             for plan in plans:
                 session.add(plan)
+            
+            await session.commit() # Persistent commit
+            print("Initial users, products and plans committed.")
+        else:
+            print(f"Users already exist ({user_count}), skipping initial seed.")
 
-            # 5. Simulate one week of sales and waste
+        # 5. Simulate one week of sales and waste (Always run to ensure current data)
+        print("Simulating sales and waste for the last 7 days...")
+        # Get products for sales simulation (check both DB and session)
+        product_res = await session.execute(select(Product))
+        products = product_res.scalars().all()
+        
+        if not products:
+            # Try to get from session if not committed yet
+            products = [obj for obj in session.new if isinstance(obj, Product)]
+        
+        if products:
             today = datetime.now()
             for i in range(7):
-                current_date = (today - timedelta(days=i)).date()
+                current_date = (today - timedelta(days=i))
                 # Generate 5-15 sales per day
                 for _ in range(random.randint(5, 15)):
                     p = random.choice(products)
                     qty = random.randint(1, 3)
                     sale = Sale(
-                        id=f"sale_{i}_{random.randint(0, 1000)}",
+                        id=f"sale_{i}_{random.randint(0, 100000)}",
                         user_id="u_demo",
                         product_id=p.id,
                         quantity=qty,
@@ -86,13 +112,15 @@ async def seed():
                     p = random.choice(products)
                     qty = random.randint(1, 2)
                     waste = Waste(
-                        id=f"waste_{i}_{random.randint(0, 1000)}",
+                        id=f"waste_{i}_{random.randint(0, 100000)}",
                         product_id=p.id,
                         quantity=qty,
                         reason=random.choice(["Expired", "Damaged", "Unsold"]),
                         timestamp=current_date
                     )
                     session.add(waste)
+        else:
+            print("No products found to simulate sales.")
 
         # 6. Seed Weekly Menu Items
         menu_res = await session.execute(select(MenuItem))

@@ -50,7 +50,6 @@ async def get_dashboard_stats(db: AsyncSession = Depends(get_db)) -> Any:
         "sku": crit_items[0].name if crit_items else "N/A",
         "remaining": crit_items[0].on_hand if crit_items else 0
     }
-
     return {
         "todayRevenue": today_revenue,
         "weekRevenue": week_revenue,
@@ -58,3 +57,37 @@ async def get_dashboard_stats(db: AsyncSession = Depends(get_db)) -> Any:
         "totalOrders": total_orders,
         "criticalInventory": crit_info
     }
+
+@router.get("/sales-series")
+async def get_sales_series(db: AsyncSession = Depends(get_db)) -> Any:
+    # Fetch last 7 days of sales aggregated by day
+    today = datetime.now().date()
+    series = []
+    days_map = {0: "Lun", 1: "Mar", 2: "Mie", 3: "Jue", 4: "Vie", 5: "Sab", 6: "Dom"}
+    
+    for i in range(6, -1, -1):
+        day = today - timedelta(days=i)
+        query = select(func.sum(Sale.total_price)).where(func.date(Sale.timestamp) == day)
+        result = await db.execute(query)
+        total = result.scalar() or 0.0
+        series.append({"label": days_map[day.weekday()], "value": total})
+    
+    return series
+
+@router.get("/trends")
+async def get_trends(db: AsyncSession = Depends(get_db)) -> Any:
+    # Simulating trends logic based on real data would go here
+    return [
+        { "title": "Pico de demanda", "desc": "Los viernes entre 12 PM y 2 PM las ventas suben 45%." },
+        { "title": "Producto Estrella", "desc": "El Sándwich de jamón representa el 30% de tus ingresos." },
+        { "title": "Oportunidad Merma", "desc": "Se detectó un exceso en stock de Jugos los lunes." }
+    ]
+
+@router.get("/prediction")
+async def get_prediction(db: AsyncSession = Depends(get_db)) -> Any:
+    # Simulated prediction data
+    list_pred = []
+    for h in range(10, 25):
+        val = int((datetime.now().hour + h) % 15 * 5 + 10)
+        list_pred.append({ "hour": f"{h}:00", "val": val })
+    return list_pred

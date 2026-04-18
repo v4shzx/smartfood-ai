@@ -138,37 +138,7 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, students, menuIte
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pb-10">
-        <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">Accesos rapidos</h3>
-            <div className="text-[10px] font-normal text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Operar</div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {[
-              { label: "Punto de Venta", icon: <ShoppingCart className="w-5 h-5" />, tab: "pos" as const },
-              { label: "Registro de Ventas", icon: <ClipboardList className="w-5 h-5" />, tab: "sales" as const },
-              { label: "Inventario", icon: <Box className="w-5 h-5" />, tab: "inventory" as const },
-              { label: "Prediccion IA", icon: <Brain className="w-5 h-5" />, tab: "prediction" as const },
-            ].map((x) => (
-              <button key={x.label} onClick={() => setActiveTab(x.tab)} className="text-left p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/40 hover:bg-white dark:hover:bg-slate-900/60 hover:border-emerald-500/30 transition-all shadow-sm">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
-                      {x.icon}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-sm font-normal text-slate-900 dark:text-white truncate">{x.label}</div>
-                      <div className="text-[10px] text-slate-400 dark:text-slate-500 font-normal uppercase tracking-[0.2em] mt-1">Abrir</div>
-                    </div>
-                  </div>
-                  <ArrowUpRight className="w-4 h-4 text-slate-300" />
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-
+      <div className="grid grid-cols-1 gap-8 pb-10">
         <div className="bg-linear-to-br from-emerald-600 to-teal-700 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
           <div className="absolute top-0 right-0 p-8 opacity-20">
             <Brain className="w-32 h-32" />
