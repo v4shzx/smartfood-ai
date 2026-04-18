@@ -70,10 +70,16 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, students, menuIte
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard title="Pedidos Totales" value={`${kpis.activeStudents}`} subtitle="Procesados hoy" icon={<ShoppingCart className="w-6 h-6 text-emerald-600" />} trend="Hoy" />
-        <StatCard title="Ingresos Hoy" value={formatCurrencyMXN(kpis.todayRevenue)} subtitle="Ventas brutas" icon={<DollarSign className="w-6 h-6 text-sky-600" />} />
-        <StatCard title="Producto Top" value={kpis.topStudent} subtitle="Más vendido" icon={<Store className="w-6 h-6 text-amber-600" />} />
-        <StatCard title="Stock Crítico" value={`${kpis.criticalInventory.items} items`} subtitle="Requieren atención" icon={<AlertTriangle className="w-6 h-6 text-rose-600" />} trend="Alerta" />
+        <StatCard title="Pedidos Totales" value={`${kpis.activeStudents}`} subtitle={`${kpis.todayOrders} Procesados hoy`} icon={<ShoppingCart className="w-6 h-6 text-emerald-600" />} trend="Hoy" />
+        <StatCard 
+          title="Ingresos Hoy" 
+          value={formatCurrencyMXN(kpis.todayRevenue)} 
+          subtitle={`Ayer: ${formatCurrencyMXN(kpis.yesterdayRevenue)}`} 
+          icon={<DollarSign className="w-6 h-6 text-sky-600" />} 
+          trend={kpis.todayRevenue >= kpis.yesterdayRevenue ? "+Trend" : "-Trend"}
+        />
+        <StatCard title="Producto Top" value={kpis.topStudent} subtitle={`${kpis.topProductQty} unidades vendidas`} icon={<Store className="w-6 h-6 text-amber-600" />} />
+        <StatCard title="Stock Crítico" value={`${kpis.criticalInventory.items} items`} subtitle={`Alerta: ${kpis.criticalInventory.sku}`} icon={<AlertTriangle className="w-6 h-6 text-rose-600" />} trend="Alerta" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

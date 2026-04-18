@@ -11,11 +11,17 @@ router = APIRouter()
 
 @router.get("/")
 async def get_dashboard_stats(db: AsyncSession = Depends(get_db)) -> Any:
-    # 1. Today Revenue
+    # 1. Today Revenue & Yesterday Revenue
     today = datetime.now().date()
+    yesterday = today - timedelta(days=1)
+    
     query_today = select(func.sum(Sale.total_price)).where(func.date(Sale.timestamp) == today)
     result_today = await db.execute(query_today)
     today_revenue = result_today.scalar() or 0.0
+
+    query_yesterday = select(func.sum(Sale.total_price)).where(func.date(Sale.timestamp) == yesterday)
+    result_yesterday = await db.execute(query_yesterday)
+    yesterday_revenue = result_yesterday.scalar() or 0.0
 
     # 2. Week Revenue
     week_ago = datetime.now() - timedelta(days=7)
@@ -34,11 +40,16 @@ async def get_dashboard_stats(db: AsyncSession = Depends(get_db)) -> Any:
     result_top = await db.execute(query_top)
     top_prod_row = result_top.first()
     top_product = top_prod_row[0] if top_prod_row else "N/A"
+    top_product_qty = top_prod_row[1] if top_prod_row else 0
 
-    # 4. Total Orders Today
-    query_orders = select(func.count(Sale.id)).where(func.date(Sale.timestamp) == today)
-    result_orders = await db.execute(query_orders)
-    total_orders = result_orders.scalar() or 0
+    # 4. Total Orders Today and Absolute Total
+    query_orders_today = select(func.count(Sale.id)).where(func.date(Sale.timestamp) == today)
+    result_orders_today = await db.execute(query_orders_today)
+    total_orders_today = result_orders_today.scalar() or 0
+
+    query_orders_total = select(func.count(Sale.id))
+    result_orders_total = await db.execute(query_orders_total)
+    total_orders_abs = result_orders_total.scalar() or 0
 
     # 5. Critical Inventory
     query_crit = select(Product).where(Product.on_hand <= Product.min_stock)
@@ -52,9 +63,12 @@ async def get_dashboard_stats(db: AsyncSession = Depends(get_db)) -> Any:
     }
     return {
         "todayRevenue": today_revenue,
+        "yesterdayRevenue": yesterday_revenue,
         "weekRevenue": week_revenue,
         "topProduct": top_product,
-        "totalOrders": total_orders,
+        "topProductQty": top_product_qty,
+        "totalOrdersToday": total_orders_today,
+        "totalOrdersAbs": total_orders_abs,
         "criticalInventory": crit_info
     }
 

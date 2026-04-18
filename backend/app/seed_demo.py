@@ -57,7 +57,16 @@ async def seed():
             ]
 
             for pid, name, cat, price in items_data:
-                p = Product(id=pid, name=name, category=cat, price=price, available=True)
+                # Give initial random stock between 10 and 50
+                p = Product(
+                    id=pid, 
+                    name=name, 
+                    category=cat, 
+                    price=price, 
+                    available=True,
+                    on_hand=random.randint(10, 50),
+                    min_stock=5
+                )
                 session.add(p)
 
             # 3. Add a student for the demo user
@@ -78,47 +87,47 @@ async def seed():
         else:
             print(f"Users already exist ({user_count}), skipping initial seed.")
 
-        # 5. Simulate one week of sales and waste (Always run to ensure current data)
-        print("Simulating sales and waste for the last 7 days...")
-        # Get products for sales simulation (check both DB and session)
+        # 5. Simulate sales and waste from 2026-04-01 to 2026-04-23
+        print("Simulating sales and waste from 2026-04-01 to 2026-04-23...")
+        # Get products for sales simulation
         product_res = await session.execute(select(Product))
         products = product_res.scalars().all()
         
-        if not products:
-            # Try to get from session if not committed yet
-            products = [obj for obj in session.new if isinstance(obj, Product)]
-        
         if products:
-            today = datetime.now()
-            for i in range(7):
-                current_date = (today - timedelta(days=i))
-                # Generate 5-15 sales per day
-                for _ in range(random.randint(5, 15)):
+            start_date = datetime(2026, 4, 1)
+            end_date = datetime(2026, 4, 23)
+            current_date = start_date
+            
+            while current_date <= end_date:
+                # Generate 8-20 sales per day for a richer history
+                for _ in range(random.randint(8, 20)):
                     p = random.choice(products)
-                    qty = random.randint(1, 3)
+                    qty = random.randint(1, 4)
                     sale = Sale(
-                        id=f"sale_{i}_{random.randint(0, 100000)}",
+                        id=f"sale_{current_date.strftime('%Y%m%d')}_{random.randint(0, 100000)}",
                         user_id="u_demo",
                         product_id=p.id,
                         quantity=qty,
                         total_price=p.price * qty,
-                        timestamp=current_date,
+                        timestamp=current_date + timedelta(hours=random.randint(8, 18)), # Random time during the day
                         payment_method=random.choice(["Cash", "Card"])
                     )
                     session.add(sale)
                 
-                # Generate 1-3 waste records per day
-                for _ in range(random.randint(1, 3)):
+                # Generate 1-4 waste records per day
+                for _ in range(random.randint(1, 4)):
                     p = random.choice(products)
                     qty = random.randint(1, 2)
                     waste = Waste(
-                        id=f"waste_{i}_{random.randint(0, 100000)}",
+                        id=f"waste_{current_date.strftime('%Y%m%d')}_{random.randint(0, 100000)}",
                         product_id=p.id,
                         quantity=qty,
                         reason=random.choice(["Expired", "Damaged", "Unsold"]),
-                        timestamp=current_date
+                        timestamp=current_date + timedelta(hours=random.randint(19, 21))
                     )
                     session.add(waste)
+                
+                current_date += timedelta(days=1)
         else:
             print("No products found to simulate sales.")
 

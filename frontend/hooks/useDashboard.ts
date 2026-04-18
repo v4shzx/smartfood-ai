@@ -405,9 +405,12 @@ export function useDashboard(t: any) {
 
   const kpis = useMemo(() => ({
     todayRevenue: stats?.todayRevenue || 0,
+    yesterdayRevenue: stats?.yesterdayRevenue || 0,
     weekRevenue: stats?.weekRevenue || 0,
     topStudent: stats?.topProduct || "N/A", // Label "Top Product" in UI
-    activeStudents: stats?.totalOrders || 0, // Label "Total Sales" in UI
+    topProductQty: stats?.topProductQty || 0,
+    activeStudents: stats?.totalOrdersAbs || 0, // Absolute Total
+    todayOrders: stats?.totalOrdersToday || 0, // Today Total
     menuItemsCount: menuItems.length,
     criticalInventory: { 
       items: stats?.criticalInventory?.items || 0, 
