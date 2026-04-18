@@ -423,6 +423,7 @@ export default function Dashboard() {
               posDiscount={dashboard.posDiscount}
               setPosDiscount={dashboard.setPosDiscount}
               posTotal={dashboard.posTotal}
+              posCheckout={dashboard.posCheckout}
               setActiveTab={setActiveTab}
             />
           )}

@@ -26,6 +26,7 @@ interface POSViewProps {
   posDiscount: number;
   setPosDiscount: (d: number) => void;
   posTotal: number;
+  posCheckout: (method: "Cash" | "Card") => void;
   setActiveTab: (tab: any) => void;
 }
 
@@ -42,6 +43,7 @@ export function POSView({
   posDiscount,
   setPosDiscount,
   posTotal,
+  posCheckout,
   setActiveTab,
 }: POSViewProps) {
   return (
@@ -186,6 +188,7 @@ export function POSView({
           </div>
           <div className="mt-6 grid grid-cols-1 gap-3">
             <button
+              onClick={() => posCheckout("Cash")}
               disabled={posCartLines.length === 0}
               className="flex items-center justify-between gap-3 bg-emerald-600 disabled:bg-slate-300 dark:disabled:bg-slate-800 disabled:text-slate-600 text-white px-5 py-3 rounded-2xl text-xs font-normal uppercase tracking-widest shadow-lg shadow-emerald-500/20 transition-all"
             >
@@ -193,6 +196,7 @@ export function POSView({
               <span>{formatCurrencyMXN(posTotal)}</span>
             </button>
             <button
+              onClick={() => posCheckout("Card")}
               disabled={posCartLines.length === 0}
               className="flex items-center justify-between gap-3 bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 disabled:opacity-60 px-5 py-3 rounded-2xl text-xs font-normal uppercase tracking-widest shadow-sm"
             >

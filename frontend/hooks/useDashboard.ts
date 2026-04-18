@@ -455,6 +455,56 @@ export function useDashboard(t: any) {
     },
     posDec: (id: string) => updateCartQuantity(id, -1),
     posClear: () => setPosCart([]),
+    posCheckout: async (method: "Cash" | "Card") => {
+      if (posCart.length === 0) return;
+      try {
+        const sessionUserId = localStorage.getItem("smartfood_user_id") || "u_demo";
+        const saleData = {
+          user_id: sessionUserId,
+          items: posCart.map(item => ({
+            product_id: item.id,
+            quantity: item.quantity,
+            price: item.price
+          })),
+          payment_method: method,
+          discount: posDiscount
+        };
+
+        const res = await fetch(`${API_URL}/sales/checkout`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(saleData)
+        });
+
+        if (res.ok) {
+          const newSale = await res.json();
+          // Update local states
+          setSalesHistory(prev => [newSale, ...prev]);
+          setPosCart([]);
+          setPosDiscount(0);
+          
+          // Re-fetch stats to update dashboard KPIs
+          const statsRes = await fetch(`${API_URL}/stats/`).then(r => r.json());
+          setStats(statsRes);
+          
+          // Update inventory levels locally
+          setInvItems(prev => prev.map(inv => {
+            const soldItem = posCart.find(cartItem => cartItem.id === inv.id);
+            if (soldItem) {
+              return { ...inv, onHand: inv.onHand - soldItem.quantity };
+            }
+            return inv;
+          }));
+
+          alert("Venta procesada con éxito");
+        } else {
+          alert("Error al procesar la venta");
+        }
+      } catch (error) {
+        console.error("Checkout error:", error);
+        alert("Fallo de conexión al procesar venta");
+      }
+    },
     salesQuery, setSalesQuery, salesMethod, setSalesMethod,
     salesDateFrom, setSalesDateFrom, salesDateTo, setSalesDateTo,
     salesFiltered, selectedSaleId, setSelectedSaleId, selectedSale,
