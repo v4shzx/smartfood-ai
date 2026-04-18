@@ -1,5 +1,9 @@
 Write-Host "===> Iniciando limpieza total y reconstrucción..." -ForegroundColor Blue
 
+# Moverse a la raíz del proyecto
+Set-Location "$PSScriptRoot\.."
+Write-Host "Directorio de trabajo: $(Get-Location)" -ForegroundColor Gray
+
 Write-Host "1. Deteniendo servicios y eliminando volúmenes (limpieza de BD)..." -ForegroundColor Yellow
 docker-compose -f docker-compose.dev.yml down -v
 
