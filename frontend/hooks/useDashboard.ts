@@ -245,9 +245,10 @@ export function useDashboard(t: any) {
   }, [products, posQuery]);
 
   const posCartLines = useMemo(() => {
-    return posCart.map(item => ({
+    return posCart.map((item, idx) => ({
       ...item,
-      qty: item.quantity
+      qty: item.quantity,
+      lineKey: `${item.id}-${idx}` // Guarantee unique key for React rendering
     }));
   }, [posCart]);
 
@@ -508,8 +509,6 @@ export function useDashboard(t: any) {
             }
             return inv;
           }));
-
-          alert("Venta procesada con éxito");
         } else {
           alert("Error al procesar la venta");
         }

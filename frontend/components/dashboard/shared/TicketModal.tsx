@@ -54,7 +54,7 @@ export function TicketModal({ sale, onClose }: TicketModalProps) {
 
             <div className="border-t border-dashed border-slate-200 dark:border-slate-800 pt-6 space-y-4">
               {sale.items_detail?.map((item: any, i: number) => (
-                <div key={i} className="flex justify-between text-sm">
+                <div key={`${sale.id}-${item.name}-${i}`} className="flex justify-between text-sm">
                   <div className="flex gap-2 min-w-0">
                     <span className="font-black text-emerald-600 dark:text-emerald-400">{item.quantity}x</span>
                     <span className="text-slate-700 dark:text-slate-300 truncate">{item.name}</span>

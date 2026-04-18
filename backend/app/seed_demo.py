@@ -15,16 +15,13 @@ async def seed():
         await conn.run_sync(Base.metadata.create_all)
 
     async with SessionLocal() as session:
-        # Check if users and products exist
+        # Check if users exist
         from sqlalchemy import func, select
         u_count_res = await session.execute(select(func.count(SchoolUser.id)))
         user_count = u_count_res.scalar() or 0
         
-        p_count_res = await session.execute(select(func.count(Product.id)))
-        product_count = p_count_res.scalar() or 0
-        
-        if user_count == 0 or product_count == 0:
-            print(f"Seeding initial users ({user_count}) and products ({product_count})...")
+        if user_count == 0:
+            print(f"Seeding initial users...")
             # 1. Demo Users (Admins/Owners)
             users_data = [
                 ("u_demo", "comedordm@gmail.com", "Comedor DM", "admin", "profesional"),
@@ -41,6 +38,9 @@ async def seed():
                     subscription_tier=tier
                 )
                 session.add(u)
+            
+            await session.commit() # Commit users FIRST to avoid FK issues
+            print("Users committed.")
 
             # 2. Staff (Workers linked to owners)
             staff_data = [
@@ -53,13 +53,11 @@ async def seed():
                 session.add(Staff(id=sid, owner_id=oid, full_name=name, role=role, email=email))
 
             # 3. Inventory Items (Different for each owner)
-            # For u_demo (Professional)
             items_demo = [
                 ("p1", "Sándwich de jamón y queso", "Comida", 35.0),
                 ("p2", "Jugo natural de naranja", "Bebidas", 25.0),
                 ("p3", "Galletas de avena", "Snacks", 15.0),
             ]
-            # For u_demo_basico (Basic)
             items_basico = [
                 ("pb1", "Taco de Pollo", "Tacos", 18.0),
                 ("pb2", "Agua de Horchata", "Bebidas", 20.0),
@@ -67,7 +65,6 @@ async def seed():
 
             for pid, name, cat, price in items_demo:
                 session.add(Product(id=pid, owner_id="u_demo", name=name, category=cat, price=price, available=True, on_hand=random.randint(10, 50)))
-            
             for pid, name, cat, price in items_basico:
                 session.add(Product(id=pid, owner_id="u_demo_basico", name=name, category=cat, price=price, available=True, on_hand=random.randint(10, 50)))
 
@@ -90,59 +87,45 @@ async def seed():
                 session.add(Supplier(id=sid, owner_id=oid, name=name, contact=contact, phone=phone, email=email, lead_days=lead, rating=rating))
 
             await session.commit()
-            print("Initial users, products and plans committed.")
+            print("Initial entities committed.")
         else:
             print(f"Users already exist ({user_count}), skipping initial seed.")
 
-        # 5. Simulate sales and waste from 2026-04-01 to 2026-04-23
-        print("Simulating sales and waste from 2026-04-01 to 2026-04-23...")
-        
+        # 5. Simulate sales
+        print("Simulating sales and waste...")
         owners = ["u_demo", "u_demo_basico"]
         for oid in owners:
-            # Get products for this owner
             product_res = await session.execute(select(Product).where(Product.owner_id == oid))
             products = product_res.scalars().all()
-            
             if products:
                 start_date = datetime(2026, 4, 1)
                 end_date = datetime(2026, 4, 23)
-                current_date = start_date
-                
-                while current_date <= end_date:
-                    for _ in range(random.randint(5, 15)):
+                curr = start_date
+                while curr <= end_date:
+                    for _ in range(random.randint(5, 12)):
                         p = random.choice(products)
                         qty = random.randint(1, 4)
-                        sale = Sale(
-                            id=f"sale_{oid}_{current_date.strftime('%Y%m%d')}_{random.randint(0, 100000)}",
-                            user_id=oid,
-                            product_id=p.id,
-                            quantity=qty,
-                            total_price=p.price * qty,
-                            timestamp=current_date + timedelta(hours=random.randint(8, 18)),
+                        session.add(Sale(
+                            id=f"sale_{oid}_{curr.strftime('%Y%m%d')}_{random.randint(0, 100000)}",
+                            user_id=oid, product_id=p.id, quantity=qty, total_price=p.price * qty,
+                            timestamp=curr + timedelta(hours=random.randint(8, 18)),
                             payment_method=random.choice(["Cash", "Card"])
-                        )
-                        session.add(sale)
-                    current_date += timedelta(days=1)
-            else:
-                print(f"No products found for owner {oid} to simulate sales.")
-
-        # 6. Seed Weekly Menu Items
+                        ))
+                    curr += timedelta(days=1)
+        
+        # 6. Menu Items
         menu_res = await session.execute(select(MenuItem))
         if not menu_res.scalars().first():
             menu_data = [
-                ("m1", "u_demo", "Lunes", "Tacos de Pollo", "Tacos de pollo con guarnición de arroz y frijoles.", 450, False),
-                ("m2", "u_demo", "Martes", "Pasta Alfredo", "Pasta cremosa con pollo y pan de ajo.", 600, False),
+                ("m1", "u_demo", "Lunes", "Tacos de Pollo", "Tacos de pollo con arroz.", 450, False),
+                ("m2", "u_demo", "Martes", "Pasta Alfredo", "Pasta cremosa.", 600, False),
                 ("mb1", "u_demo_basico", "Lunes", "Ensalada Básica", "Lechuga y tomate.", 200, True),
             ]
             for mid, oid, day, name, desc, cal, veg in menu_data:
-                m = MenuItem(id=mid, owner_id=oid, day_of_week=day, dish_name=name, description=desc, calories=cal, is_vegetarian=veg)
-                session.add(m)
-            print("Menu items seeded!")
+                session.add(MenuItem(id=mid, owner_id=oid, day_of_week=day, dish_name=name, description=desc, calories=cal, is_vegetarian=veg))
 
         await session.commit()
-        print("Demo data and one-week simulation seeded successfully!")
-
+        print("Demo data seeded successfully!")
 
 if __name__ == "__main__":
     asyncio.run(seed())
-
