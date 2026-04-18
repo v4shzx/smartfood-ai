@@ -12,7 +12,8 @@ import {
   Settings,
   MoreVertical,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  X
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -238,4 +239,4 @@ export default function AdminUsersPage() {
       </AnimatePresence>
     </div>
   );
-}}
+}

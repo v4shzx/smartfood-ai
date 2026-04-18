@@ -29,8 +29,8 @@ docker compose -f docker-compose.dev.yml up -d
 echo -e "${YELLOW}4. Esperando a que el backend esté disponible...${NC}"
 MAX_RETRIES=30
 COUNT=0
-# Intentamos usar curl o docker inspect si curl falla
-until $(curl --output /dev/null --silent --head --fail http://localhost:8000/health); do
+# Usamos curl para verificar que el endpoint /health responda con 200 OK
+until curl --output /dev/null --silent --fail http://localhost:8000/health; do
     if [ $COUNT -eq $MAX_RETRIES ]; then
       echo -e "${RED}Error: El backend no inició a tiempo o curl no está instalado.${NC}"
       echo -e "${YELLOW}Intentando verificar estado del contenedor...${NC}"
