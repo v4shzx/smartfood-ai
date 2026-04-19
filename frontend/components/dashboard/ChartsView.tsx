@@ -75,9 +75,7 @@ export function ChartsView({
               <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">Ingresos vs Tickets</h3>
               <p className="text-xs text-slate-400 dark:text-slate-500 font-bold mt-1 uppercase tracking-widest">Desempeño temporal</p>
             </div>
-            <button className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-emerald-500 transition-all">
-              <Download className="w-4 h-4" />
-            </button>
+
           </div>
           <div className="h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -111,9 +109,9 @@ export function ChartsView({
               <div className="text-center text-slate-500 py-8">{t.dashboard.no_top_products || 'No hay productos destacados'}</div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartsTopProducts} layout="vertical" margin={{ left: -20, right: 20 }}>
+                <BarChart data={chartsTopProducts} layout="vertical" margin={{ left: 0, right: 20 }}>
                   <XAxis type="number" hide />
-                  <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 400, width: 80 }} stroke="rgba(148,163,184,0.8)" />
+                  <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 9, fontWeight: 500, width: 120 }} width={120} stroke="rgba(148,163,184,0.8)" />
                   <Tooltip cursor={{ fill: "rgba(148,163,184,0.05)" }} contentStyle={{ borderRadius: 16, border: "none", boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1)" }} />
                   <Bar dataKey="val" radius={[0, 10, 10, 0]} barSize={24}>
                     {chartsTopProducts.map((entry, index) => (
