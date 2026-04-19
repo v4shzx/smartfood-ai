@@ -19,7 +19,7 @@ class SaleResponse(BaseModel):
     ts: datetime
     total: float
     items_count: int
-    type: str
+    method: str
     items_detail: List[TicketItem] = []
     subtotal: float = 0.0
     discount: float = 0.0
@@ -79,7 +79,7 @@ async def checkout(request: CheckoutRequest, db: AsyncSession = Depends(get_db))
         ts=last_sale.timestamp if last_sale else datetime.now(),
         total=subtotal - request.discount,
         items_count=sum(i.quantity for i in request.items),
-        type=request.payment_method,
+        method=request.payment_method,
         items_detail=items_detail,
         subtotal=subtotal,
         discount=request.discount
@@ -95,14 +95,23 @@ async def get_sales(
     
     grouped = {}
     for s in all_sales:
-        ticket_id = s.id.split('_')[0] if 'sale_' in s.id else s.id
+        parts = s.id.split('_')
+        # POS sales: sale_UUID_PRODID (3 parts)
+        # We group by sale_UUID
+        if len(parts) == 3 and parts[0] == 'sale':
+            ticket_id = f"{parts[0]}_{parts[1]}"
+        # If it's a seed sale or something else, use the full ID to keep it unique
+        # unless it was intentionally meant to be grouped (not the case in current seed)
+        else:
+            ticket_id = s.id
+            
         if ticket_id not in grouped:
             grouped[ticket_id] = {
                 "id": ticket_id,
                 "ts": s.timestamp,
                 "total": 0,
                 "items_count": 0,
-                "type": s.payment_method,
+                "method": s.payment_method,
                 "items_detail": []
             }
         grouped[ticket_id]["total"] += s.total_price
@@ -133,7 +142,7 @@ async def get_sale_detail(ticket_id: str, db: AsyncSession = Depends(get_db)):
         ts=first_row.timestamp,
         total=total,
         items_count=sum(i.quantity for i, _ in rows),
-        type=first_row.payment_method,
+        method=first_row.payment_method,
         items_detail=items_detail,
         subtotal=total,
         discount=0.0

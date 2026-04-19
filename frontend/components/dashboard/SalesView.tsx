@@ -8,9 +8,14 @@ import {
   ShoppingCart,
   PackageSearch,
   X,
+  TrendingUp,
+  Receipt,
+  DollarSign,
+  Calendar
 } from "lucide-react";
 import { formatCurrencyMXN } from "@/lib/dashboard-utils";
 import { useI18n } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 interface SalesViewProps {
   t: any;
@@ -45,48 +50,83 @@ export function SalesView({
 }: SalesViewProps) {
   const { lang } = useI18n();
 
+  const totalIncomes = salesFiltered.reduce((acc, s) => acc + s.total, 0);
+  const avgTicket = salesFiltered.length ? totalIncomes / salesFiltered.length : 0;
+
   return (
     <>
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.sales}</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">{t.dashboard.sales_desc}</p>
         </motion.div>
-
-        <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-3">
-          <button className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-5 py-3 rounded-2xl text-xs font-normal uppercase tracking-widest hover:border-emerald-500/40 transition-all shadow-sm">
-            <Download className="w-4 h-4" /> {t.dashboard.export_csv}
-          </button>
-          <button
-            onClick={() => setActiveTab("pos")}
-            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-2xl text-xs font-normal uppercase tracking-widest shadow-lg shadow-emerald-500/20 active:scale-95 transition-all"
-          >
-            <ShoppingCart className="w-4 h-4" /> {t.dashboard.go_to_pos}
-          </button>
-        </motion.div>
       </div>
 
-      <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 flex-1">
-              <PackageSearch className="w-4 h-4 text-slate-400" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-slate-400 dark:text-slate-500 text-[12px] font-black uppercase tracking-widest">{t.dashboard.incomes}</div>
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600">
+              <DollarSign className="w-5 h-5" />
+            </div>
+          </div>
+          <div className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">{formatCurrencyMXN(totalIncomes)}</div>
+          <div className="text-[11px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">{t.dashboard.filtered}</div>
+        </div>
+
+        <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-slate-400 dark:text-slate-500 text-[12px] font-black uppercase tracking-widest">{t.dashboard.tickets}</div>
+            <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-blue-600">
+              <Receipt className="w-5 h-5" />
+            </div>
+          </div>
+          <div className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">{salesFiltered.length}</div>
+          <div className="text-[11px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">{t.dashboard.results}</div>
+        </div>
+
+        <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-slate-400 dark:text-slate-500 text-[12px] font-black uppercase tracking-widest">{t.dashboard.avg_ticket}</div>
+            <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center text-amber-600">
+              <TrendingUp className="w-5 h-5" />
+            </div>
+          </div>
+          <div className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">{formatCurrencyMXN(avgTicket)}</div>
+          <div className="text-[11px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">Promedio del periodo</div>
+        </div>
+      </div>
+
+      <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm mb-8">
+        <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 items-end">
+          <div className="xl:col-span-2 space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">Búsqueda rápida</label>
+            <div className={cn(
+              "flex items-center gap-2 px-4 py-3 rounded-2xl border transition-all duration-300",
+              salesQuery ? "bg-white dark:bg-slate-950 border-emerald-500/30 ring-4 ring-emerald-500/5" : "bg-slate-50/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800"
+            )}>
+              <PackageSearch className={cn("w-4 h-4 transition-colors", salesQuery ? "text-emerald-500" : "text-slate-400")} />
               <input
                 value={salesQuery}
                 onChange={(e) => setSalesQuery(e.target.value)}
                 placeholder={t.dashboard.search_sales}
                 className="w-full bg-transparent outline-none text-sm font-semibold text-slate-700 dark:text-slate-200 placeholder:text-slate-400"
               />
+              {salesQuery && (
+                <button onClick={() => setSalesQuery("")} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                  <X className="w-3.5 h-3.5 text-slate-400" />
+                </button>
+              )}
             </div>
           </div>
 
-          <div>
-            <div className="px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
-              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">{t.dashboard.method}</div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">{t.dashboard.method}</label>
+            <div className="px-3 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
               <select
                 value={salesMethod}
                 onChange={(e) => setSalesMethod(e.target.value as "all" | "cash" | "card")}
-                className="w-full bg-transparent outline-none text-sm font-black text-slate-900 dark:text-white"
+                className="w-full bg-transparent outline-none text-sm font-black text-slate-900 dark:text-white cursor-pointer"
               >
                 <option value="all">{t.dashboard.all}</option>
                 <option value="cash">{t.dashboard.cash}</option>
@@ -95,98 +135,82 @@ export function SalesView({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
-              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">{t.dashboard.from}</div>
-              <input
-                type="date"
-                value={salesDateFrom}
-                onChange={(e) => setSalesDateFrom(e.target.value)}
-                className="w-full bg-transparent outline-none text-sm font-black text-slate-900 dark:text-white"
-              />
+          <div className="grid grid-cols-2 gap-3 xl:col-span-1">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">{t.dashboard.from}</label>
+              <div className="px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
+                <input
+                  type="date"
+                  value={salesDateFrom}
+                  onChange={(e) => setSalesDateFrom(e.target.value)}
+                  className="w-full bg-transparent outline-none text-[11px] font-black text-slate-900 dark:text-white"
+                />
+              </div>
             </div>
-            <div className="px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
-              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">{t.dashboard.to}</div>
-              <input
-                type="date"
-                value={salesDateTo}
-                onChange={(e) => setSalesDateTo(e.target.value)}
-                className="w-full bg-transparent outline-none text-sm font-black text-slate-900 dark:text-white"
-              />
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">{t.dashboard.to}</label>
+              <div className="px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
+                <input
+                  type="date"
+                  value={salesDateTo}
+                  onChange={(e) => setSalesDateTo(e.target.value)}
+                  className="w-full bg-transparent outline-none text-[11px] font-black text-slate-900 dark:text-white"
+                />
+              </div>
             </div>
           </div>
+
+          <button 
+            onClick={() => {
+              setSalesQuery("");
+              setSalesMethod("all");
+              setSalesDateFrom("");
+              setSalesDateTo("");
+            }}
+            className="h-[46px] flex items-center justify-center gap-2 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-6 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-rose-500 hover:border-rose-500/30 transition-all active:scale-95 shadow-sm"
+          >
+            <X className="w-3.5 h-3.5" /> Limpiar filtros
+          </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.transactions}</h3>
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{salesFiltered.length} {t.dashboard.results}</div>
-          </div>
-
-          <div className="space-y-3">
-            {salesFiltered.map((s) => {
-              const d = new Date(s.ts);
-              const methodLabel = s.method === "cash" ? t.dashboard.cash : t.dashboard.card;
-              return (
-                <button
-                  key={s.id}
-                  onClick={() => setSelectedSaleId(s.id)}
-                  className="w-full text-left p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-900/60 hover:border-emerald-500/30 transition-all"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <div className="text-sm font-black text-slate-900 dark:text-white">{s.id}</div>
-                        <div className="text-[10px] font-black uppercase tracking-[0.2em] px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400">
-                          {methodLabel}
-                        </div>
-                      </div>
-                      <div className="text-[12px] text-slate-500 dark:text-slate-400 mt-1">
-                        {d.toLocaleString(undefined, { year: "numeric", month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit" })} · {t.dashboard.cashier}:{" "}
-                        <span className="font-bold">Admin</span> · Items: <span className="font-bold">{s.items_count}</span>
-                      </div>
-                    </div>
-                    <div className="shrink-0 text-right">
-                      <div className="text-sm font-black text-slate-900 dark:text-white">{formatCurrencyMXN(s.total)}</div>
-                      <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 mt-1">{t.dashboard.view_detail}</div>
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+      <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm pb-10">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.transactions}</h3>
+          <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{salesFiltered.length} {t.dashboard.results}</div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.summary}</h3>
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{t.dashboard.filtered}</div>
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex items-center justify-between text-sm font-bold text-slate-600 dark:text-slate-300">
-              <span>{t.dashboard.incomes}</span>
-              <span className="font-black">{formatCurrencyMXN(salesFiltered.reduce((acc, s) => acc + s.total, 0))}</span>
-            </div>
-            <div className="flex items-center justify-between text-sm font-bold text-slate-600 dark:text-slate-300">
-              <span>{t.dashboard.tickets}</span>
-              <span className="font-black">{salesFiltered.length}</span>
-            </div>
-            <div className="flex items-center justify-between text-sm font-bold text-slate-600 dark:text-slate-300">
-              <span>{t.dashboard.avg_ticket}</span>
-              <span className="font-black">
-                {formatCurrencyMXN(salesFiltered.length ? salesFiltered.reduce((acc, s) => acc + s.total, 0) / salesFiltered.length : 0)}
-              </span>
-            </div>
-          </div>
-
-          <div className="mt-6 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{t.dashboard.next}</div>
-            <div className="text-sm font-black text-slate-900 dark:text-white mt-1">{t.dashboard.export_pdf_desc}</div>
-            <div className="text-[12px] text-slate-500 dark:text-slate-400 mt-2">{t.dashboard.connect_billing_desc}</div>
-          </div>
+        <div className="space-y-3">
+          {salesFiltered.map((s) => {
+            const d = new Date(s.ts);
+            const methodLabel = s.method === "cash" ? t.dashboard.cash : t.dashboard.card;
+            return (
+              <button
+                key={s.id}
+                onClick={() => setSelectedSaleId(s.id)}
+                className="w-full text-left p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-900/60 hover:border-emerald-500/30 transition-all"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <div className="text-sm font-black text-slate-900 dark:text-white">{s.id}</div>
+                      <div className="text-[10px] font-black uppercase tracking-[0.2em] px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400">
+                        {methodLabel}
+                      </div>
+                    </div>
+                    <div className="text-[12px] text-slate-500 dark:text-slate-400 mt-1">
+                      {d.toLocaleString(undefined, { year: "numeric", month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit" })} · {t.dashboard.cashier}:{" "}
+                      <span className="font-bold">Admin</span> · Items: <span className="font-bold">{s.items_count}</span>
+                    </div>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <div className="text-sm font-black text-slate-900 dark:text-white">{formatCurrencyMXN(s.total)}</div>
+                    <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 mt-1">{t.dashboard.view_detail}</div>
+                  </div>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
 

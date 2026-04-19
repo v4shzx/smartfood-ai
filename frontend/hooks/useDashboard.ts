@@ -206,12 +206,23 @@ export function useDashboard(t: any) {
 
   const salesFiltered = useMemo(() => {
     return salesHistory.filter((s) => {
-      // Basic mock filter
+      // 1. Search Query Filter
       const matchQuery = s.id.toLowerCase().includes(salesQuery.toLowerCase());
-      const matchMethod = salesMethod === "all" || s.type.toLowerCase() === salesMethod.toLowerCase();
-      return matchQuery && matchMethod;
+      
+      // 2. Payment Method Filter
+      const matchMethod = salesMethod === "all" || s.method.toLowerCase() === salesMethod.toLowerCase();
+      
+      // 3. Date Range Filter
+      let matchDate = true;
+      if (salesDateFrom || salesDateTo) {
+        const saleDate = new Date(s.ts).toISOString().split('T')[0];
+        if (salesDateFrom && saleDate < salesDateFrom) matchDate = false;
+        if (salesDateTo && saleDate > salesDateTo) matchDate = false;
+      }
+
+      return matchQuery && matchMethod && matchDate;
     });
-  }, [salesHistory, salesQuery, salesMethod]);
+  }, [salesHistory, salesQuery, salesMethod, salesDateFrom, salesDateTo]);
 
   useEffect(() => {
     async function fetchSaleDetail() {
