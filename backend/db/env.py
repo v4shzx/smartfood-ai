@@ -10,7 +10,7 @@ from alembic import context
 from app.core.config import settings
 from app.core.database import Base
 # Import all models here so Alembic can find them
-from app.models.product import Product
+from app.models import Product, SchoolUser, MealPlan, MenuItem, Sale, Waste, Supplier, Staff, PaymentMethod, Category
 
 target_metadata = Base.metadata
 
