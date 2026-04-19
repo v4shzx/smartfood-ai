@@ -26,6 +26,7 @@ import {
   AlertCircle,
   Info,
   Clock,
+  Sparkles,
 } from "lucide-react";
 import { useI18n, LangSwitcher } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
