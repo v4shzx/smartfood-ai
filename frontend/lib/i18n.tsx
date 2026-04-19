@@ -441,7 +441,8 @@ export const T = {
       portal_ready_btn: "Portal Listo",
       pass_updated_success: "Contraseña actualizada correctamente",
       pass_mismatch_error: "Las contraseñas no coinciden",
-      pass_length_error: "La contraseña debe tener al menos 6 caracteres"
+      pass_length_error: "La contraseña debe tener al menos 6 caracteres",
+      generated_at: "Generado"
     }
   },
   en: {
@@ -865,7 +866,8 @@ export const T = {
       portal_ready_btn: "Portal Ready",
       pass_updated_success: "Password updated successfully",
       pass_mismatch_error: "Passwords do not match",
-      pass_length_error: "Password must be at least 6 characters"
+      pass_length_error: "Password must be at least 6 characters",
+      generated_at: "Generated"
     }
   },
   fr: {
@@ -1289,7 +1291,8 @@ export const T = {
       portal_ready_btn: "Portail Prêt",
       pass_updated_success: "Mot de passe mis à jour avec succès",
       pass_mismatch_error: "Les mots de passe ne correspondent pas",
-      pass_length_error: "Le mot de passe doit comporter au moins 6 caractères"
+      pass_length_error: "Le mot de passe doit comporter au moins 6 caractères",
+      generated_at: "Généré"
     }
   },
 } as const;
