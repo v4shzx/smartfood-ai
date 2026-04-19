@@ -151,7 +151,7 @@ export function useDashboard(t: any) {
         setSalesHistory(salesRes);
         setInvItems(invRes);
         setInvMovements(movRes);
-        setSuppliers(supRes);
+        setSuppliers(supRes.map((s: any) => ({ ...s, leadDays: s.lead_days })));
         setSalesSeries(seriesRes);
         setTrendsInsights(trendsRes);
         setPrediction(predRes);
@@ -476,7 +476,8 @@ export function useDashboard(t: any) {
   const supSave = async () => {
     try {
       const sessionUserId = localStorage.getItem("smartfood_user_id") || "u_demo";
-      const supplierData = { ...supForm, owner_id: sessionUserId };
+      const { leadDays, ...rest } = supForm;
+      const supplierData = { ...rest, lead_days: leadDays, owner_id: sessionUserId };
 
       if (supEditingId) {
         const res = await fetch(`${API_URL}/suppliers/${supEditingId}`, {
@@ -486,7 +487,8 @@ export function useDashboard(t: any) {
         });
         if (res.ok) {
           const updated = await res.json();
-          setSuppliers((prev) => prev.map((s) => (s.id === supEditingId ? updated : s)));
+          const mapped = { ...updated, leadDays: updated.lead_days };
+          setSuppliers((prev) => prev.map((s) => (s.id === supEditingId ? mapped : s)));
         } else {
           // Fallback if patch fails
           setSuppliers((prev) => prev.map((s) => (s.id === supEditingId ? { ...s, ...supForm } : s)));
@@ -499,7 +501,8 @@ export function useDashboard(t: any) {
         });
         if (res.ok) {
           const newSup = await res.json();
-          setSuppliers((prev) => [...prev, newSup]);
+          const mapped = { ...newSup, leadDays: newSup.lead_days };
+          setSuppliers((prev) => [...prev, mapped]);
         } else {
           // Fallback
           setSuppliers((prev) => [...prev, { id: Math.random().toString(36), ...supForm, rating: 5.0 }]);

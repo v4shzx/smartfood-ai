@@ -187,16 +187,16 @@ export function SuppliersView({
         </div>
       </div>
 
-      <AnimatePresence>
-        {supEditorOpen && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50">
-            <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={supClose} />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.98, y: 18 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.98, y: 10 }}
-              className="absolute right-4 left-4 md:left-auto md:right-10 top-20 md:top-24 md:w-[500px] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] shadow-2xl p-6 md:p-8"
-            >
+  <AnimatePresence>
+    {supEditorOpen && (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+        <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={supClose} />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98, y: 18 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.98, y: 10 }}
+          className="relative w-full max-w-[560px] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] shadow-2xl p-6 md:p-10 overflow-hidden"
+        >
               <div className="flex items-start justify-between gap-4 mb-8">
                 <div>
                   <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{supEditingId ? t.dashboard.edit : t.dashboard.new}</div>
