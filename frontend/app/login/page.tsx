@@ -7,9 +7,9 @@ import { motion } from "framer-motion";
 import { 
   Mail, 
   Lock, 
+  User,
   ArrowRight, 
   ArrowLeft, 
-  Activity, 
   Shield, 
   Sparkles,
   ChevronRight,
