@@ -67,7 +67,7 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
             initial={{ opacity: 0, scale: 0.95 }} 
             animate={{ opacity: 1, scale: 1 }}
             onClick={() => setActiveTab("prediction")}
-            className="group cursor-pointer relative overflow-hidden bg-linear-to-br from-emerald-600 to-teal-700 rounded-3xl p-4 shadow-lg shadow-emerald-600/20 flex items-center gap-4 min-w-[560px] hover:scale-[1.02] transition-all"
+            className="group cursor-pointer relative overflow-hidden bg-linear-to-br from-emerald-600 to-teal-700 rounded-3xl p-4 shadow-lg shadow-emerald-600/20 flex items-center gap-4 w-fit max-w-full hover:scale-[1.02] transition-all"
           >
             <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:rotate-12 transition-transform">
               <Brain className="w-12 h-12" />
@@ -75,7 +75,7 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
             <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
               <Zap className="w-5 h-5 text-white" />
             </div>
-            <div className="min-w-0 pr-4">
+            <div className="min-w-0 pr-8">
               <div className="text-[10px] font-black text-emerald-100 uppercase tracking-widest leading-none mb-1">IA: Predicción para Mañana</div>
               <div className="text-sm font-bold text-white truncate">
                 {kpis.topStudent !== "N/A" ? kpis.topStudent : "Calculando tendencia..."}

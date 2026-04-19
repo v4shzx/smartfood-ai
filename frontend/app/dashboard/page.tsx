@@ -550,6 +550,7 @@ export default function Dashboard() {
               predictionLift={dashboard.predictionLift}
               setPredictionLift={dashboard.setPredictionLift}
               prediction={dashboard.prediction}
+              trends={dashboard.trendsInsights}
             />
           )}
           {activeTab === "staff" && (

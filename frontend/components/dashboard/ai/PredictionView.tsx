@@ -22,6 +22,7 @@ interface PredictionViewProps {
   predictionLift: number;
   setPredictionLift: (l: number) => void;
   prediction: any[];
+  trends: any[];
 }
 
 export function PredictionView({
@@ -31,6 +32,7 @@ export function PredictionView({
   predictionLift,
   setPredictionLift,
   prediction,
+  trends,
 }: PredictionViewProps) {
   return (
     <>
@@ -92,11 +94,7 @@ export function PredictionView({
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">IA</div>
           </div>
           <div className="space-y-3">
-            {[
-              { title: "Sube produccion", desc: "Aumenta tacos y refrescos para 6-9 PM." },
-              { title: "Reorden", desc: "Tortilla 12cm: compra sugerida para 2 dias." },
-              { title: "Merma", desc: "Revisar cilantro/cebolla antes del cierre." },
-            ].map((r, idx) => (
+            {trends.map((r, idx) => (
               <div key={idx} className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30">
                 <div className="text-sm font-black text-slate-900 dark:text-white">{r.title}</div>
                 <div className="text-[12px] text-slate-500 dark:text-slate-400 mt-2">{r.desc}</div>
