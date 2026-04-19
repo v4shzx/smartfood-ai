@@ -13,6 +13,7 @@ export const LANGUAGES: { code: Lang; label: string; flag: string }[] = [
 ];
 
 export type Translation = typeof T.es;
+export type Translations = Translation;
 
 export const T = {
   es: {

@@ -8,7 +8,7 @@ import {
   FileCheck,
 } from "lucide-react";
 import { formatCurrencyMXN } from "@/lib/dashboard-utils";
-import { Translations } from "@/lib/i18n";
+import { Translation } from "@/lib/i18n";
 import { ReportStats } from "@/types/dashboard";
 
 interface ReportsViewProps {

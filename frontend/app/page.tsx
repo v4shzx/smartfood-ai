@@ -511,7 +511,7 @@ function Pricing() {
         </motion.p>
       </motion.div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-        {t.pricing_plans.map((plan, idx) => (
+        {t.pricing_plans.map((plan: any, idx: number) => (
           <motion.div 
             key={idx}
             initial={{ opacity: 0, y: 30 }}
@@ -570,7 +570,7 @@ function Pricing() {
             </div>
 
             <ul className="space-y-4 mb-12 relative z-10 grow">
-              {plan.feats.map((f, i) => (
+              {plan.feats.map((f: string, i: number) => (
                 <li key={i} className="flex gap-3 font-bold text-sm items-start text-slate-600 dark:text-slate-300">
                   <CheckCircle2 className={cn("shrink-0 w-5 h-5", plan.popular ? "text-emerald-500" : "text-slate-300 dark:text-slate-600")} /> 
                   <span className="leading-tight">{f}</span>

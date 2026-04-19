@@ -9,11 +9,11 @@ import {
   ArrowUpRight,
   TrendingDown,
 } from "lucide-react";
-import { Translations } from "@/lib/i18n";
+import { Translation } from "@/lib/i18n";
 import { TrendInsight } from "@/types/dashboard";
 
 interface TrendsViewProps {
-  t: Translations;
+  t: Translation;
   trendsInsights: TrendInsight[];
 }
 
@@ -41,7 +41,7 @@ export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
     return { title: template.title, desc };
   };
 
-  const relevant = trendsInsights.filter(i => !i.category || i.category === "relevant" || i.category === "growth");
+  const relevant = trendsInsights.filter(i => !i.category || (i.category as string) === "relevant" || i.category === "growth");
   const opportunities = trendsInsights.filter(i => i.category === "opportunity");
   const wasteRaw = trendsInsights.find(i => i.category === "warning" || i.key.includes('merma'));
   
