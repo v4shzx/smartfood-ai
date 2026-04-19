@@ -5,6 +5,21 @@ import { formatCurrencyMXN } from "@/lib/dashboard-utils";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
+type ApiSupplier = {
+  id: string;
+  owner_id: string;
+  name: string;
+  contact?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  lead_days?: number | null;
+  leadDays?: number | null;
+  notes?: string | null;
+  rating?: number;
+  created_at?: string | null;
+  updated_at?: string | null;
+};
+
 export function useDashboard(t: any) {
   const [subscriptionTier, setSubscriptionTier] = useState<string>("basico");
 
@@ -164,6 +179,16 @@ export function useDashboard(t: any) {
         setInvItems(invRes);
         setInvMovements(movRes);
         setSalesHistory(salesRes);
+        const mappedSuppliers = (supRes as ApiSupplier[]).map((supplier) => ({
+          ...supplier,
+          contact: supplier.contact || "",
+          phone: supplier.phone || "",
+          email: supplier.email || "",
+          notes: supplier.notes || "",
+          leadDays: supplier.leadDays ?? supplier.lead_days ?? 3,
+        }));
+        setSuppliers(mappedSuppliers);
+        setSupSelectedId((current) => current || mappedSuppliers[0]?.id || null);
         setSalesSeries(seriesRes);
         setTrendsInsights(trendsRes);
         setPrediction(predRes);
@@ -209,7 +234,12 @@ export function useDashboard(t: any) {
   const invSelected = useMemo(() => invItems.find((it) => it.id === invSelectedId), [invItems, invSelectedId]);
 
   const supFiltered = useMemo(() => {
-    return suppliers.filter((s) => s.name.toLowerCase().includes(supQuery.toLowerCase()) || s.contact.toLowerCase().includes(supQuery.toLowerCase()));
+    const query = supQuery.toLowerCase();
+    return suppliers.filter((s) =>
+      s.name.toLowerCase().includes(query) ||
+      (s.contact || "").toLowerCase().includes(query) ||
+      (s.email || "").toLowerCase().includes(query)
+    );
   }, [suppliers, supQuery]);
 
   const supSelected = useMemo(() => suppliers.find((s) => s.id === supSelectedId), [suppliers, supSelectedId]);
@@ -488,10 +518,29 @@ export function useDashboard(t: any) {
       const staffData = { ...staffForm, owner_id: sessionUserId };
 
       if (staffEditingId) {
-        // Since backend update is missing, we update local state but keep it consistent with UI expectations
-        setStaff((prev) => prev.map((u) => (u.id === staffEditingId ? { ...u, ...staffForm } : u)));
+        const res = await fetch(`${API_URL}/staff/${staffEditingId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(staffForm),
+        });
+        if (!res.ok) {
+          alert("Error al actualizar el miembro del personal");
+          return;
+        }
+        const updated = await res.json();
+        setStaff((prev) => prev.map((u) => (u.id === staffEditingId ? updated : u)));
       } else {
-        setStaff((prev) => [...prev, { id: Math.random().toString(36), ...staffForm, lastActiveAt: Date.now() }]);
+        const res = await fetch(`${API_URL}/staff/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(staffData),
+        });
+        if (!res.ok) {
+          alert("Error al guardar el miembro del personal");
+          return;
+        }
+        const created = await res.json();
+        setStaff((prev) => [...prev, created]);
       }
       setStaffEditorOpen(false);
     } catch (error) {
@@ -612,6 +661,51 @@ export function useDashboard(t: any) {
     }
   }), [stats, menuItems]);
 
+  const reportsStats = useMemo(() => {
+    let filteredSales = salesHistory;
+    
+    // Range filter
+    const now = new Date();
+    const todayStr = now.toISOString().split('T')[0];
+    
+    if (reportsRange === "today") {
+      filteredSales = salesHistory.filter(s => s.ts?.split('T')[0] === todayStr);
+    } else if (reportsRange === "7d") {
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(now.getDate() - 7);
+      filteredSales = salesHistory.filter(s => new Date(s.ts) >= sevenDaysAgo);
+    } else if (reportsRange === "30d") {
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(now.getDate() - 30);
+      filteredSales = salesHistory.filter(s => new Date(s.ts) >= thirtyDaysAgo);
+    } else if (reportsRange === "custom" && reportsFrom && reportsTo) {
+      filteredSales = salesHistory.filter(s => {
+        const saleDate = s.ts?.split('T')[0];
+        return saleDate >= reportsFrom && saleDate <= reportsTo;
+      });
+    }
+
+    const revenue = filteredSales.reduce((acc, s) => acc + (s.total || 0), 0);
+    const tickets = filteredSales.length;
+    
+    // Guess merma from inventory movements "out" or "adjust" in that range
+    const rangeMovements = invMovements.filter(m => {
+      const movDate = new Date(m.ts).toISOString().split('T')[0];
+      if (reportsRange === "today") return movDate === todayStr;
+      if (reportsRange === "custom" && reportsFrom && reportsTo) return movDate >= reportsFrom && movDate <= reportsTo;
+      return true; // Simplified for 7d/30d for now
+    });
+    
+    const mermaItems = rangeMovements.filter(m => m.type === "out" || m.type === "adjust");
+    const mermaValue = mermaItems.length * 15; // Estimado $15 por item de merma ya que no tenemos costo unitario real guardado en movimiento
+
+    return {
+      revenue,
+      tickets,
+      merma: mermaValue
+    };
+  }, [salesHistory, reportsType, reportsRange, reportsFrom, reportsTo, invMovements]);
+
   return {
     activeTab, setActiveTab,
     storeQuery, setStoreQuery,
@@ -685,10 +779,14 @@ export function useDashboard(t: any) {
     salesHistory, trendsInsights, activeTitle, products,
     kpis, salesSeries, chartsSales, chartsTopProducts,
     chartsRange, setChartsRange,
+    reportsType, setReportsType,
+    reportsRange, setReportsRange,
+    reportsFrom, setReportsFrom,
+    reportsTo, setReportsTo,
+    reportsStats,
     menuItems, mealPlans, isLoading, subscriptionTier,
     lastSaleForTicket, setLastSaleForTicket,
     handleSimulate, 
     categories, createCategory
   };
 }
-

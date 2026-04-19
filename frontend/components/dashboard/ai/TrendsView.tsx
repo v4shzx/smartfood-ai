@@ -17,9 +17,29 @@ interface TrendsViewProps {
 }
 
 export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
+  const renderInsight = (ins: any) => {
+    if (!ins) return { title: "", desc: "" };
+    const template = t.dashboard.trends_insights?.[ins.key];
+    if (!template) return { title: ins.title || "Insight", desc: ins.desc || "" };
+
+    let desc = template.desc;
+    if (ins.params) {
+      Object.entries(ins.params).forEach(([key, val]) => {
+        // If the parameter is a day key, translate it using the days dict
+        const finalVal = key === "day" && t.dashboard.trends_insights.days[val as string] 
+          ? t.dashboard.trends_insights.days[val as string] 
+          : val;
+        desc = desc.replace(`{${key}}`, String(finalVal));
+      });
+    }
+
+    return { title: template.title, desc };
+  };
+
   const relevant = trendsInsights.filter(i => !i.category || i.category === "relevant");
   const opportunities = trendsInsights.filter(i => i.category === "opportunity");
-  const waste = trendsInsights.filter(i => i.category === "waste")[0];
+  const wasteRaw = trendsInsights.find(i => i.category === "waste");
+  const waste = renderInsight(wasteRaw);
 
   return (
     <>
@@ -37,22 +57,25 @@ export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
           </div>
           <div className="space-y-6">
             {relevant.length === 0 && <p className="text-sm text-slate-500 text-center py-10 italic">{t.dashboard.no_insights_data}</p>}
-            {relevant.map((ins, i) => (
-              <div key={i} className="group p-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/20 hover:border-emerald-500/30 hover:bg-white dark:hover:bg-slate-800 transition-all">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-emerald-500 shrink-0">
-                      <Zap className="w-5 h-5" />
+            {relevant.map((ins, i) => {
+              const info = renderInsight(ins);
+              return (
+                <div key={i} className="group p-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/20 hover:border-emerald-500/30 hover:bg-white dark:hover:bg-slate-800 transition-all">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-emerald-500 shrink-0">
+                        <Zap className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="font-black text-slate-900 dark:text-white mb-2">{info.title}</h4>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{info.desc}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-black text-slate-900 dark:text-white mb-2">{ins.title}</h4>
-                      <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{ins.desc}</p>
-                    </div>
+                    <ArrowUpRight className="w-5 h-5 text-slate-300 group-hover:text-emerald-500 transition-colors" />
                   </div>
-                  <ArrowUpRight className="w-5 h-5 text-slate-300 group-hover:text-emerald-500 transition-colors" />
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -64,15 +87,17 @@ export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
             </h3>
             <div className="space-y-4">
               {opportunities.length === 0 && <p className="text-xs text-slate-500 italic">{t.dashboard.analyzing_market}</p>}
-              {opportunities.map((opp, i) => (
-                <div key={i} className="p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10">
-                  <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 mb-1">{opp.title}</div>
-                  <div className="text-sm font-normal text-slate-700 dark:text-white">{opp.desc}</div>
-                </div>
-              ))}
+              {opportunities.map((opp, i) => {
+                const info = renderInsight(opp);
+                return (
+                  <div key={i} className="p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10">
+                    <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 mb-1">{info.title}</div>
+                    <div className="text-sm font-normal text-slate-700 dark:text-white">{info.desc}</div>
+                  </div>
+                );
+              })}
             </div>
           </div>
-
 
           <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
             <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm mb-8">{t.dashboard.waste_analysis}</h3>
@@ -81,9 +106,9 @@ export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
                 <TrendingDown className="w-6 h-6" />
               </div>
               <div>
-                <div className="text-sm font-normal text-rose-600 dark:text-rose-400 italic">{waste?.title || t.dashboard.waste_preventive}</div>
+                <div className="text-sm font-normal text-rose-600 dark:text-rose-400 italic">{waste.title || t.dashboard.waste_preventive}</div>
                 <p className="text-[12px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
-                  {waste?.desc || t.dashboard.waste_tip}
+                  {waste.desc || t.dashboard.waste_tip}
                 </p>
               </div>
             </div>

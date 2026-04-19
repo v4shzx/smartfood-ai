@@ -171,18 +171,18 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
 
   const handleSavePassword = () => {
     if (passForm.new !== passForm.confirm) {
-      setPassError("Las contraseñas no coinciden");
+      setPassError(t.dashboard.pass_mismatch_error);
       return;
     }
     if (passForm.new.length < 6) {
-      setPassError("La contraseña debe tener al menos 6 caracteres");
+      setPassError(t.dashboard.pass_length_error);
       return;
     }
     // Simulation
     setPassError(null);
     setIsEditingPassword(false);
     setPassForm({ current: "", new: "", confirm: "" });
-    alert("Contraseña actualizada correctamente");
+    alert(t.dashboard.pass_updated_success);
   };
 
   return (
@@ -221,14 +221,14 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                     </div>
                   </div>
                 </div>
-                <button className="absolute bottom-1 right-1 w-10 h-10 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex items-center justify-center text-slate-500 hover:text-emerald-600 transition-all shadow-lg active:scale-90 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0">
+                <button className="absolute bottom-1 right-1 w-10 h-10 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex items-center justify-center text-slate-500 hover:text-emerald-600 transition-all shadow-lg active:scale-90 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 text-slate-900 dark:text-white">
                   <Camera className="w-5 h-5" />
                 </button>
               </div>
 
               <h3 className="text-2xl font-black text-slate-900 dark:text-white">Admin User</h3>
               <div className="flex items-center gap-2 mt-1 text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest text-[10px]">
-                <ShieldCheck className="w-3.5 h-3.5" /> Administrador Pro
+                <ShieldCheck className="w-3.5 h-3.5" /> {t.dashboard.admin_pro}
               </div>
 
               <div className="w-full mt-8 pt-8 border-t border-slate-100 dark:border-slate-800/60 space-y-4">
@@ -282,12 +282,12 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                 {isBillingLoading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-emerald-700/30 border-t-emerald-700 rounded-full animate-spin" />
-                    {lang === 'es' ? 'Procesando...' : (lang === 'fr' ? 'Traitement...' : 'Processing...')}
+                    {t.dashboard.saving_btn}
                   </>
                 ) : billingStatus === 'success' ? (
                   <>
                     <ShieldCheck className="w-4 h-4" />
-                    {lang === 'es' ? 'Portal Listo' : (lang === 'fr' ? 'Portail Prêt' : 'Portal Ready')}
+                    {t.dashboard.portal_ready_btn}
                   </>
                 ) : (
                   <>
@@ -317,14 +317,14 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                     <Mail className="w-6 h-6" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Correo Electrónico</div>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t.dashboard.email_field}</div>
                     {isEditingEmail ? (
                       <div className="flex items-center gap-2 mt-1">
                         <input
                           type="email"
                           value={tempEmail}
                           onChange={(e) => setTempEmail(e.target.value)}
-                          className="w-full bg-white dark:bg-slate-950 border border-emerald-500/30 rounded-xl px-3 py-2 text-sm font-normal outline-none shadow-inner"
+                          className="w-full bg-white dark:bg-slate-950 border border-emerald-500/30 rounded-xl px-3 py-2 text-sm font-normal outline-none shadow-inner text-slate-900 dark:text-white"
                           autoFocus
                         />
                         <button onClick={handleSaveEmail} className="p-2 bg-emerald-600 text-white rounded-xl shadow-lg shadow-emerald-500/20 active:scale-95 transition-all">
@@ -344,7 +344,7 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                     onClick={() => setIsEditingEmail(true)}
                     className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-emerald-500 transition-colors bg-slate-100 dark:bg-slate-800 group-hover:bg-emerald-50 dark:group-hover:bg-emerald-500/10 px-4 py-2 rounded-xl"
                   >
-                    {lang === 'es' ? 'Cambiar' : (lang === 'fr' ? 'Changer' : 'Change')}
+                    {t.dashboard.change_btn}
                   </button>
                 )}
               </div>
@@ -356,8 +356,8 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                       <ShieldCheck className="w-6 h-6" />
                     </div>
                     <div>
-                      <div className="text-sm font-black text-slate-900 dark:text-white">Cambiar Contraseña</div>
-                      <div className="text-[11px] text-slate-500 dark:text-slate-400 font-normal mt-0.5">Actualizada hace 2 meses</div>
+                      <div className="text-sm font-black text-slate-900 dark:text-white">{t.dashboard.change_password_field}</div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 font-normal mt-0.5">{t.dashboard.updated_2_months_ago}</div>
                     </div>
                   </div>
                   {!isEditingPassword && (
@@ -365,7 +365,7 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                       onClick={() => setIsEditingPassword(true)}
                       className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-emerald-500 transition-colors bg-slate-100 dark:bg-slate-800 group-hover:bg-emerald-50 dark:group-hover:bg-emerald-500/10 px-4 py-2 rounded-xl"
                     >
-                      {lang === 'es' ? 'Actualizar' : (lang === 'fr' ? 'Actualiser' : 'Update')}
+                      {t.dashboard.update_btn}
                     </button>
                   )}
                 </div>
@@ -385,7 +385,7 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                             type="password" 
                             value={passForm.current}
                             onChange={(e) => setPassForm({...passForm, current: e.target.value})}
-                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors"
+                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors text-slate-900 dark:text-white"
                             placeholder="••••••••"
                           />
                         </div>
@@ -395,7 +395,7 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                             type="password" 
                             value={passForm.new}
                             onChange={(e) => setPassForm({...passForm, new: e.target.value})}
-                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors"
+                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors text-slate-900 dark:text-white"
                             placeholder="••••••••"
                           />
                         </div>
@@ -405,7 +405,7 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                             type="password" 
                             value={passForm.confirm}
                             onChange={(e) => setPassForm({...passForm, confirm: e.target.value})}
-                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors"
+                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors text-slate-900 dark:text-white"
                             placeholder="••••••••"
                           />
                         </div>
@@ -420,7 +420,7 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                       <div className="flex items-center gap-3 mt-8">
                         <button 
                           onClick={handleSavePassword}
-                          className="px-6 py-3 bg-emerald-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 active:scale-95 transition-all"
+                          className="px-6 py-3 bg-emerald-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 active:scale-95 transition-all text-white"
                         >
                           {t.dashboard.save_pass}
                         </button>
@@ -431,7 +431,7 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                           }}
                           className="px-6 py-3 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 transition-all"
                         >
-                          {lang === 'es' ? 'Cancelar' : (lang === 'fr' ? 'Annuler' : 'Cancel')}
+                          {t.dashboard.cancel}
                         </button>
                       </div>
                     </motion.div>
@@ -449,12 +449,12 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                     <div className="text-[11px] text-slate-500 dark:text-slate-400 font-normal mt-0.5">{t.dashboard.notifications_sub}</div>
                   </div>
                 </div>
-                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-emerald-500 transition-colors">{lang === 'es' ? 'Configurar' : (lang === 'fr' ? 'Configurer' : 'Configure')}</div>
+                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-emerald-500 transition-colors">{t.dashboard.configure_btn}</div>
               </button>
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+          <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm text-slate-900 dark:text-white">
             <div className="flex items-center justify-between mb-8">
               <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.payment_methods_title}</h3>
               <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center text-slate-400">
@@ -565,7 +565,7 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                         type="text" 
                         value={newCardForm.holder}
                         onChange={(e) => setNewCardForm({...newCardForm, holder: e.target.value})}
-                        className="w-full bg-slate-50/50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors"
+                        className="w-full bg-slate-50/50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors text-slate-900 dark:text-white"
                         placeholder="John Doe"
                       />
                     </div>
@@ -578,7 +578,7 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                         maxLength={16}
                         value={newCardForm.number}
                         onChange={(e) => setNewCardForm({...newCardForm, number: e.target.value.replace(/\D/g, '')})}
-                        className="w-full bg-slate-50/50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors"
+                        className="w-full bg-slate-50/50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors text-slate-900 dark:text-white"
                         placeholder="•••• •••• •••• ••••"
                       />
                     </div>
@@ -593,7 +593,7 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                           maxLength={5}
                           value={newCardForm.exp}
                           onChange={(e) => setNewCardForm({...newCardForm, exp: e.target.value})}
-                          className="w-full bg-slate-50/50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors"
+                          className="w-full bg-slate-50/50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors text-slate-900 dark:text-white"
                         />
                       </div>
                       <div className="space-y-2">
@@ -604,7 +604,7 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                           maxLength={3}
                           value={newCardForm.cvc}
                           onChange={(e) => setNewCardForm({...newCardForm, cvc: e.target.value.replace(/\D/g, '')})}
-                          className="w-full bg-slate-50/50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors"
+                          className="w-full bg-slate-50/50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-normal outline-none focus:border-emerald-500/50 transition-colors text-slate-900 dark:text-white"
                           placeholder="123"
                         />
                       </div>
@@ -614,12 +614,12 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                       <button 
                         type="submit"
                         disabled={isBillingLoading}
-                        className="flex-1 py-3.5 bg-emerald-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+                        className="flex-1 py-3.5 bg-emerald-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-70 text-white"
                       >
                         {isBillingLoading ? (
                           <>
                             <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                            {lang === 'es' ? 'Guardando...' : (lang === 'fr' ? 'Enregistrement...' : 'Saving...')}
+                            {t.dashboard.saving_btn}
                           </>
                         ) : (
                           <>
@@ -633,7 +633,7 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                         onClick={() => setIsAddingCard(false)}
                         className="px-6 py-3.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 transition-all"
                       >
-                        {lang === 'es' ? 'Cancelar' : (lang === 'fr' ? 'Annuler' : 'Cancel')}
+                        {t.dashboard.cancel}
                       </button>
                     </div>
                   </form>
@@ -654,17 +654,17 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
               <div className="p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30">
                 <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">{t.dashboard.visual_mode}</div>
                 <div className="flex gap-2">
-                  <button className="flex-1 py-3 px-2 rounded-xl bg-white dark:bg-slate-950 border-2 border-emerald-600 text-[10px] font-black uppercase tracking-wider text-emerald-600">{t.dashboard.system_auto}</button>
-                  <button className="flex-1 py-3 px-2 rounded-xl bg-white/20 border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400">{t.dashboard.light}</button>
-                  <button className="flex-1 py-3 px-2 rounded-xl bg-white/20 border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400">{t.dashboard.dark}</button>
+                  <button className="flex-1 py-3 px-2 rounded-xl bg-white dark:bg-slate-950 border-2 border-emerald-600 text-[10px] font-black uppercase tracking-wider text-emerald-600 outline-none">{t.dashboard.system_auto}</button>
+                  <button className="flex-1 py-3 px-2 rounded-xl bg-white/20 border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400 outline-none">{t.dashboard.light}</button>
+                  <button className="flex-1 py-3 px-2 rounded-xl bg-white/20 border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400 outline-none">{t.dashboard.dark}</button>
                 </div>
               </div>
 
               <div className="p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30">
                 <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">{t.dashboard.measurement_units}</div>
                 <div className="flex gap-2">
-                  <button className="flex-1 py-3 px-2 rounded-xl bg-white dark:bg-slate-950 border-2 border-emerald-600 text-[10px] font-black uppercase tracking-wider text-emerald-600">{t.dashboard.metric_kg}</button>
-                  <button className="flex-1 py-3 px-2 rounded-xl bg-white/20 border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400">{t.dashboard.imperial_lb}</button>
+                  <button className="flex-1 py-3 px-2 rounded-xl bg-white dark:bg-slate-950 border-2 border-emerald-600 text-[10px] font-black uppercase tracking-wider text-emerald-600 outline-none">{t.dashboard.metric_kg}</button>
+                  <button className="flex-1 py-3 px-2 rounded-xl bg-white/20 border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400 outline-none">{t.dashboard.imperial_lb}</button>
                 </div>
               </div>
             </div>

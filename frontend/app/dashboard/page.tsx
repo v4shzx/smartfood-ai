@@ -563,6 +563,7 @@ export default function Dashboard() {
               setReportsFrom={dashboard.setReportsFrom}
               reportsTo={dashboard.reportsTo}
               setReportsTo={dashboard.setReportsTo}
+              reportsStats={dashboard.reportsStats}
             />
           )}
           {activeTab === "prediction" && (

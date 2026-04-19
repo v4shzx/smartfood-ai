@@ -110,95 +110,119 @@ async def get_trends(owner_id: Optional[str] = Query("u_demo"), db: AsyncSession
     )
     res_hour = await db.execute(query_hour)
     row_hour = res_hour.first()
+    trends = []
+    
+    # 1. Peak Demand
     if row_hour:
-        h = int(row_hour[0])
-        peak_hour_msg = f"A las {h}:00 hrs se registra el mayor flujo de clientes históricamente."
+        trends.append({
+            "key": "peak_demand",
+            "params": {"hour": int(row_hour[0])},
+            "category": "relevant"
+        })
     else:
-        peak_hour_msg = "Aún no hay suficientes datos para identificar picos de demanda."
+        trends.append({
+            "key": "no_peak_data",
+            "category": "relevant"
+        })
 
-    # 2. Star Product (Highest revenue generator)
     query_star = (
-        select(Product.name, func.sum(Sale.total_price).label('revenue'))
+        select(
+            Product.name,
+            func.sum(Sale.total_price).label("revenue")
+        )
         .join(Sale, Product.id == Sale.product_id)
         .where(Sale.user_id == owner_id)
         .group_by(Product.name)
-        .order_by(desc('revenue'))
+        .order_by(desc("revenue"))
         .limit(1)
     )
     res_star = await db.execute(query_star)
     row_star = res_star.first()
-    if row_star:
-        star_msg = f"El {row_star[0]} es tu producto estrella, liderando en generación de ingresos."
-    else:
-        star_msg = "Tus productos más populares aparecerán aquí una vez que comiencen las ventas."
 
-    # 3. Low Stock Alert
-    query_low = select(func.count(Product.id)).where(Product.on_hand <= Product.min_stock, Product.owner_id == owner_id)
+    # 2. Star Product
+    if row_star:
+        trends.append({
+            "key": "star_product",
+            "params": {"product": row_star[0]},
+            "category": "relevant"
+        })
+    else:
+        trends.append({
+            "key": "no_star_data",
+            "category": "relevant"
+        })
+
+    query_low = select(func.count(Product.id)).where(
+        Product.owner_id == owner_id,
+        Product.on_hand <= Product.min_stock
+    )
     res_low = await db.execute(query_low)
     count_low = res_low.scalar() or 0
+
+    # 3. Inventory Status
     if count_low > 0:
-        low_stock_msg = f"Atención: Tienes {count_low} productos con stock crítico o agotado."
+        trends.append({
+            "key": "low_stock",
+            "params": {"count": count_low},
+            "category": "relevant"
+        })
     else:
-        low_stock_msg = "Niveles de inventario saludables. No se detectan faltantes críticos hoy."
+        trends.append({
+            "key": "stock_healthy",
+            "category": "relevant"
+        })
 
-    # 4. Top Category
-    query_cat = (
-        select(Product.category, func.sum(Sale.total_price).label('revenue'))
-        .join(Sale, Product.id == Sale.product_id)
-        .where(Sale.user_id == owner_id)
-        .group_by(Product.category)
-        .order_by(desc('revenue'))
-        .limit(1)
-    )
-    res_cat = await db.execute(query_cat)
-    row_cat = res_cat.first()
-    top_category = row_cat[0] if row_cat else "General"
-
-    # 5. Peak Day
     query_day = (
-        select(func.extract('dow', Sale.timestamp).label('day'), func.sum(Sale.total_price).label('revenue'))
+        select(
+            func.extract('dow', Sale.timestamp).label('day'),
+            func.count(Sale.id).label('count')
+        )
         .where(Sale.user_id == owner_id)
         .group_by(func.extract('dow', Sale.timestamp))
-        .order_by(desc('revenue'))
+        .order_by(desc('count'))
         .limit(1)
     )
     res_day = await db.execute(query_day)
     row_day = res_day.first()
-    days_map = {0: "Domingo", 1: "Lunes", 2: "Martes", 3: "Miércoles", 4: "Jueves", 5: "Viernes", 6: "Sábado"}
-    peak_day_name = days_map.get(int(row_day[0]), "el fin de semana") if row_day else "días pico"
 
-    trends = [
-        { 
-            "title": "Pico de demanda", 
-            "desc": peak_hour_msg,
-            "category": "relevant"
-        },
-        { 
-            "title": "Producto Estrella", 
-            "desc": star_msg,
-            "category": "relevant"
-        },
-        { 
-            "title": "Estado de Inventario", 
-            "desc": low_stock_msg,
-            "category": "relevant"
-        },
-        {
-            "title": "Crossover",
-            "desc": f"Activar promoción: Combinar productos de {top_category} con bebidas los {peak_day_name} para subir ticket promedio.",
-            "category": "opportunity"
-        },
-        {
-            "title": "Stock",
-            "desc": f"Ajustar pedido de insumos los {peak_day_name}: la demanda de {top_category} sube significativamente.",
-            "category": "opportunity"
-        },
-        {
-            "title": "Merma",
-            "desc": f"Se recomienda revisar el excedente de {top_category} al inicio de la semana para evitar desperdicios.",
-            "category": "waste"
-        }
-    ]
+    query_category = (
+        select(
+            Product.category,
+            func.sum(Sale.quantity).label("total_qty")
+        )
+        .join(Sale, Product.id == Sale.product_id)
+        .where(Sale.user_id == owner_id)
+        .group_by(Product.category)
+        .order_by(desc("total_qty"))
+        .limit(1)
+    )
+    res_category = await db.execute(query_category)
+    row_category = res_category.first()
+    top_category = row_category[0] if row_category and row_category[0] else "General"
+
+    # 4 & 5. Opportunities (Crossover and Adjust)
+    # Using raw values for category and day to let frontend localize them
+    peak_day_map = {0: "sunday", 1: "monday", 2: "tuesday", 3: "wednesday", 4: "thursday", 5: "friday", 6: "saturday"}
+    day_key = peak_day_map.get(int(row_day[0]), "weekend") if row_day else "peak_days"
+
+    trends.append({
+        "key": "crossover_promo",
+        "params": {"category": top_category, "day": day_key},
+        "category": "opportunity"
+    })
+    
+    trends.append({
+        "key": "inventory_adjust",
+        "params": {"category": top_category, "day": day_key},
+        "category": "opportunity"
+    })
+
+    # 6. Waste
+    trends.append({
+        "key": "waste_prevention",
+        "params": {"category": top_category},
+        "category": "waste"
+    })
 
     return trends
 
