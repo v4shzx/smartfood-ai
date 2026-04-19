@@ -47,18 +47,18 @@ export function SalesView({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.sales}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">Historial, filtros y detalle por transaccion.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">{t.dashboard.sales_desc}</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-3">
           <button className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-5 py-3 rounded-2xl text-xs font-normal uppercase tracking-widest hover:border-emerald-500/40 transition-all shadow-sm">
-            <Download className="w-4 h-4" /> Exportar CSV
+            <Download className="w-4 h-4" /> {t.dashboard.export_csv}
           </button>
           <button
             onClick={() => setActiveTab("pos")}
             className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-2xl text-xs font-normal uppercase tracking-widest shadow-lg shadow-emerald-500/20 active:scale-95 transition-all"
           >
-            <ShoppingCart className="w-4 h-4" /> Ir a POS
+            <ShoppingCart className="w-4 h-4" /> {t.dashboard.go_to_pos}
           </button>
         </motion.div>
       </div>
@@ -71,7 +71,7 @@ export function SalesView({
               <input
                 value={salesQuery}
                 onChange={(e) => setSalesQuery(e.target.value)}
-                placeholder="Buscar por folio, cajero o metodo..."
+                placeholder={t.dashboard.search_sales}
                 className="w-full bg-transparent outline-none text-sm font-semibold text-slate-700 dark:text-slate-200 placeholder:text-slate-400"
               />
             </div>
@@ -79,22 +79,22 @@ export function SalesView({
 
           <div>
             <div className="px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
-              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">Metodo</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">{t.dashboard.method}</div>
               <select
                 value={salesMethod}
                 onChange={(e) => setSalesMethod(e.target.value as "all" | "cash" | "card")}
                 className="w-full bg-transparent outline-none text-sm font-black text-slate-900 dark:text-white"
               >
-                <option value="all">Todos</option>
-                <option value="cash">Efectivo</option>
-                <option value="card">Tarjeta</option>
+                <option value="all">{t.dashboard.all}</option>
+                <option value="cash">{t.dashboard.cash}</option>
+                <option value="card">{t.dashboard.card}</option>
               </select>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
-              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">Desde</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">{t.dashboard.from}</div>
               <input
                 type="date"
                 value={salesDateFrom}
@@ -103,7 +103,7 @@ export function SalesView({
               />
             </div>
             <div className="px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
-              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">Hasta</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">{t.dashboard.to}</div>
               <input
                 type="date"
                 value={salesDateTo}
@@ -118,14 +118,14 @@ export function SalesView({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
         <div className="lg:col-span-2 bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">Transacciones</h3>
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{salesFiltered.length} resultados</div>
+            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.transactions}</h3>
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{salesFiltered.length} {t.dashboard.results}</div>
           </div>
 
           <div className="space-y-3">
             {salesFiltered.map((s) => {
               const d = new Date(s.ts);
-              const methodLabel = s.method === "cash" ? "Efectivo" : "Tarjeta";
+              const methodLabel = s.method === "cash" ? t.dashboard.cash : t.dashboard.card;
               return (
                 <button
                   key={s.id}
@@ -141,13 +141,13 @@ export function SalesView({
                         </div>
                       </div>
                       <div className="text-[12px] text-slate-500 dark:text-slate-400 mt-1">
-                        {d.toLocaleString(undefined, { year: "numeric", month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit" })} · Cajero:{" "}
+                        {d.toLocaleString(undefined, { year: "numeric", month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit" })} · {t.dashboard.cashier}:{" "}
                         <span className="font-bold">Admin</span> · Items: <span className="font-bold">{s.items_count}</span>
                       </div>
                     </div>
                     <div className="shrink-0 text-right">
                       <div className="text-sm font-black text-slate-900 dark:text-white">{formatCurrencyMXN(s.total)}</div>
-                      <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 mt-1">Ver detalle</div>
+                      <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 mt-1">{t.dashboard.view_detail}</div>
                     </div>
                   </div>
                 </button>
@@ -158,21 +158,21 @@ export function SalesView({
 
         <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">Resumen</h3>
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Filtrado</div>
+            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.summary}</h3>
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{t.dashboard.filtered}</div>
           </div>
 
           <div className="space-y-3">
             <div className="flex items-center justify-between text-sm font-bold text-slate-600 dark:text-slate-300">
-              <span>Ingresos</span>
+              <span>{t.dashboard.incomes}</span>
               <span className="font-black">{formatCurrencyMXN(salesFiltered.reduce((acc, s) => acc + s.total, 0))}</span>
             </div>
             <div className="flex items-center justify-between text-sm font-bold text-slate-600 dark:text-slate-300">
-              <span>Tickets</span>
+              <span>{t.dashboard.tickets}</span>
               <span className="font-black">{salesFiltered.length}</span>
             </div>
             <div className="flex items-center justify-between text-sm font-bold text-slate-600 dark:text-slate-300">
-              <span>Ticket promedio</span>
+              <span>{t.dashboard.avg_ticket}</span>
               <span className="font-black">
                 {formatCurrencyMXN(salesFiltered.length ? salesFiltered.reduce((acc, s) => acc + s.total, 0) / salesFiltered.length : 0)}
               </span>
@@ -180,9 +180,9 @@ export function SalesView({
           </div>
 
           <div className="mt-6 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Siguiente</div>
-            <div className="text-sm font-black text-slate-900 dark:text-white mt-1">Export PDF, notas y devoluciones</div>
-            <div className="text-[12px] text-slate-500 dark:text-slate-400 mt-2">Lo conectamos cuando integremos facturacion y reglas de caja.</div>
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{t.dashboard.next}</div>
+            <div className="text-sm font-black text-slate-900 dark:text-white mt-1">{t.dashboard.export_pdf_desc}</div>
+            <div className="text-[12px] text-slate-500 dark:text-slate-400 mt-2">{t.dashboard.connect_billing_desc}</div>
           </div>
         </div>
       </div>
@@ -199,10 +199,10 @@ export function SalesView({
             >
               <div className="flex items-start justify-between gap-4 mb-6">
                 <div>
-                  <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Detalle</div>
+                  <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{t.dashboard.detail}</div>
                   <div className="text-2xl font-black text-slate-900 dark:text-white mt-1">{selectedSale.id}</div>
                   <div className="text-[12px] text-slate-500 dark:text-slate-400 mt-1">
-                    {new Date(selectedSale.ts).toLocaleString()} · Cajero: <span className="font-bold">{selectedSale.cashier}</span>
+                    {new Date(selectedSale.ts).toLocaleString()} · {t.dashboard.cashier}: <span className="font-bold">{selectedSale.cashier}</span>
                   </div>
                 </div>
                 <button onClick={() => setSelectedSaleId(null)} className="w-10 h-10 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
@@ -211,40 +211,40 @@ export function SalesView({
               </div>
 
               <div className="space-y-3">
-                {selectedSale.items_detail?.map((l: any, idx: number) => (
+                {selectedSale.items_detail?.map((li: any, idx: number) => (
                   <div key={idx} className="flex items-center justify-between p-4 rounded-2xl bg-slate-50/60 dark:bg-slate-800/30 border border-slate-100/60 dark:border-slate-800/60">
                     <div className="min-w-0">
-                      <div className="text-sm font-black text-slate-900 dark:text-white truncate">{l.name}</div>
+                      <div className="text-sm font-black text-slate-900 dark:text-white truncate">{li.name}</div>
                       <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mt-1">
-                        {l.quantity} x {formatCurrencyMXN(l.price)}
+                        {li.quantity} x {formatCurrencyMXN(li.price)}
                       </div>
                     </div>
-                    <div className="text-sm font-black text-slate-900 dark:text-white">{formatCurrencyMXN(l.quantity * l.price)}</div>
+                    <div className="text-sm font-black text-slate-900 dark:text-white">{formatCurrencyMXN(li.quantity * li.price)}</div>
                   </div>
                 ))}
               </div>
 
               <div className="mt-6 space-y-2">
                 <div className="flex items-center justify-between text-sm font-bold text-slate-600 dark:text-slate-300">
-                  <span>Subtotal</span>
+                  <span>{t.dashboard.subtotal}</span>
                   <span className="font-black">{formatCurrencyMXN(selectedSale.subtotal)}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm font-bold text-slate-600 dark:text-slate-300">
-                  <span>Descuento</span>
+                  <span>{t.dashboard.discount}</span>
                   <span className="font-black">-{formatCurrencyMXN(selectedSale.discount)}</span>
                 </div>
                 <div className="flex items-center justify-between text-base font-bold text-slate-900 dark:text-white pt-2">
-                  <span>Total</span>
+                  <span>{t.dashboard.total}</span>
                   <span className="font-black">{formatCurrencyMXN(selectedSale.total)}</span>
                 </div>
               </div>
 
               <div className="mt-6 flex gap-3">
                 <button className="flex-1 bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-sm">
-                  Reimprimir ticket
+                  {t.dashboard.reprint_ticket}
                 </button>
                 <button className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20">
-                  Exportar
+                  {t.dashboard.export}
                 </button>
               </div>
             </motion.div>

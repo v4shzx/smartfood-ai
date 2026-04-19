@@ -65,26 +65,26 @@ export function InventoryView({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.inventory}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">Control de insumos, stock crítico y movimientos.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">{t.dashboard.inventory_desc}</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-3">
           <button className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest hover:border-emerald-500/40 transition-all shadow-sm">
-            <Plus className="w-4 h-4" /> Nuevo item
+            <Plus className="w-4 h-4" /> {t.dashboard.new_item}
           </button>
         </motion.div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
-          <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Stock Crítico</div>
+          <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">{t.dashboard.critical_stock}</div>
           <div className="text-3xl font-black text-rose-500 tracking-tight">{invCritical.length}</div>
-          <div className="text-[10px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">Insumos por agotar</div>
+          <div className="text-[10px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">{t.dashboard.insumos_to_deplete}</div>
         </div>
         <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
-          <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Total SKU</div>
+          <div className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">{t.dashboard.total_sku}</div>
           <div className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{invFiltered.length}</div>
-          <div className="text-[10px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">Productos en catálogo</div>
+          <div className="text-[10px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">{t.dashboard.products_in_catalog}</div>
         </div>
       </div>
 
@@ -97,7 +97,7 @@ export function InventoryView({
                 <input
                   value={invQuery}
                   onChange={(e) => setInvQuery(e.target.value)}
-                  placeholder="Buscar por insumo o SKU..."
+                  placeholder={t.dashboard.search_insumo_sku}
                   className="w-full bg-transparent outline-none text-sm font-normal text-slate-700 dark:text-slate-200"
                 />
               </div>
@@ -110,7 +110,7 @@ export function InventoryView({
                     : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400"
                 )}
               >
-                <AlertTriangle className="w-4 h-4" /> Criticos
+                <AlertTriangle className="w-4 h-4" /> {t.dashboard.critical_items}
               </button>
             </div>
 
@@ -137,7 +137,7 @@ export function InventoryView({
                         <span className="text-[10px] font-normal text-slate-400 uppercase tracking-widest">{it.sku}</span>
                       </div>
                       <div className="flex items-center gap-3 text-[12px] text-slate-500 dark:text-slate-400 mt-1">
-                        <span>Actualizado: {new Date(it.updatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+                        <span>{t.dashboard.updated}: {new Date(it.updatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
                         <span>Min: {it.min} {it.unit}</span>
                       </div>
                     </div>
@@ -148,7 +148,7 @@ export function InventoryView({
                       <div className={cn("text-xl font-black", it.onHand <= it.min ? "text-rose-500" : "text-slate-900 dark:text-white")}>
                         {it.onHand} {it.unit}
                       </div>
-                      <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mt-0.5">Stock actual</div>
+                      <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mt-0.5">{t.dashboard.current_stock}</div>
                     </div>
                     <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
                       <button
@@ -193,7 +193,7 @@ export function InventoryView({
                     <Box className="w-7 h-7" />
                   </div>
                   <div>
-                    <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Movimiento de inventario</div>
+                    <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{t.dashboard.inventory_movement}</div>
                     <div className="text-2xl font-black text-slate-900 dark:text-white mt-1">{invSelected.name}</div>
                   </div>
                 </div>
@@ -204,25 +204,25 @@ export function InventoryView({
 
               <div className="space-y-6">
                 <div className="flex p-1.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-                  {(["in", "out", "adjust"] as const).map((t) => (
+                  {(["in", "out", "adjust"] as const).map((ti) => (
                     <button
-                      key={t}
-                      onClick={() => setInvMoveType(t)}
+                      key={ti}
+                      onClick={() => setInvMoveType(ti)}
                       className={cn(
                         "flex-1 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all",
-                        invMoveType === t
+                        invMoveType === ti
                           ? "bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 shadow-sm border border-slate-200 dark:border-slate-700"
                           : "text-slate-400 hover:text-slate-600"
                       )}
                     >
-                      {t === "in" ? "Entrada" : t === "out" ? "Salida" : "Ajuste"}
+                      {ti === "in" ? t.dashboard.entry : ti === "out" ? t.dashboard.exit : t.dashboard.adjust}
                     </button>
                   ))}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Cantidad ({invSelected.unit})</label>
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.dashboard.quantity} ({invSelected.unit})</label>
                     <div className="flex items-center gap-2 px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
                       {invMoveType === "out" ? <MinusCircle className="w-4 h-4 text-amber-500" /> : <PlusCircle className="w-4 h-4 text-emerald-500" />}
                       <input
@@ -234,7 +234,7 @@ export function InventoryView({
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Stock Resultante</label>
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.dashboard.resulting_stock}</label>
                     <div className="px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 font-black text-sm text-slate-400">
                       {Math.max(0, invSelected.onHand + (invMoveType === "in" ? invMoveQty : invMoveType === "out" ? -invMoveQty : invMoveQty))} {invSelected.unit}
                     </div>
@@ -242,11 +242,11 @@ export function InventoryView({
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Nota (Opcional)</label>
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.dashboard.note} ({t.dashboard.optional})</label>
                   <input
                     value={invMoveNote}
                     onChange={(e) => setInvMoveNote(e.target.value)}
-                    placeholder="Ej. Compra semanal, Merma por calor..."
+                    placeholder={t.dashboard.eg_purchase}
                     className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-normal focus:border-emerald-500/40 transition-all"
                   />
                 </div>
@@ -255,7 +255,7 @@ export function InventoryView({
                   onClick={invCommit}
                   className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-emerald-500/20 active:scale-95 transition-all"
                 >
-                  Confirmar movimiento
+                  {t.dashboard.confirm_movement}
                 </button>
               </div>
             </motion.div>

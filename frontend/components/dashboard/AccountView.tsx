@@ -237,8 +237,10 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                     <Globe className="w-5 h-5" />
                   </div>
                   <div className="min-w-0">
-                    <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Idioma</div>
-                    <div className="text-sm font-normal text-slate-700 dark:text-slate-200">Español (México)</div>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t.dashboard.language}</div>
+                    <div className="text-sm font-normal text-slate-700 dark:text-slate-200">
+                      {lang === 'es' ? 'Español' : (lang === 'fr' ? 'Français' : 'English')}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -642,7 +644,7 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
 
           <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
             <div className="flex items-center justify-between mb-8">
-              <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">Preferencia del Sistema</h3>
+              <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.preferences}</h3>
               <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center text-slate-400">
                 <Settings className="w-4 h-4" />
               </div>
@@ -650,19 +652,19 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30">
-                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Modo Visual</div>
+                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">{t.dashboard.visual_mode}</div>
                 <div className="flex gap-2">
-                  <button className="flex-1 py-3 px-2 rounded-xl bg-white dark:bg-slate-950 border-2 border-emerald-600 text-[10px] font-black uppercase tracking-wider text-emerald-600">Automático</button>
-                  <button className="flex-1 py-3 px-2 rounded-xl bg-white/20 border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400">Claro</button>
-                  <button className="flex-1 py-3 px-2 rounded-xl bg-white/20 border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400">Oscuro</button>
+                  <button className="flex-1 py-3 px-2 rounded-xl bg-white dark:bg-slate-950 border-2 border-emerald-600 text-[10px] font-black uppercase tracking-wider text-emerald-600">{t.dashboard.system_auto}</button>
+                  <button className="flex-1 py-3 px-2 rounded-xl bg-white/20 border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400">{t.dashboard.light}</button>
+                  <button className="flex-1 py-3 px-2 rounded-xl bg-white/20 border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400">{t.dashboard.dark}</button>
                 </div>
               </div>
 
               <div className="p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30">
-                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Unidades de Medida</div>
+                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">{t.dashboard.measurement_units}</div>
                 <div className="flex gap-2">
-                  <button className="flex-1 py-3 px-2 rounded-xl bg-white dark:bg-slate-950 border-2 border-emerald-600 text-[10px] font-black uppercase tracking-wider text-emerald-600">Sistema (kg)</button>
-                  <button className="flex-1 py-3 px-2 rounded-xl bg-white/20 border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400">Imperial (lb)</button>
+                  <button className="flex-1 py-3 px-2 rounded-xl bg-white dark:bg-slate-950 border-2 border-emerald-600 text-[10px] font-black uppercase tracking-wider text-emerald-600">{t.dashboard.metric_kg}</button>
+                  <button className="flex-1 py-3 px-2 rounded-xl bg-white/20 border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400">{t.dashboard.imperial_lb}</button>
                 </div>
               </div>
             </div>

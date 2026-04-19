@@ -119,7 +119,7 @@ export default function Dashboard() {
             <div className="mb-4">
               {!isSidebarCollapsed && (
                 <div className="px-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">
-                  {t.dashboard.menu}
+                  {t.dashboard.menu_title}
                 </div>
               )}
               <SidebarItem
@@ -314,7 +314,7 @@ export default function Dashboard() {
                     className="absolute right-0 mt-3 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 overflow-hidden z-50 p-2 backdrop-blur-xl"
                   >
                     <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800/50 mb-2">
-                      <div className="text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white">Notificaciones</div>
+                      <div className="text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white">{t.dashboard.notifications}</div>
                     </div>
                     
                     <div className="max-h-[320px] overflow-y-auto no-scrollbar space-y-1">
@@ -353,7 +353,7 @@ export default function Dashboard() {
                         }}
                         className="w-full py-2.5 text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 transition-all rounded-xl"
                       >
-                        Ver todos los reportes
+                        {t.dashboard.view_all_reports}
                       </button>
                     </div>
                   </motion.div>

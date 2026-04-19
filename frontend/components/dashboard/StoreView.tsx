@@ -61,7 +61,7 @@ export function StoreView({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.store}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">Productos, categorías y precios.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">{t.dashboard.store_desc}</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-3">
@@ -69,7 +69,7 @@ export function StoreView({
             onClick={storeOpenCreate}
             className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20 active:scale-95 transition-all"
           >
-            <Plus className="w-4 h-4" /> Nuevo producto
+            <Plus className="w-4 h-4" /> {t.dashboard.new_product}
           </button>
         </motion.div>
       </div>
@@ -82,20 +82,20 @@ export function StoreView({
               <input
                 value={storeQuery}
                 onChange={(e) => setStoreQuery(e.target.value)}
-                placeholder="Buscar producto o categoria..."
+                placeholder={t.dashboard.search_product_category}
                 className="w-full bg-transparent outline-none text-sm font-semibold text-slate-700 dark:text-slate-200 placeholder:text-slate-400"
               />
             </div>
           </div>
           <div>
             <div className="px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
-              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">Categoria</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">{t.dashboard.category}</div>
               <select
                 value={storeCategory}
                 onChange={(e) => setStoreCategory(e.target.value as typeof storeCategory)}
                 className="w-full bg-transparent outline-none text-sm font-normal text-slate-900 dark:text-white"
               >
-                <option value="all">Todas</option>
+                <option value="all">{t.dashboard.all_categories_f}</option>
                 {storeCategories.map((c) => (
                   <option key={c} value={c}>
                     {c}
@@ -106,8 +106,8 @@ export function StoreView({
           </div>
           <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
             <div>
-              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Disponibles</div>
-              <div className="text-sm font-normal text-slate-900 dark:text-white">Solo activos</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{t.dashboard.available}</div>
+              <div className="text-sm font-normal text-slate-900 dark:text-white">{t.dashboard.active_only}</div>
             </div>
             <button
               onClick={() => setStoreOnlyAvailable((v: boolean) => !v)}
@@ -146,7 +146,7 @@ export function StoreView({
                   <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{p.category}</span>
                 </div>
                 {!p.available && (
-                   <span className="bg-rose-50 dark:bg-rose-500/10 text-rose-600 text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-lg">Agotado</span>
+                   <span className="bg-rose-50 dark:bg-rose-500/10 text-rose-600 text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-lg">{t.dashboard.sold_out}</span>
                 )}
               </div>
               <h4 className="text-xl font-black text-slate-900 dark:text-white line-clamp-1">{p.name}</h4>
@@ -157,7 +157,7 @@ export function StoreView({
                   onClick={() => storeOpenEdit(p.id)}
                   className="flex-1 flex items-center justify-center gap-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 py-3 rounded-2xl text-[10px] font-normal uppercase tracking-widest hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all"
                 >
-                  <Pencil className="w-3.5 h-3.5" /> Editar
+                  <Pencil className="w-3.5 h-3.5" /> {t.dashboard.edit}
                 </button>
                 <button
                   onClick={() => storeDelete(p.id)}
@@ -178,8 +178,8 @@ export function StoreView({
             <PlusCircle className="w-7 h-7" />
           </div>
           <div className="text-center">
-            <div className="text-sm font-black text-slate-900 dark:text-white">Nuevo producto</div>
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mt-1">Añadir al menu</div>
+            <div className="text-sm font-black text-slate-900 dark:text-white">{t.dashboard.new_product}</div>
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mt-1">{t.dashboard.add_to_menu}</div>
           </div>
         </button>
       </div>
@@ -196,8 +196,8 @@ export function StoreView({
             >
               <div className="flex items-start justify-between gap-4 mb-8">
                 <div>
-                  <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{storeEditingId ? "Editar" : "Nuevo"}</div>
-                  <div className="text-2xl font-black text-slate-900 dark:text-white mt-1">Producto</div>
+                  <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{storeEditingId ? t.dashboard.edit : t.dashboard.new}</div>
+                  <div className="text-2xl font-black text-slate-900 dark:text-white mt-1">{t.dashboard.product}</div>
                 </div>
                 <button onClick={storeCloseEditor} className="w-10 h-10 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
                   <X className="w-5 h-5 text-slate-500" />
@@ -206,18 +206,18 @@ export function StoreView({
 
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Nombre del producto</label>
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.dashboard.product_name}</label>
                   <input
                     value={storeForm.name}
                     onChange={(e) => setStoreForm({ ...storeForm, name: e.target.value })}
-                    placeholder="Ej. Taco al Pastor"
+                    placeholder={t.dashboard.eg_taco}
                     className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-normal focus:border-emerald-500/40 transition-all"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Categoria</label>
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.dashboard.category}</label>
                     <select
                       value={storeForm.category}
                       onChange={(e) => setStoreForm({ ...storeForm, category: e.target.value as any })}
@@ -229,7 +229,7 @@ export function StoreView({
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Precio (MXN)</label>
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.dashboard.price_mxn}</label>
                     <input
                       type="number"
                       value={storeForm.price}
@@ -241,15 +241,15 @@ export function StoreView({
 
                 <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
                 <div>
-                  <div className="text-sm font-normal text-slate-900 dark:text-white">Disponibilidad</div>
-                  <div className="text-[10px] font-normal text-slate-400 uppercase mt-0.5">Mostrar en el POS</div>
+                  <div className="text-sm font-normal text-slate-900 dark:text-white">{t.dashboard.availability}</div>
+                  <div className="text-[10px] font-normal text-slate-400 uppercase mt-0.5">{t.dashboard.show_in_pos}</div>
                 </div>                  <button
                     onClick={() => setStoreForm({ ...storeForm, available: !storeForm.available })}
                     className={cn(
                       "w-12 h-7 rounded-full border transition-all relative",
                       storeForm.available
                         ? "bg-emerald-600 border-emerald-600"
-                        : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800"
+                        : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800"
                     )}
                   >
                     <div className={cn("w-5 h-5 rounded-full bg-white absolute top-1 transition-all shadow-sm", storeForm.available ? "left-6" : "left-1")} />
@@ -260,7 +260,7 @@ export function StoreView({
                   onClick={storeSave}
                   className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-emerald-500/20 active:scale-95 transition-all flex items-center justify-center gap-2"
                 >
-                  <Save className="w-4 h-4" /> Guardar cambios
+                  <Save className="w-4 h-4" /> {t.dashboard.save_changes}
                 </button>
               </div>
             </motion.div>
