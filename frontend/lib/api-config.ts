@@ -1,4 +1,4 @@
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 // Asegurar que no termine en /
 export const BASE_URL = API_URL.endsWith("/") ? API_URL.slice(0, -1) : API_URL;

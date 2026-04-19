@@ -22,6 +22,8 @@ import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
 import { useTheme } from "next-themes";
 
+import { API_URL } from "@/lib/api-config";
+
 interface AccountViewProps {
   t: any;
   handleLogout: () => void;
@@ -92,8 +94,7 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
 
   const fetchCards = async () => {
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
-      const res = await fetch(`${apiUrl}/payments/`);
+      const res = await fetch(`${API_URL}/payments/`);
       if (res.ok) {
         const data = await res.json();
         setCards(data.map((c: any) => ({
@@ -122,9 +123,8 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
     setIsBillingLoading(true);
     
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
       const [exp_month, exp_year] = (newCardForm.exp || "01/29").split('/').map(Number);
-      const res = await fetch(`${apiUrl}/payments/`, {
+      const res = await fetch(`${API_URL}/payments/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -150,8 +150,7 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
 
   const handleSetPrimary = async (id: string | number) => {
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
-      const res = await fetch(`${apiUrl}/payments/${id}/set-primary`, {
+      const res = await fetch(`${API_URL}/payments/${id}/set-primary`, {
         method: 'PATCH'
       });
       if (res.ok) {
@@ -170,8 +169,7 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
     }
     
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
-      const res = await fetch(`${apiUrl}/payments/${id}`, {
+      const res = await fetch(`${API_URL}/payments/${id}`, {
         method: 'DELETE'
       });
       if (res.ok) {

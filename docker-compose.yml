@@ -36,7 +36,7 @@ services:
     container_name: smartfood_frontend
     restart: always
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
     depends_on:
       - backend
     ports:

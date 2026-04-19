@@ -17,14 +17,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { API_URL } from "@/lib/api-config";
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<any>(null);
-
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
   useEffect(() => {
     fetchUsers();

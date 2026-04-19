@@ -49,6 +49,8 @@ function ThemeToggle() {
   );
 }
 
+import { API_URL } from "@/lib/api-config";
+
 export default function LoginPage() {
   const { t } = useI18n();
   const router = useRouter();
@@ -75,8 +77,6 @@ export default function LoginPage() {
   React.useEffect(() => {
     setMounted(true);
   }, []);
-
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
