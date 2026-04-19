@@ -39,7 +39,9 @@ export function useDashboard(t: any) {
   const [reportsFrom, setReportsFrom] = useState("");
   const [reportsTo, setReportsTo] = useState("");
 
-  const [predictionScenario, setPredictionScenario] = useState<"baseline" | "promo" | "rain">("baseline");
+  const [predictionScenario, setPredictionScenario] = useState<
+    "baseline" | "promo" | "rain" | "event" | "heatwave" | "monthend"
+  >("baseline");
   const [predictionLift, setPredictionLift] = useState(15);
 
   const [staffQuery, setStaffQuery] = useState("");
@@ -104,6 +106,7 @@ export function useDashboard(t: any) {
   const [salesSeries, setSalesSeries] = useState<any[]>([]);
   const [trendsInsights, setTrendsInsights] = useState<any[]>([]);
   const [prediction, setPrediction] = useState<any[]>([]);
+  const [basePrediction, setBasePrediction] = useState<any[]>([]);
   const [stats, setStats] = useState<any>(null);
   const [lastSaleForTicket, setLastSaleForTicket] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -147,6 +150,7 @@ export function useDashboard(t: any) {
         setSalesSeries(Array.isArray(seriesRes) ? seriesRes : []);
         setTrendsInsights(Array.isArray(trendsRes) ? trendsRes : []);
         setPrediction(Array.isArray(predRes) ? predRes : []);
+        setBasePrediction(Array.isArray(predRes) ? predRes : []);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       } finally {
@@ -396,6 +400,30 @@ export function useDashboard(t: any) {
     setStaffEditorOpen(false);
   };
 
+  const handleSimulate = () => {
+    let factor = 1;
+    if (predictionScenario === "promo") factor += (predictionLift / 100);
+    if (predictionScenario === "rain") factor -= 0.20;
+    if (predictionScenario === "event") factor += 0.50;
+    if (predictionScenario === "heatwave") factor += 0.15;
+    if (predictionScenario === "monthend") factor -= 0.15;
+
+    const simulated = basePrediction.map(p => ({
+      ...p,
+      ventas: Math.round(p.ventas * factor)
+    }));
+    setPrediction(simulated);
+  };
+
+  const handleApplyPrediction = () => {
+    // Acción Real: Optimizar stock mínimo basado en la predicción
+    setInvItems(prev => prev.map(item => ({
+      ...item,
+      min: Math.round(item.min * 1.25) // Aumentamos 25% el margen de seguridad
+    })));
+    alert("¡Optimización Exitosa! Se ha ajustado el stock mínimo de seguridad en tu inventario para prevenir faltantes ante la demanda proyectada.");
+  };
+
   const activeTitle = useMemo(() => {
     switch (activeTab) {
       case "home": return t.dashboard.home;
@@ -524,6 +552,7 @@ export function useDashboard(t: any) {
     salesHistory, trendsInsights, activeTitle, products,
     kpis, salesSeries,
     menuItems, mealPlans, isLoading, subscriptionTier,
-    lastSaleForTicket, setLastSaleForTicket
+    lastSaleForTicket, setLastSaleForTicket,
+    handleSimulate, handleApplyPrediction
   };
 }

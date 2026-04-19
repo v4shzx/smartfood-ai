@@ -104,28 +104,27 @@ async def get_trends(owner_id: Optional[str] = Query("u_demo"), db: AsyncSession
 
 @router.get("/prediction")
 async def get_prediction(owner_id: Optional[str] = Query("u_demo"), db: AsyncSession = Depends(get_db)) -> Any:
-    # Estimate hourly demand based on average historical sales per hour
+    # Estimate hourly revenue based on average historical sales per hour
     list_pred = []
     
-    # Query sales grouped by hour
+    # Query total sales revenue grouped by hour
     query = (
         select(
             func.extract('hour', Sale.timestamp).label('hour'),
-            func.count(Sale.id).label('count')
+            func.sum(Sale.total_price).label('revenue')
         )
         .where(Sale.user_id == owner_id)
         .group_by(func.extract('hour', Sale.timestamp))
     )
     
     result = await db.execute(query)
-    hourly_data = {int(row[0]): row[1] for row in result.all()}
+    hourly_data = {int(row[0]): float(row[1]) for row in result.all()}
     
     # Default hours from 8 AM to 10 PM
     for h in range(8, 23):
-        # Calculate a mock prediction based on historical data + some random factor for "realism"
-        historical_avg = hourly_data.get(h, 0)
-        # If no data, provide a small baseline
-        val = historical_avg if historical_avg > 0 else (5 if 12 <= h <= 15 else 2)
-        list_pred.append({ "hour": f"{h}:00", "val": val })
+        historical_avg_revenue = hourly_data.get(h, 0.0)
+        # Provide a baseline revenue if no data exists
+        ventas = historical_avg_revenue if historical_avg_revenue > 0 else (150.0 if 12 <= h <= 15 else 50.0)
+        list_pred.append({ "hour": f"{h}:00", "ventas": round(ventas, 2) })
         
     return list_pred

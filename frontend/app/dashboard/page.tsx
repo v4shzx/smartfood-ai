@@ -551,6 +551,8 @@ export default function Dashboard() {
               setPredictionLift={dashboard.setPredictionLift}
               prediction={dashboard.prediction}
               trends={dashboard.trendsInsights}
+              onSimulate={dashboard.handleSimulate}
+              onApply={dashboard.handleApplyPrediction}
             />
           )}
           {activeTab === "staff" && (
