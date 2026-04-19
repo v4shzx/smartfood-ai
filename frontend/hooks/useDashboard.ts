@@ -67,6 +67,7 @@ export function useDashboard(t: any) {
     category: "Tacos" as any,
     price: 0,
     available: true,
+    min_stock: 5,
   });
 
   const [invEditorOpen, setInvEditorOpen] = useState(false);
@@ -190,6 +191,8 @@ export function useDashboard(t: any) {
 
   const invCritical = useMemo(() => invItems.filter((it) => it.onHand <= it.min), [invItems]);
 
+  const invSelected = useMemo(() => invItems.find((it) => it.id === invSelectedId), [invItems, invSelectedId]);
+
   const supFiltered = useMemo(() => {
     return suppliers.filter((s) => s.name.toLowerCase().includes(supQuery.toLowerCase()) || s.contact.toLowerCase().includes(supQuery.toLowerCase()));
   }, [suppliers, supQuery]);
@@ -265,7 +268,7 @@ export function useDashboard(t: any) {
   // Store Real API Actions
   const storeOpenCreate = () => {
     setStoreEditingId(null);
-    setStoreForm({ name: "", category: storeCategories[0] || "General", price: 0, available: true });
+    setStoreForm({ name: "", category: storeCategories[0] || "General", price: 0, available: true, min_stock: 5 });
     setStoreEditorOpen(true);
   };
 
@@ -273,7 +276,7 @@ export function useDashboard(t: any) {
     const p = products.find((x) => x.id === id);
     if (!p) return;
     setStoreEditingId(id);
-    setStoreForm({ name: p.name, category: p.category, price: p.price, available: p.available });
+    setStoreForm({ name: p.name, category: p.category, price: p.price, available: p.available, min_stock: p.min_stock || 5 });
     setStoreEditorOpen(true);
   };
 
@@ -291,6 +294,12 @@ export function useDashboard(t: any) {
         if (res.ok) {
           const updatedProd = await res.json();
           setProducts((prev) => prev.map((p) => (p.id === storeEditingId ? updatedProd : p)));
+          setInvItems((prev) => prev.map((it) => it.id === storeEditingId ? {
+            ...it,
+            name: updatedProd.name,
+            onHand: updatedProd.on_hand,
+            min: updatedProd.min_stock
+          } : it));
         }
       } else {
         const res = await fetch(`${API_URL}/products/`, {
@@ -301,6 +310,15 @@ export function useDashboard(t: any) {
         if (res.ok) {
           const newProd = await res.json();
           setProducts((prev) => [...prev, newProd]);
+          setInvItems((prev) => [...prev, {
+            id: newProd.id,
+            name: newProd.name,
+            sku: `SKU-${newProd.id}`,
+            onHand: newProd.on_hand,
+            min: newProd.min_stock,
+            unit: "pcs",
+            updatedAt: Date.now()
+          }]);
         }
       }
       setStoreEditorOpen(false);
@@ -348,14 +366,52 @@ export function useDashboard(t: any) {
     setInvEditorOpen(true);
   };
 
-  const invCommit = () => {
+  const invCommit = async () => {
     if (!invSelectedId) return;
     const it = invItems.find((x) => x.id === invSelectedId);
     if (!it) return;
+    
     const diff = invMoveType === "in" ? invMoveQty : invMoveType === "out" ? -invMoveQty : invMoveQty;
-    setInvItems((prev) => prev.map((x) => (x.id === invSelectedId ? { ...x, onHand: Math.max(0, x.onHand + diff), updatedAt: Date.now() } : x)));
-    setInvMovements((prev) => [{ id: Math.random().toString(36), itemId: invSelectedId, type: invMoveType, qty: invMoveQty, ts: Date.now(), note: invMoveNote || it.name }, ...prev]);
-    setInvEditorOpen(false);
+    const newStock = Math.max(0, it.onHand + diff);
+
+    try {
+      const res = await fetch(`${API_URL}/products/${invSelectedId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ on_hand: newStock })
+      });
+
+      if (res.ok) {
+        const updatedProduct = await res.json();
+        // Update local state for inventory items
+        setInvItems((prev) => prev.map((x) => (x.id === invSelectedId ? { 
+          ...x, 
+          onHand: updatedProduct.on_hand, 
+          updatedAt: Date.now() 
+        } : x)));
+        
+        // Update local state for products (since they are the same entity in this simplified model)
+        setProducts((prev) => prev.map((p) => (p.id === invSelectedId ? { 
+          ...p, 
+          on_hand: updatedProduct.on_hand 
+        } : p)));
+
+        setInvMovements((prev) => [{ 
+          id: Math.random().toString(36), 
+          itemId: invSelectedId, 
+          type: invMoveType, 
+          qty: invMoveQty, 
+          ts: Date.now(), 
+          note: invMoveNote || it.name 
+        }, ...prev]);
+        
+        setInvEditorOpen(false);
+      } else {
+        alert("Error al actualizar el inventario");
+      }
+    } catch (error) {
+      console.error("Inventory update error:", error);
+    }
   };
 
   // Staff Edits
@@ -514,6 +570,7 @@ export function useDashboard(t: any) {
     invFiltered, invCritical,
     invOpen, invCommit, invEditorOpen, setInvEditorOpen,
     invSelectedId, setInvSelectedId,
+    invSelected,
     invMoveType, setInvMoveType, invMoveQty, setInvMoveQty, invMoveNote, setInvMoveNote,
     invMovements,
     supQuery, setSupQuery,

@@ -177,41 +177,69 @@ export function StoreView({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 pb-12">
         {storeFiltered.map((p) => (
           <motion.div
             key={p.id}
             layout
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="group bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] p-1 shadow-sm hover:shadow-2xl hover:border-emerald-500/30 transition-all duration-500"
           >
-            <div className="p-8">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <div className={cn("w-1.5 h-1.5 rounded-full", p.available ? "bg-emerald-500" : "bg-rose-500")} />
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{p.category}</span>
-                </div>
-                {!p.available && (
-                   <span className="bg-rose-50 dark:bg-rose-500/10 text-rose-600 text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-lg">{t.dashboard.sold_out}</span>
-                )}
-              </div>
-              <h4 className="text-xl font-black text-slate-900 dark:text-white line-clamp-1">{p.name}</h4>
-              <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-2">{formatCurrencyMXN(p.price)}</div>
+            <div className="relative h-full bg-slate-50/50 dark:bg-slate-950/40 rounded-[2.2rem] p-7 overflow-hidden">
+              {/* Decorative background element */}
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl group-hover:bg-emerald-500/10 transition-colors duration-500" />
               
-              <div className="mt-8 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
-                <button
-                  onClick={() => storeOpenEdit(p.id)}
-                  className="flex-1 flex items-center justify-center gap-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 py-3 rounded-2xl text-[10px] font-normal uppercase tracking-widest hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all"
-                >
-                  <Pencil className="w-3.5 h-3.5" /> {t.dashboard.edit}
-                </button>
-                <button
-                  onClick={() => storeDelete(p.id)}
-                  className="w-12 h-12 flex items-center justify-center bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-2xl text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 hover:border-rose-500/30 transition-all"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+              <div className="relative flex flex-col h-full">
+                <div className="flex items-start justify-between mb-6">
+                  <div className="space-y-1.5">
+                    <div className="flex items-center gap-2">
+                      <div className={cn(
+                        "w-2 h-2 rounded-full",
+                        p.available ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]"
+                      )} />
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
+                        {p.category}
+                      </span>
+                    </div>
+                    <h4 className="text-lg font-black text-slate-900 dark:text-white leading-tight group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                      {p.name}
+                    </h4>
+                  </div>
+                  
+                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
+                    <button
+                      onClick={() => storeOpenEdit(p.id)}
+                      className="w-9 h-9 flex items-center justify-center rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-emerald-500 hover:border-emerald-500/30 transition-all active:scale-90"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => storeDelete(p.id)}
+                      className="w-9 h-9 flex items-center justify-center rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-rose-500 hover:border-rose-500/30 transition-all active:scale-90"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {!p.available && (
+                   <div className="mb-4">
+                     <span className="inline-flex items-center bg-rose-500/10 text-rose-600 dark:text-rose-400 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border border-rose-500/20">
+                       {t.dashboard.sold_out}
+                     </span>
+                   </div>
+                )}
+
+                <div className="mt-auto pt-6 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between">
+                  <div className="space-y-1">
+                    <div className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.15em] leading-none">Precio venta</div>
+                    <div className="text-3xl font-black text-slate-900 dark:text-white flex items-baseline tracking-tight group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-300">
+                      <span className="text-lg mr-1 text-emerald-500 font-bold">$</span>
+                      {p.price}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -219,14 +247,16 @@ export function StoreView({
 
         <button
           onClick={storeOpenCreate}
-          className="flex flex-col items-center justify-center gap-4 bg-slate-50/50 dark:bg-slate-900/30 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-[2.5rem] p-8 hover:bg-white dark:hover:bg-slate-800/40 hover:border-emerald-500/40 transition-all group"
+          className="group relative bg-slate-50/50 dark:bg-slate-900/30 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-[2.5rem] p-1 hover:border-emerald-500/40 transition-all duration-500"
         >
-          <div className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 group-hover:text-emerald-500 group-hover:scale-110 transition-all shadow-sm">
-            <PlusCircle className="w-7 h-7" />
-          </div>
-          <div className="text-center">
-            <div className="text-sm font-black text-slate-900 dark:text-white">{t.dashboard.new_product}</div>
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mt-1">{t.dashboard.add_to_menu}</div>
+          <div className="h-full flex flex-col items-center justify-center gap-5 p-10 bg-transparent rounded-[2.2rem] group-hover:bg-white dark:group-hover:bg-slate-800/40 transition-all">
+            <div className="w-16 h-16 rounded-[2rem] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-300 group-hover:text-emerald-500 group-hover:scale-110 group-hover:rotate-90 transition-all duration-500 shadow-sm">
+              <Plus className="w-8 h-8" />
+            </div>
+            <div className="text-center">
+              <div className="text-base font-black text-slate-900 dark:text-white">{t.dashboard.new_product}</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mt-1.5">{t.dashboard.add_to_menu}</div>
+            </div>
           </div>
         </button>
       </div>
@@ -285,94 +315,6 @@ export function StoreView({
                   </button>
                 </div>
               </form>
-            </motion.div>
-          </motion.div>
-        )}
-
-        {storeEditorOpen && (
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
-            exit={{ opacity: 0 }} 
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md"
-          >
-            <div className="absolute inset-0" onClick={storeCloseEditor} />
-            <motion.div
-              initial={{ opacity: 0, y: 30, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.95 }}
-              className="relative w-full max-w-[500px] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] shadow-2xl p-6 md:p-10 overflow-hidden"
-            >
-              <div className="flex items-start justify-between gap-4 mb-8">
-                <div>
-                  <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{storeEditingId ? t.dashboard.edit : t.dashboard.new}</div>
-                  <div className="text-2xl font-black text-slate-900 dark:text-white mt-1">{t.dashboard.product}</div>
-                </div>
-                <button onClick={storeCloseEditor} className="w-10 h-10 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
-                  <X className="w-5 h-5 text-slate-500" />
-                </button>
-              </div>
-
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.dashboard.product_name}</label>
-                  <input
-                    value={storeForm.name}
-                    onChange={(e) => setStoreForm({ ...storeForm, name: e.target.value })}
-                    placeholder={t.dashboard.eg_taco}
-                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-normal focus:border-emerald-500/40 transition-all"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.dashboard.category}</label>
-                    <select
-                      value={storeForm.category}
-                      onChange={(e) => setStoreForm({ ...storeForm, category: e.target.value as any })}
-                      className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-black text-slate-900 dark:text-white cursor-pointer"
-                    >
-                      {storeCategories.map((c) => (
-                        <option key={c} value={c}>{c}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.dashboard.price_mxn}</label>
-                    <input
-                      type="number"
-                      value={storeForm.price}
-                      onChange={(e) => setStoreForm({ ...storeForm, price: Number(e.target.value) })}
-                      className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 outline-none text-sm font-black focus:border-emerald-500/40 transition-all"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
-                  <div>
-                    <div className="text-sm font-black text-slate-900 dark:text-white">{t.dashboard.availability}</div>
-                    <div className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">{t.dashboard.show_in_pos}</div>
-                  </div>
-                  <button
-                    onClick={() => setStoreForm({ ...storeForm, available: !storeForm.available })}
-                    className={cn(
-                      "w-12 h-7 rounded-full border transition-all relative",
-                      storeForm.available
-                        ? "bg-emerald-600 border-emerald-600"
-                        : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800"
-                    )}
-                  >
-                    <div className={cn("w-5 h-5 rounded-full bg-white absolute top-1 transition-all shadow-sm", storeForm.available ? "left-6" : "left-1")} />
-                  </button>
-                </div>
-
-                <button
-                  onClick={storeSave}
-                  className="w-full py-5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-emerald-500/20 active:scale-95 transition-all flex items-center justify-center gap-3"
-                >
-                  <Save className="w-4 h-4" /> {t.dashboard.save_changes}
-                </button>
-              </div>
             </motion.div>
           </motion.div>
         )}

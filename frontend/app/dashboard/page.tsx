@@ -47,6 +47,7 @@ import { PredictionView } from "@/components/dashboard/ai/PredictionView";
 import { StaffView } from "@/components/dashboard/StaffView";
 import { AccountView } from "@/components/dashboard/AccountView";
 import { TicketModal } from "@/components/dashboard/shared/TicketModal";
+import { ProductEditorModal } from "@/components/dashboard/shared/ProductEditorModal";
 
 // Hooks
 import { useDashboard } from "@/hooks/useDashboard";
@@ -519,6 +520,8 @@ export default function Dashboard() {
               invCommit={dashboard.invCommit}
               invClose={() => dashboard.setInvEditorOpen(false)}
               invMovements={dashboard.invMovements}
+              storeOpenCreate={dashboard.storeOpenCreate}
+              storeOpenEdit={dashboard.storeOpenEdit}
             />
           )}
           {activeTab === "suppliers" && (
@@ -604,6 +607,18 @@ export default function Dashboard() {
       <TicketModal 
         sale={dashboard.lastSaleForTicket} 
         onClose={() => dashboard.setLastSaleForTicket(null)} 
+      />
+
+      <ProductEditorModal
+        t={t}
+        isOpen={dashboard.storeEditorOpen}
+        editingId={dashboard.storeEditingId}
+        form={dashboard.storeForm}
+        setForm={dashboard.setStoreForm}
+        categories={dashboard.storeCategories}
+        onSave={dashboard.storeSave}
+        onClose={() => dashboard.setStoreEditorOpen(false)}
+        lang={lang}
       />
     </div>
   );

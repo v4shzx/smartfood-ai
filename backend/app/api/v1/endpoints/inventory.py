@@ -16,6 +16,7 @@ class InventoryItemResponse(BaseModel):
     onHand: int
     min: int
     unit: str
+    price: float
     updatedAt: datetime
 
     class Config:
@@ -36,6 +37,7 @@ async def get_inventory(
             onHand=p.on_hand,
             min=p.min_stock,
             unit="pcs",
+            price=p.price,
             updatedAt=p.updated_at or datetime.now()
         ) for p in products
     ]
