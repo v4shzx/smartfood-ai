@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
+import { useTheme } from "next-themes";
 
 interface AccountViewProps {
   t: any;
@@ -30,29 +31,34 @@ interface AccountViewProps {
 
 export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: AccountViewProps) {
   const { lang } = useI18n();
+  const { theme, setTheme } = useTheme();
+  
   const [userName, setUserName] = React.useState("User");
+  const [measurementUnit, setMeasurementUnit] = React.useState("metric");
   const [email, setEmail] = React.useState("admin@smartfood.ai");
   const [isEditingEmail, setIsEditingEmail] = React.useState(false);
   const [tempEmail, setTempEmail] = React.useState(email);
 
   React.useEffect(() => {
     const storedName = localStorage.getItem("smartfood_user_name");
-    const storedEmail = localStorage.getItem("smartfood_user_id"); // Usually we use email, but let's check what's in localStorage
+    const storedUnit = localStorage.getItem("smartfood_measurement_unit");
+    const storedEmail = localStorage.getItem("smartfood_user_id");
     
     // In our login, we save smartfood_user_name and smartfood_user_id (which might be the email or UUID)
     // Let's try to find if we have email specifically or use ID as fallback for display
     if (storedName) setUserName(storedName);
+    if (storedUnit) setMeasurementUnit(storedUnit);
     
-    // Let's use a safer approach for email if it's not explicitly stored
-    // For now use what we have, but ideally we store email too.
-    // Based on login/page.tsx:
-    // localStorage.setItem("smartfood_user_id", data.user_id);
-    // localStorage.setItem("smartfood_user_name", data.full_name);
     if (storedEmail && storedEmail.includes('@')) {
       setEmail(storedEmail);
       setTempEmail(storedEmail);
     }
   }, []);
+
+  const handleUnitChange = (unit: string) => {
+    setMeasurementUnit(unit);
+    localStorage.setItem("smartfood_measurement_unit", unit);
+  };
 
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
@@ -685,20 +691,60 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30">
+              <div className="p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30 transition-all">
                 <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">{t.dashboard.visual_mode}</div>
-                <div className="flex gap-2">
-                  <button className="flex-1 py-3 px-2 rounded-xl bg-white dark:bg-slate-950 border-2 border-emerald-600 text-[10px] font-black uppercase tracking-wider text-emerald-600 outline-none">{t.dashboard.system_auto}</button>
-                  <button className="flex-1 py-3 px-2 rounded-xl bg-white/20 border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400 outline-none">{t.dashboard.light}</button>
-                  <button className="flex-1 py-3 px-2 rounded-xl bg-white/20 border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400 outline-none">{t.dashboard.dark}</button>
+                <div className="flex gap-2 p-1 bg-white dark:bg-slate-950 rounded-2xl border border-slate-100 dark:border-slate-800">
+                  <button 
+                    onClick={() => setTheme('system')}
+                    className={cn(
+                      "flex-1 py-3 px-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all outline-none",
+                      theme === 'system' ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20" : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                    )}
+                  >
+                    {t.dashboard.system_auto}
+                  </button>
+                  <button 
+                    onClick={() => setTheme('light')}
+                    className={cn(
+                      "flex-1 py-3 px-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all outline-none",
+                      theme === 'light' ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20" : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                    )}
+                  >
+                    {t.dashboard.light}
+                  </button>
+                  <button 
+                    onClick={() => setTheme('dark')}
+                    className={cn(
+                      "flex-1 py-3 px-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all outline-none",
+                      theme === 'dark' ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20" : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                    )}
+                  >
+                    {t.dashboard.dark}
+                  </button>
                 </div>
               </div>
 
-              <div className="p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30">
+              <div className="p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30 transition-all">
                 <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">{t.dashboard.measurement_units}</div>
-                <div className="flex gap-2">
-                  <button className="flex-1 py-3 px-2 rounded-xl bg-white dark:bg-slate-950 border-2 border-emerald-600 text-[10px] font-black uppercase tracking-wider text-emerald-600 outline-none">{t.dashboard.metric_kg}</button>
-                  <button className="flex-1 py-3 px-2 rounded-xl bg-white/20 border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400 outline-none">{t.dashboard.imperial_lb}</button>
+                <div className="flex gap-2 p-1 bg-white dark:bg-slate-950 rounded-2xl border border-slate-100 dark:border-slate-800">
+                  <button 
+                    onClick={() => handleUnitChange('metric')}
+                    className={cn(
+                      "flex-1 py-3 px-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all outline-none",
+                      measurementUnit === 'metric' ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20" : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                    )}
+                  >
+                    {t.dashboard.metric_kg}
+                  </button>
+                  <button 
+                    onClick={() => handleUnitChange('imperial')}
+                    className={cn(
+                      "flex-1 py-3 px-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all outline-none",
+                      measurementUnit === 'imperial' ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20" : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                    )}
+                  >
+                    {t.dashboard.imperial_lb}
+                  </button>
                 </div>
               </div>
             </div>
