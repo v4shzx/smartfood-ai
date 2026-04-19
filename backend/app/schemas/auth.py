@@ -12,3 +12,8 @@ class LoginResponse(BaseModel):
     role: str
     subscription_tier: str = "basico"
     status: str = "success"
+
+class RegisterRequest(BaseModel):
+    email: EmailStr
+    password: str
+    full_name: str

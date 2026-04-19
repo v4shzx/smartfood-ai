@@ -3,9 +3,49 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.core.database import get_db
 from app.models.cafeteria import SchoolUser
-from app.schemas.auth import LoginRequest, LoginResponse
+import uuid
+from app.schemas.auth import LoginRequest, LoginResponse, RegisterRequest
 
 router = APIRouter()
+
+@router.post("/register", response_model=LoginResponse)
+async def register(
+    reg_data: RegisterRequest,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Create a new user. Default tier is 'basico'.
+    """
+    # Check if user already exists
+    existing_query = select(SchoolUser).where(SchoolUser.email == reg_data.email)
+    existing_result = await db.execute(existing_query)
+    if existing_result.scalar_one_or_none():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered"
+        )
+
+    new_user = SchoolUser(
+        id=str(uuid.uuid4()),
+        email=reg_data.email,
+        full_name=reg_data.full_name,
+        password_hash=reg_data.password,  # Demo purposes: direct password storage
+        role="admin",  # Default role for owners
+        subscription_tier="basico"
+    )
+
+    db.add(new_user)
+    await db.commit()
+    await db.refresh(new_user)
+
+    return {
+        "user_id": new_user.id,
+        "email": new_user.email,
+        "full_name": new_user.full_name,
+        "role": new_user.role,
+        "subscription_tier": new_user.subscription_tier,
+        "status": "success"
+    }
 
 @router.post("/login", response_model=LoginResponse)
 async def login(
