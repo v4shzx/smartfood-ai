@@ -61,6 +61,29 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
               : "Gestión simplificada de ventas y reportes base."}
           </p>
         </motion.div>
+
+        {isProOrAbove && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }} 
+            animate={{ opacity: 1, scale: 1 }}
+            onClick={() => setActiveTab("prediction")}
+            className="group cursor-pointer relative overflow-hidden bg-linear-to-br from-emerald-600 to-teal-700 rounded-3xl p-4 shadow-lg shadow-emerald-600/20 flex items-center gap-4 min-w-[560px] hover:scale-[1.02] transition-all"
+          >
+            <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:rotate-12 transition-transform">
+              <Brain className="w-12 h-12" />
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+              <Zap className="w-5 h-5 text-white" />
+            </div>
+            <div className="min-w-0 pr-4">
+              <div className="text-[10px] font-black text-emerald-100 uppercase tracking-widest leading-none mb-1">IA: Predicción para Mañana</div>
+              <div className="text-sm font-bold text-white truncate">
+                {kpis.topStudent !== "N/A" ? kpis.topStudent : "Calculando tendencia..."}
+              </div>
+              <div className="text-[10px] text-emerald-50/70 font-medium">Máxima probabilidad de venta • Ver análisis</div>
+            </div>
+          </motion.div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -143,41 +166,6 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
           </div>
         )}
       </div>
-
-      {isProOrAbove && (
-        <div className="grid grid-cols-1 gap-8 pb-10">
-          <div className="bg-linear-to-br from-emerald-600 to-teal-700 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
-            <div className="absolute top-0 right-0 p-8 opacity-20">
-              <Brain className="w-32 h-32" />
-            </div>
-            <div className="relative z-10 h-full flex flex-col">
-              <div className="flex items-center gap-2 mb-8 text-emerald-100 font-normal text-[12px] uppercase tracking-[0.2em]">
-                <Zap className="w-4 h-4" /> Predicciones recientes
-              </div>
-              <div className="space-y-4">
-                {menuItems.length > 0 ? menuItems.map((m, i) => (
-                  <div key={i} className="p-4 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="min-w-0">
-                        <div className="text-sm font-black truncate">{m.dish_name}</div>
-                        <div className="text-emerald-50/85 text-[12px] leading-snug mt-1">{m.description}</div>
-                      </div>
-                      <div className="shrink-0 text-[10px] font-normal uppercase tracking-[0.2em] bg-white/15 px-2 py-1 rounded-lg">{m.day_of_week}</div>
-                    </div>
-                  </div>
-                )) : (
-                  <div className="text-center py-4 text-emerald-100/60 font-normal">No hay menú publicado para esta semana.</div>
-                )}
-              </div>
-              <div className="mt-8">
-                <button onClick={() => setActiveTab("prediction")} className="bg-white text-emerald-700 px-6 py-3 rounded-2xl font-normal text-xs uppercase tracking-widest hover:bg-emerald-50 transition-colors shadow-xl">
-                  Ver prediccion IA
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }
