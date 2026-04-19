@@ -36,13 +36,32 @@ fi
 
 # 3. Create Schema and Seed data
 echo -e "\n[3/4] Ejecutando esquema y semillas (SQL)..."
-docker exec -i smartfood_db_dev psql -U $DB_USER -d $DB_NAME < backend/db/sql/schema.sql > /dev/null
-docker exec -i smartfood_db_dev psql -U $DB_USER -d $DB_NAME < backend/db/sql/seed_data.sql > /dev/null
+docker exec -i smartfood_db_dev psql -U $DB_USER -d $DB_NAME < backend/db/sql/schema.sql
+docker exec -i smartfood_db_dev psql -U $DB_USER -d $DB_NAME < backend/db/sql/seed_data.sql
 echo -e "\033[0;32m✅ Base de datos inicializada correctamente.\033[0m"
 
 # 4. Start Application Services
 echo -e "\n[4/4] Levantando Backend y Frontend..."
 docker compose -f docker-compose.dev.yml up -d
+
+# 5. Wait for Backend and run Python seed for rich demo data
+echo -e "\n[5/4] Inyectando datos demo avanzados (Ventas, Mermas)..."
+MAX_RETRIES=30
+COUNT=0
+until curl --output /dev/null --silent --fail http://localhost:8000/health; do
+    if [ $COUNT -eq $MAX_RETRIES ]; then
+      echo -e "\033[0;31m❌ Error: El backend no inició a tiempo para inyectar semillas avanzadas.\033[0m"
+      break
+    fi
+    printf '.'
+    sleep 2
+    COUNT=$((COUNT+1))
+done
+
+if [ $COUNT -lt $MAX_RETRIES ]; then
+    echo -e "\n\033[0;32m✅ Backend listo. Ejecutando seed_demo.py...\033[0m"
+    docker exec smartfood_backend_dev python -m app.seed_demo
+fi
 
 echo -e "\033[0;32m\n✨ ¡ENTORNO LISTO!\033[0m"
 echo "----------------------------------"

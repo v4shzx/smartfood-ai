@@ -9,6 +9,7 @@ from app.models.product import Product
 from app.models.supplier import Supplier
 from app.models.staff import Staff
 from app.models.payment import PaymentMethod
+from app.models.category import Category
 
 async def seed():
     async with engine.begin() as conn:
@@ -40,10 +41,22 @@ async def seed():
                 )
                 session.add(u)
             
-            await session.commit() # Commit users FIRST to avoid FK issues
+            await session.commit()
             print("Users committed.")
+        
+        # 1.5 Categories (Only for u_demo)
+        cat_count_res = await session.execute(select(func.count(Category.id)))
+        if cat_count_res.scalar() == 0:
+            print("Seeding categories...")
+            categories_data = ["Comida", "Bebidas", "Snacks", "Desayuno", "Frutas", "Postres"]
+            for i, cat_name in enumerate(categories_data):
+                session.add(Category(id=f"cat_{i}", owner_id="u_demo", name=cat_name))
+            await session.commit()
 
-            # 2. Staff (Only for u_demo)
+        # 2. Staff (Only for u_demo)
+        staff_count_res = await session.execute(select(func.count(Staff.id)))
+        if staff_count_res.scalar() == 0:
+            print("Seeding staff...")
             staff_data = [
                 ("s_w1", "u_demo", "Pedro Gómez", "Cajero", "pedro@smartfood.ai"),
                 ("s_w2", "u_demo", "Chef Rodrigo", "Cocina", "rodrigo@smartfood.ai"),
@@ -51,8 +64,12 @@ async def seed():
             ]
             for sid, oid, name, role, email in staff_data:
                 session.add(Staff(id=sid, owner_id=oid, full_name=name, role=role, email=email))
+            await session.commit()
 
-            # 3. Inventory Items (Only for u_demo)
+        # 3. Inventory Items (Only for u_demo)
+        prod_count_res = await session.execute(select(func.count(Product.id)))
+        if prod_count_res.scalar() == 0:
+            print("Seeding products...")
             items_demo = [
                 ("p1", "Sándwich de jamón y queso", "Comida", 35.0),
                 ("p2", "Jugo natural de naranja", "Bebidas", 25.0),
@@ -67,11 +84,14 @@ async def seed():
             ]
 
             for pid, name, cat, price in items_demo:
-                # Set p1 to 10 items intentionally to trigger critical stock alert
                 stock = 10 if pid == "p1" else random.randint(20, 50)
                 session.add(Product(id=pid, owner_id="u_demo", name=name, category=cat, price=price, available=True, on_hand=stock))
+            await session.commit()
 
-            # 4. Default Meal Plans
+        # 4. Default Meal Plans
+        plan_count_res = await session.execute(select(func.count(MealPlan.id)))
+        if plan_count_res.scalar() == 0:
+            print("Seeding meal plans...")
             plans = [
                 MealPlan(id="plan_basico_1", owner_id="u_demo", name="Básico", price_mxn=0, days_per_week=5),
                 MealPlan(id="plan_prof_1", owner_id="u_demo", name="Profesional", price_mxn=299, days_per_week=5),
@@ -79,23 +99,28 @@ async def seed():
             ]
             for plan in plans:
                 session.add(plan)
+            await session.commit()
             
-            # 5. Suppliers (Only for u_demo)
+        # 5. Suppliers (Only for u_demo)
+        sup_count_res = await session.execute(select(func.count(Supplier.id)))
+        if sup_count_res.scalar() == 0:
+            print("Seeding suppliers...")
             suppliers_data = [
                 ("s1", "u_demo", "Cárnicos Express", "Juan Pérez", "555-0123", "ventas@carnicosexp.com", 1, 4.8),
                 ("s2", "u_demo", "Tortillería La Abuela", "Doña María", "555-9876", "pedidos@laabuela.mx", 0, 5.0),
             ]
             for sid, oid, name, contact, phone, email, lead, rating in suppliers_data:
                 session.add(Supplier(id=sid, owner_id=oid, name=name, contact=contact, phone=phone, email=email, lead_days=lead, rating=rating))
+            await session.commit()
 
-            # 6. Payment Methods (Only for u_demo)
+        # 6. Payment Methods (Only for u_demo)
+        pm_count_res = await session.execute(select(func.count(PaymentMethod.id)))
+        if pm_count_res.scalar() == 0:
+            print("Seeding payment methods...")
             session.add(PaymentMethod(id="pm_1", user_id="u_demo", brand="Visa", last4="4242", exp_month=12, exp_year=2026, is_primary=True))
             session.add(PaymentMethod(id="pm_2", user_id="u_demo", brand="Mastercard", last4="8888", exp_month=10, exp_year=2025, is_primary=False))
-
             await session.commit()
-            print("Initial entities committed.")
-        else:
-            print(f"Users already exist ({user_count}), skipping initial seed.")
+
 
         # 5. Simulate sales (Only for u_demo)
         print("Simulating sales for u_demo...")
