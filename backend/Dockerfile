@@ -14,4 +14,5 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# Script para asegurar que la DB esté lista, migrada y con datos
+CMD ["sh", "-c", "alembic upgrade head && python -m app.seed_demo && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
