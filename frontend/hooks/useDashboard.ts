@@ -3,6 +3,8 @@
 import { useState, useMemo, useEffect } from "react";
 import { formatCurrencyMXN } from "@/lib/dashboard-utils";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+
 export function useDashboard(t: any) {
   const [subscriptionTier, setSubscriptionTier] = useState<string>("basico");
 
@@ -113,7 +115,6 @@ export function useDashboard(t: any) {
   const [lastSaleForTicket, setLastSaleForTicket] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
   useEffect(() => {
     async function fetchData() {
@@ -123,23 +124,34 @@ export function useDashboard(t: any) {
         const tier = localStorage.getItem("smartfood_subscription_tier") || "basico";
         setSubscriptionTier(tier.toLowerCase());
 
-        const fetchJson = (url: string) => fetch(url).then(r => r.ok ? r.json() : []);
-        const fetchSingleJson = (url: string) => fetch(url).then(r => r.ok ? r.json() : null);
+        const fetchWithLogging = async (url: string, defaultValue: any) => {
+          try {
+            const r = await fetch(url);
+            if (!r.ok) {
+              console.warn(`Fetch failed for ${url}: ${r.status}`);
+              return defaultValue;
+            }
+            return await r.json();
+          } catch (e) {
+            console.error(`Network error for ${url}:`, e);
+            return defaultValue;
+          }
+        };
 
         const [menuRes, plansRes, statsRes, staffRes, productsRes, salesRes, invRes, movRes, supRes, seriesRes, trendsRes, predRes, catRes] = await Promise.all([
-          fetchJson(`${API_URL}/cafeteria/menu?owner_id=${sessionUserId}`),
-          fetchJson(`${API_URL}/cafeteria/plans?owner_id=${sessionUserId}`),
-          fetchSingleJson(`${API_URL}/stats/?owner_id=${sessionUserId}`),
-          fetchJson(`${API_URL}/staff/?owner_id=${sessionUserId}`),
-          fetchJson(`${API_URL}/products/?owner_id=${sessionUserId}`),
-          fetchJson(`${API_URL}/sales/?owner_id=${sessionUserId}`),
-          fetchJson(`${API_URL}/inventory/?owner_id=${sessionUserId}`),
-          fetchJson(`${API_URL}/inventory/movements?owner_id=${sessionUserId}`),
-          fetchJson(`${API_URL}/suppliers/?owner_id=${sessionUserId}`),
-          fetchJson(`${API_URL}/stats/sales-series?owner_id=${sessionUserId}`),
-          fetchJson(`${API_URL}/stats/trends?owner_id=${sessionUserId}`),
-          fetchJson(`${API_URL}/stats/prediction?owner_id=${sessionUserId}`),
-          fetchJson(`${API_URL}/categories/?owner_id=${sessionUserId}`)
+          fetchWithLogging(`${API_URL}/cafeteria/menu?owner_id=${sessionUserId}`, []),
+          fetchWithLogging(`${API_URL}/cafeteria/plans?owner_id=${sessionUserId}`, []),
+          fetchWithLogging(`${API_URL}/stats/?owner_id=${sessionUserId}`, null),
+          fetchWithLogging(`${API_URL}/staff/?owner_id=${sessionUserId}`, []),
+          fetchWithLogging(`${API_URL}/products/?owner_id=${sessionUserId}`, []),
+          fetchWithLogging(`${API_URL}/sales/?owner_id=${sessionUserId}`, []),
+          fetchWithLogging(`${API_URL}/inventory/?owner_id=${sessionUserId}`, []),
+          fetchWithLogging(`${API_URL}/inventory/movements?owner_id=${sessionUserId}`, []),
+          fetchWithLogging(`${API_URL}/suppliers/?owner_id=${sessionUserId}`, []),
+          fetchWithLogging(`${API_URL}/stats/sales-series?owner_id=${sessionUserId}`, []),
+          fetchWithLogging(`${API_URL}/stats/trends?owner_id=${sessionUserId}`, []),
+          fetchWithLogging(`${API_URL}/stats/prediction?owner_id=${sessionUserId}`, []),
+          fetchWithLogging(`${API_URL}/categories/?owner_id=${sessionUserId}`, [])
         ]);
 
         setMenuItems(menuRes);
@@ -151,19 +163,19 @@ export function useDashboard(t: any) {
         setSalesHistory(salesRes);
         setInvItems(invRes);
         setInvMovements(movRes);
-        setSuppliers(supRes.map((s: any) => ({ ...s, leadDays: s.lead_days })));
+        setSuppliers(supRes.map((s: any) => ({ ...s, leadDays: s.lead_days || s.leadDays || 3 })));
         setSalesSeries(seriesRes);
         setTrendsInsights(trendsRes);
         setPrediction(predRes);
         setBasePrediction(predRes);
       } catch (error) {
-        console.error("Dashboard fetch error:", error);
+        console.error("Dashboard total fetch error:", error);
       } finally {
         setIsLoading(false);
       }
     }
     fetchData();
-  }, [API_URL]);
+  }, []);
   
   // Computed Values
   const storeCategories = useMemo(() => {
@@ -239,6 +251,44 @@ export function useDashboard(t: any) {
   const posTotal = useMemo(() => {
     return Math.max(0, posSubtotal - posDiscount);
   }, [posSubtotal, posDiscount]);
+
+  const chartsSales = useMemo(() => {
+    const days = chartsRange === "7d" ? 7 : chartsRange === "30d" ? 30 : 90;
+    const now = new Date();
+    const data = [];
+
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(now.getDate() - i);
+      const dayStr = d.toISOString().split('T')[0];
+      
+      const daySales = salesHistory.filter(s => s.ts?.split('T')[0] === dayStr);
+      const total = daySales.reduce((acc, s) => acc + (s.total || 0), 0);
+      
+      data.push({
+        label: days > 30 ? dayStr.slice(5) : d.toLocaleDateString(undefined, { weekday: 'short' }),
+        sales: total,
+        tickets: daySales.length
+      });
+    }
+    return data;
+  }, [salesHistory, chartsRange]);
+
+  const chartsTopProducts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    salesHistory.forEach(s => {
+      if (Array.isArray(s.items_detail)) {
+        s.items_detail.forEach((item: any) => {
+          counts[item.name] = (counts[item.name] || 0) + item.quantity;
+        });
+      }
+    });
+
+    return Object.entries(counts)
+      .map(([name, val]) => ({ name, val }))
+      .sort((a, b) => b.val - a.val)
+      .slice(0, 5);
+  }, [salesHistory]);
 
   // Actions
   const addToCart = (product: any) => {
@@ -630,7 +680,7 @@ export function useDashboard(t: any) {
     salesDateFrom, setSalesDateFrom, salesDateTo, setSalesDateTo,
     salesFiltered, selectedSaleId, setSelectedSaleId,
     salesHistory, trendsInsights, activeTitle, products,
-    kpis, salesSeries,
+    kpis, salesSeries, chartsSales, chartsTopProducts,
     menuItems, mealPlans, isLoading, subscriptionTier,
     lastSaleForTicket, setLastSaleForTicket,
     handleSimulate, 
