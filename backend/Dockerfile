@@ -13,8 +13,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 ENV PYTHONPATH=/code
+ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8000
 
 # Script para asegurar que la DB esté lista, migrada y con datos
-CMD ["sh", "-c", "alembic upgrade head && python -m app.seed_demo && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# Añadimos un chequeo de archivos para depuración en el log
+CMD ["sh", "-c", "ls -R /code/app && alembic upgrade head && python -m app.seed_demo && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
