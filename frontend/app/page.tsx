@@ -209,7 +209,7 @@ function Hero() {
 
         <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
           className="text-5xl md:text-7xl font-black tracking-tight text-slate-900 dark:text-white max-w-4xl leading-[1.1]">
-          {t.h1.split(". ").map((phrase: string, i: number) => {
+          {(t.h1 as string).split(". ").map((phrase: string, i: number) => {
             const words = phrase.split(" ");
             const firstWord = words[0];
             const rest = words.slice(1).join(" ");
