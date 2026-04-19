@@ -8,6 +8,7 @@ from app.models.sales import Sale, Waste
 from app.models.product import Product
 from app.models.supplier import Supplier
 from app.models.staff import Staff
+from app.models.payment import PaymentMethod
 
 async def seed():
     async with engine.begin() as conn:
@@ -84,6 +85,10 @@ async def seed():
             ]
             for sid, oid, name, contact, phone, email, lead, rating in suppliers_data:
                 session.add(Supplier(id=sid, owner_id=oid, name=name, contact=contact, phone=phone, email=email, lead_days=lead, rating=rating))
+
+            # 6. Payment Methods (Only for u_demo)
+            session.add(PaymentMethod(id="pm_1", user_id="u_demo", brand="Visa", last4="4242", exp_month=12, exp_year=2026, is_primary=True))
+            session.add(PaymentMethod(id="pm_2", user_id="u_demo", brand="Mastercard", last4="8888", exp_month=10, exp_year=2025, is_primary=False))
 
             await session.commit()
             print("Initial entities committed.")

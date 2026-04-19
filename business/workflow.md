@@ -1,3 +1,4 @@
+
 # Contexto
 SmartFood AI es una plataforma de suscripcion (SaaS) que cuenta con 3 vistas principales. 
 

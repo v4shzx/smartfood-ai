@@ -50,3 +50,9 @@ INSERT INTO menu_items (id, day_of_week, dish_name, description, calories, is_ve
 ('m4', 'Jueves', 'Hamburguesa Mixta', 'Hamburguesa de res y cerdo con papas fritas.', 750, FALSE),
 ('m5', 'Viernes', 'Filete de Pescado', 'Filete de pescado al limón con verduras al vapor.', 400, FALSE)
 ON CONFLICT (id) DO NOTHING;
+
+-- 7. Payment Methods
+INSERT INTO payment_methods (id, user_id, brand, last4, exp_month, exp_year, is_primary) VALUES
+('pm_1', 'u_demo', 'Visa', '4242', 12, 2026, TRUE),
+('pm_2', 'u_demo', 'Mastercard', '8888', 10, 2025, FALSE)
+ON CONFLICT (id) DO NOTHING;
