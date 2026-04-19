@@ -1293,10 +1293,10 @@ export const T = {
   },
 } as const;
 
-export type Translations = typeof T["en"];
+export type Translations = typeof T.es | typeof T.en | typeof T.fr;
 
 const LangCtx = createContext<{ lang: Lang; t: Translations; setLang: (l: Lang) => void }>({
-  lang: "es", t: T["es"] as unknown as Translations, setLang: () => { },
+  lang: "es", t: T["es"], setLang: () => { },
 });
 
 export function LangProvider({ children }: { children: React.ReactNode }) {
