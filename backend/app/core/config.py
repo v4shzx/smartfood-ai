@@ -37,12 +37,14 @@ class Settings(BaseSettings):
                 url = url.replace("postgres://", "postgresql+asyncpg://")
             
             # If it's a production URL (contains a cloud host), ensure SSL is handled
-            # asyncpg uses 'ssl' parameter instead of 'sslmode'
-            if "railway.app" in url or "amazonaws.com" in url:
+            if any(host in url for host in ["railway.app", "amazonaws.com", "elephantsql.com"]):
                 if "ssl=" not in url:
                     separator = "&" if "?" in url else "?"
                     url = f"{url}{separator}ssl=True"
             return url
+        
+        # Fallback to individual components
+        print(f"WARNING: DATABASE_URL not found. Falling back to {self.POSTGRES_SERVER}")
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}/{self.POSTGRES_DB}"
 
     model_config = SettingsConfigDict(case_sensitive=True, env_file=".env")
