@@ -2,7 +2,7 @@
 
 -- 1. Users (Admins/Owners)
 INSERT INTO users (id, full_name, email, password_hash, role, subscription_tier) VALUES
-('u_demo', 'Comedor DM', 'comedordm@gmail.com', '123456', 'admin', 'profesional'),
+('u_demo', 'Comedor DM', 'comedordm@gmail.com', '123456', 'admin', 'empresarial'),
 ('u_demo_basico', 'Demo Básico', 'demo_basico@smartfood.ai', '123456', 'admin', 'basico')
 ON CONFLICT (id) DO NOTHING;
 

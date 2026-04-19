@@ -53,7 +53,8 @@ interface HomeViewProps {
 }
 
 export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscriptionTier }: HomeViewProps) {
-  const isProOrAbove = subscriptionTier === "profesional" || subscriptionTier === "empresarial";
+  const isProOrAbove = subscriptionTier === "profesional" || subscriptionTier === "empresarial" || subscriptionTier === "administrador";
+  const isEnterpriseOrAbove = subscriptionTier === "empresarial" || subscriptionTier === "administrador";
 
   // Real-time weather logic
   const [weather, setWeather] = React.useState({ temp: 24, status: t.dashboard.sunny });
@@ -125,7 +126,7 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
           trend={kpis.todayRevenue >= kpis.yesterdayRevenue ? "+Trend" : "-Trend"}
         />
         <StatCard title={t.dashboard.top_product} value={kpis.topProduct} subtitle={`${kpis.topProductQty} ${t.dashboard.units_sold}`} icon={<Store className="w-6 h-6 text-amber-600" />} />
-        {isProOrAbove ? (
+        {isEnterpriseOrAbove ? (
           <StatCard title={t.dashboard.critical_stock} value={`${kpis.criticalInventory.items} items`} subtitle={`Alerta: ${kpis.criticalInventory.sku}`} icon={<AlertTriangle className="w-6 h-6 text-rose-600" />} trend="Alerta" />
         ) : (
           <StatCard title={t.dashboard.reports} value={`${kpis.weekRevenue > 0 ? "Activo" : "Sin Datos"}`} subtitle="Resumen semanal" icon={<BarChart3 className="w-6 h-6 text-indigo-600" />} />
@@ -168,8 +169,8 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
         </motion.div>
       )}
 
-      <div className={cn("grid grid-cols-1 gap-8", isProOrAbove ? "lg:grid-cols-2" : "lg:grid-cols-1")}>
-        <div className={cn("bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm", !isProOrAbove && "lg:col-span-1")}>
+      <div className={cn("grid grid-cols-1 gap-8", isEnterpriseOrAbove ? "lg:grid-cols-2" : "lg:grid-cols-1")}>
+        <div className={cn("bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm", !isEnterpriseOrAbove && "lg:col-span-1")}>
           <div className="flex items-center justify-between mb-8">
             <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.sales_performance}</h3>
             <div className="text-[10px] font-normal text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">{t.dashboard.last_7_days} (MXN)</div>
@@ -193,7 +194,7 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
           </div>
         </div>
 
-        {isProOrAbove && (
+        {isEnterpriseOrAbove && (
           <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm overflow-hidden">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
               <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm truncate max-w-[150px] sm:max-w-none">{t.dashboard.inventory_alerts}</h3>

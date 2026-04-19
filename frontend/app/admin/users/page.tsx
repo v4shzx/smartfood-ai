@@ -96,25 +96,33 @@ export default function AdminUsersPage() {
 
       <main className="max-w-7xl mx-auto px-8 mt-12">
         {/* Stats Summary */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mb-16">
           {[
-            { label: "Total Usuarios", value: users.length, icon: <Users className="w-6 h-6" />, color: "bg-slate-900" },
-            { label: "Plan Profesional", value: users.filter(u => u.subscription_tier === "profesional").length, icon: <Shield className="w-6 h-6" />, color: "bg-orange-500" },
-            { label: "Plan Básico", value: users.filter(u => u.subscription_tier === "basico").length, icon: <CreditCard className="w-6 h-6" />, color: "bg-emerald-500" },
+            { label: "Total Usuarios", value: users.length, icon: <Users className="w-5 h-5" />, color: "bg-slate-900", subtitle: "Registros totales" },
+            { label: "Administradores", value: users.filter(u => u.subscription_tier === "administrador").length, icon: <Shield className="w-5 h-5" />, color: "bg-purple-600", subtitle: "Acceso total" },
+            { label: "Empresarial", value: users.filter(u => u.subscription_tier === "empresarial").length, icon: <Shield className="w-5 h-5" />, color: "bg-blue-600", subtitle: "Plan corporativo" },
+            { label: "Profesional", value: users.filter(u => u.subscription_tier === "profesional").length, icon: <Shield className="w-5 h-5" />, color: "bg-orange-500", subtitle: "SaaS Full Access" },
+            { label: "Básico", value: users.filter(u => u.subscription_tier === "basico").length, icon: <CreditCard className="w-5 h-5" />, color: "bg-emerald-500", subtitle: "Funciones base" },
           ].map((stat, i) => (
             <motion.div 
               key={i}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm flex items-center justify-between"
+              whileHover={{ y: -5 }}
+              className="bg-white p-6 rounded-[2.5rem] border border-slate-200 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/50 group"
             >
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">{stat.label}</p>
-                <div className="text-4xl font-black tracking-tighter text-slate-900">{stat.value}</div>
+              <div className="flex justify-between items-start mb-6">
+                <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg transition-transform group-hover:scale-110", stat.color)}>
+                  {stat.icon}
+                </div>
+                <div className="w-1.5 h-1.5 rounded-full bg-slate-200 group-hover:bg-emerald-500 transition-colors mt-2" />
               </div>
-              <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg", stat.color)}>
-                {stat.icon}
+              
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1 group-hover:text-slate-600 transition-colors">{stat.label}</p>
+                <div className="text-3xl font-black tracking-tight text-slate-900 mb-1">{stat.value}</div>
+                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{stat.subtitle}</p>
               </div>
             </motion.div>
           ))}
@@ -155,9 +163,11 @@ export default function AdminUsersPage() {
                     <td className="px-8 py-6">
                       <div className={cn(
                         "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm",
+                        u.subscription_tier === "administrador" ? "bg-purple-50 text-purple-600" :
+                        u.subscription_tier === "empresarial" ? "bg-blue-50 text-blue-600" :
                         u.subscription_tier === "profesional" ? "bg-orange-50 text-orange-600" : "bg-emerald-50 text-emerald-600"
                       )}>
-                        {u.subscription_tier === "profesional" ? <Shield className="w-3 h-3" /> : <CreditCard className="w-3 h-3" />}
+                        {u.subscription_tier === "administrador" || u.subscription_tier === "profesional" || u.subscription_tier === "empresarial" ? <Shield className="w-3 h-3" /> : <CreditCard className="w-3 h-3" />}
                         {u.subscription_tier}
                       </div>
                     </td>

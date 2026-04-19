@@ -99,7 +99,8 @@ export default function Dashboard() {
 
     return list;
   }, [invCritical, kpis, t.dashboard, lang]);
-  const isProOrAbove = subscriptionTier === "profesional" || subscriptionTier === "empresarial";
+  const isProOrAbove = subscriptionTier === "profesional" || subscriptionTier === "empresarial" || subscriptionTier === "administrador";
+  const isEnterpriseOrAbove = subscriptionTier === "empresarial" || subscriptionTier === "administrador";
   const router = useRouter();
 
   const handleLogout = () => {
@@ -150,8 +151,8 @@ export default function Dashboard() {
                 onClick={() => setActiveTab("home")}
               />
               
-              {/* POS: Only for Pro+ */}
-              {isProOrAbove && (
+              {/* POS: Only for Enterprise+ */}
+              {isEnterpriseOrAbove && (
                 <SidebarItem
                   icon={<ShoppingCart className="w-5 h-5" />}
                   label={t.dashboard.pos}
@@ -170,8 +171,8 @@ export default function Dashboard() {
               />
             </div>
 
-            {/* Ops Section: Only for Pro+ */}
-            {isProOrAbove && (
+            {/* Ops Section: Only for Enterprise+ */}
+            {isEnterpriseOrAbove && (
               <div className="mt-8 mb-4">
                 {!isSidebarCollapsed && (
                   <div className="px-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">
@@ -236,13 +237,16 @@ export default function Dashboard() {
                 </>
               )}
 
-              <SidebarItem
-                icon={<Download className="w-5 h-5" />}
-                label={t.dashboard.reports}
-                active={activeTab === "reports"}
-                isCollapsed={isSidebarCollapsed}
-                onClick={() => setActiveTab("reports")}
-              />
+              {/* Reports: Only for Pro+ */}
+              {isProOrAbove && (
+                <SidebarItem
+                  icon={<Download className="w-5 h-5" />}
+                  label={t.dashboard.reports}
+                  active={activeTab === "reports"}
+                  isCollapsed={isSidebarCollapsed}
+                  onClick={() => setActiveTab("reports")}
+                />
+              )}
             </div>
 
             <div className="mt-8 mb-4">
@@ -252,8 +256,8 @@ export default function Dashboard() {
                 </div>
               )}
               
-              {/* Staff: Only for Pro+ */}
-              {isProOrAbove && (
+              {/* Staff: Only for Enterprise+ */}
+              {isEnterpriseOrAbove && (
                 <SidebarItem
                   icon={<Users className="w-5 h-5" />}
                   label={t.dashboard.staff}

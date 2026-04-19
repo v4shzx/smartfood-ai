@@ -61,7 +61,7 @@ export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
 
   const demoUsers = [
-    { id: "u_demo", name: "Admin Profesional", email: "comedordm@gmail.com", pass: "123456" },
+    { id: "u_demo", name: "Admin Empresarial", email: "comedordm@gmail.com", pass: "123456" },
     { id: "u_demo_basico", name: "Admin Básico", email: "demo_basico@smartfood.ai", pass: "123456" },
   ];
 
@@ -97,9 +97,15 @@ export default function LoginPage() {
       // Success: Save Session
       localStorage.setItem("smartfood_user_id", data.user_id);
       localStorage.setItem("smartfood_user_name", data.full_name);
+      localStorage.setItem("smartfood_user_role", data.role || "user");
       localStorage.setItem("smartfood_subscription_tier", data.subscription_tier || "basico");
       
-      router.push("/dashboard");
+      // MASTER PANEL Redirection logic
+      if (data.subscription_tier === "administrador") {
+        router.push("/admin/users");
+      } else {
+        router.push("/dashboard");
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -336,9 +342,6 @@ export default function LoginPage() {
           </p>
 
           <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-wrap justify-center gap-x-6 gap-y-2">
-            <Link href="/admin/users" className="text-xs font-black uppercase tracking-widest text-[#7C3AED] hover:text-[#4C1D95] transition-colors flex items-center gap-1.5">
-              <Shield className="w-3.5 h-3.5" /> Acceso Admin
-            </Link>
             <Link href="#" className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">{t.login.terms}</Link>
             <Link href="#" className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">{t.login.privacy}</Link>
             <Link href="#" className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">{t.login.security}</Link>
