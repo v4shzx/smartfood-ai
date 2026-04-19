@@ -96,11 +96,111 @@ async def get_sales_series(
 
 @router.get("/trends")
 async def get_trends(owner_id: Optional[str] = Query("u_demo"), db: AsyncSession = Depends(get_db)) -> Any:
-    return [
-        { "title": "Pico de demanda", "desc": "Los viernes entre 12 PM y 2 PM las ventas suben 45%." },
-        { "title": "Producto Estrella", "desc": "El Sándwich de jamón representa el 30% de tus ingresos." },
-        { "title": "Oportunidad Merma", "desc": "Se detectó un exceso en stock de Jugos los lunes." }
+    # 1. Peak Hour (Based on most frequent sales)
+    # Note: Using EXTRACT(HOUR FROM timestamp) which is standard in Postgres
+    query_hour = (
+        select(
+            func.extract('hour', Sale.timestamp).label('hour'),
+            func.count(Sale.id).label('count')
+        )
+        .where(Sale.user_id == owner_id)
+        .group_by(func.extract('hour', Sale.timestamp))
+        .order_by(desc('count'))
+        .limit(1)
+    )
+    res_hour = await db.execute(query_hour)
+    row_hour = res_hour.first()
+    if row_hour:
+        h = int(row_hour[0])
+        peak_hour_msg = f"A las {h}:00 hrs se registra el mayor flujo de clientes históricamente."
+    else:
+        peak_hour_msg = "Aún no hay suficientes datos para identificar picos de demanda."
+
+    # 2. Star Product (Highest revenue generator)
+    query_star = (
+        select(Product.name, func.sum(Sale.total_price).label('revenue'))
+        .join(Sale, Product.id == Sale.product_id)
+        .where(Sale.user_id == owner_id)
+        .group_by(Product.name)
+        .order_by(desc('revenue'))
+        .limit(1)
+    )
+    res_star = await db.execute(query_star)
+    row_star = res_star.first()
+    if row_star:
+        star_msg = f"El {row_star[0]} es tu producto estrella, liderando en generación de ingresos."
+    else:
+        star_msg = "Tus productos más populares aparecerán aquí una vez que comiencen las ventas."
+
+    # 3. Low Stock Alert
+    query_low = select(func.count(Product.id)).where(Product.on_hand <= Product.min_stock, Product.owner_id == owner_id)
+    res_low = await db.execute(query_low)
+    count_low = res_low.scalar() or 0
+    if count_low > 0:
+        low_stock_msg = f"Atención: Tienes {count_low} productos con stock crítico o agotado."
+    else:
+        low_stock_msg = "Niveles de inventario saludables. No se detectan faltantes críticos hoy."
+
+    # 4. Top Category
+    query_cat = (
+        select(Product.category, func.sum(Sale.total_price).label('revenue'))
+        .join(Sale, Product.id == Sale.product_id)
+        .where(Sale.user_id == owner_id)
+        .group_by(Product.category)
+        .order_by(desc('revenue'))
+        .limit(1)
+    )
+    res_cat = await db.execute(query_cat)
+    row_cat = res_cat.first()
+    top_category = row_cat[0] if row_cat else "General"
+
+    # 5. Peak Day
+    query_day = (
+        select(func.extract('dow', Sale.timestamp).label('day'), func.sum(Sale.total_price).label('revenue'))
+        .where(Sale.user_id == owner_id)
+        .group_by(func.extract('dow', Sale.timestamp))
+        .order_by(desc('revenue'))
+        .limit(1)
+    )
+    res_day = await db.execute(query_day)
+    row_day = res_day.first()
+    days_map = {0: "Domingo", 1: "Lunes", 2: "Martes", 3: "Miércoles", 4: "Jueves", 5: "Viernes", 6: "Sábado"}
+    peak_day_name = days_map.get(int(row_day[0]), "el fin de semana") if row_day else "días pico"
+
+    trends = [
+        { 
+            "title": "Pico de demanda", 
+            "desc": peak_hour_msg,
+            "category": "relevant"
+        },
+        { 
+            "title": "Producto Estrella", 
+            "desc": star_msg,
+            "category": "relevant"
+        },
+        { 
+            "title": "Estado de Inventario", 
+            "desc": low_stock_msg,
+            "category": "relevant"
+        },
+        {
+            "title": "Crossover",
+            "desc": f"Activar promoción: Combinar productos de {top_category} con bebidas los {peak_day_name} para subir ticket promedio.",
+            "category": "opportunity"
+        },
+        {
+            "title": "Stock",
+            "desc": f"Ajustar pedido de insumos los {peak_day_name}: la demanda de {top_category} sube significativamente.",
+            "category": "opportunity"
+        },
+        {
+            "title": "Merma",
+            "desc": f"Se recomienda revisar el excedente de {top_category} al inicio de la semana para evitar desperdicios.",
+            "category": "waste"
+        }
     ]
+
+    return trends
 
 @router.get("/prediction")
 async def get_prediction(owner_id: Optional[str] = Query("u_demo"), db: AsyncSession = Depends(get_db)) -> Any:

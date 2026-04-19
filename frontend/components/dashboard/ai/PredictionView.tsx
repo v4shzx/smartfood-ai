@@ -66,34 +66,7 @@ export function PredictionView({
         </motion.div>
       </div>
 
-      {/* IA Strategy Section (Horizontal) */}
-      <motion.div 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm"
-      >
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600">
-            <TrendingUp className="w-4 h-4" />
-          </div>
-          <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.ia_strategy}</h3>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {trends.map((r, idx) => (
-            <div 
-              key={idx} 
-              className="p-5 rounded-[2rem] border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-900/60 hover:border-emerald-500/20 transition-all group"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-emerald-500 transition-colors">{r.title}</div>
-              </div>
-              <div className="text-xs font-normal text-slate-600 dark:text-slate-300 leading-relaxed">{r.desc}</div>
-            </div>
-          ))}
-        </div>
-      </motion.div>
+
 
       {/* Simulation Toolbar */}
       <motion.div 
@@ -197,7 +170,7 @@ export function PredictionView({
             </div>
             <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/50 px-3 py-1.5 rounded-xl border border-slate-100 dark:border-slate-800">
               <div className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400">Ventas (MXN)</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400">{t.dashboard.sales_chart_label} (MXN)</span>
             </div>
           </div>
 
@@ -236,8 +209,8 @@ export function PredictionView({
                   }} 
                   itemStyle={{ fontSize: '12px', fontWeight: 900, color: '#0f172a' }}
                   labelStyle={{ fontSize: '10px', fontWeight: 700, color: '#64748b', marginBottom: '5px' }}
-                  formatter={(value: number) => [`$${value.toLocaleString('es-MX')}`, "Proyección"]}
-                  labelFormatter={(label) => `Hora: ${label}`}
+                  formatter={(value: number) => [`$${value.toLocaleString('es-MX')}`, t.dashboard.projection_label]}
+                  labelFormatter={(label) => `${t.dashboard.hour_label}: ${label}`}
                 />
                 <Area 
                   type="monotone" 

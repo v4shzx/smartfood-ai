@@ -47,7 +47,7 @@ export function ChartsView({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.charts}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">Analisis visual de ingresos, tickets y productos estrella.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">{t.dashboard.charts_desc}</p>
         </motion.div>
 
         <div className="flex p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm h-fit">
@@ -62,7 +62,7 @@ export function ChartsView({
                   : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
               )}
             >
-              {r === "7d" ? "1 Sem" : r === "30d" ? "1 Mes" : "3 Mes"}
+              {r === "7d" ? t.dashboard.range_1w : r === "30d" ? t.dashboard.range_1m : t.dashboard.range_3m}
             </button>
           ))}
         </div>
@@ -72,8 +72,8 @@ export function ChartsView({
         <div className="lg:col-span-2 bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
           <div className="flex items-center justify-between mb-10">
             <div>
-              <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">Ingresos vs Tickets</h3>
-              <p className="text-xs text-slate-400 dark:text-slate-500 font-bold mt-1 uppercase tracking-widest">Desempeño temporal</p>
+              <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.revenue_vs_tickets}</h3>
+              <p className="text-xs text-slate-400 dark:text-slate-500 font-bold mt-1 uppercase tracking-widest">{t.dashboard.temporal_performance}</p>
             </div>
 
           </div>
@@ -89,8 +89,8 @@ export function ChartsView({
                   cursor={{ stroke: "rgba(16, 185, 129, 0.2)", strokeWidth: 20 }}
                 />
                 <Legend iconType="circle" wrapperStyle={{ paddingTop: 30, fontSize: 10, fontWeight: 400, textTransform: "uppercase", letterSpacing: "0.1em" }} />
-                <Line yAxisId="left" type="monotone" dataKey="sales" name="Ventas" stroke="#10b981" strokeWidth={4} dot={{ r: 4, strokeWidth: 2, fill: "#fff" }} activeDot={{ r: 8, strokeWidth: 0 }} />
-                <Line yAxisId="right" type="monotone" dataKey="tickets" name="Tickets" stroke="#3b82f6" strokeWidth={4} dot={{ r: 4, strokeWidth: 2, fill: "#fff" }} activeDot={{ r: 8, strokeWidth: 0 }} />
+                <Line yAxisId="left" type="monotone" dataKey="sales" name={t.dashboard.sales_chart_label} stroke="#10b981" strokeWidth={4} dot={{ r: 4, strokeWidth: 2, fill: "#fff" }} activeDot={{ r: 8, strokeWidth: 0 }} />
+                <Line yAxisId="right" type="monotone" dataKey="tickets" name={t.dashboard.tickets_chart_label} stroke="#3b82f6" strokeWidth={4} dot={{ r: 4, strokeWidth: 2, fill: "#fff" }} activeDot={{ r: 8, strokeWidth: 0 }} />
               </ReLineChart>
             </ResponsiveContainer>
           </div>
@@ -99,8 +99,8 @@ export function ChartsView({
         <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
           <div className="flex items-center justify-between mb-10">
             <div>
-              <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">Top Productos</h3>
-              <p className="text-xs text-slate-400 dark:text-slate-500 font-bold mt-1 uppercase tracking-widest">Por volumen (unidades)</p>
+              <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.top_products}</h3>
+              <p className="text-xs text-slate-400 dark:text-slate-500 font-bold mt-1 uppercase tracking-widest">{t.dashboard.top_products_sub}</p>
             </div>
             <TrendingUp className="w-5 h-5 text-emerald-500" />
           </div>
