@@ -33,9 +33,9 @@ export function StatCard({
           </span>
         )}
       </div>
-      <div className="text-slate-400 dark:text-slate-500 text-[10px] font-normal uppercase tracking-widest mb-1">{title}</div>
-      <div className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{value}</div>
-      <div className="text-[10px] text-slate-400 dark:text-slate-500 font-normal mt-1.5 uppercase tracking-wider">{subtitle}</div>
+      <div className="text-slate-400 dark:text-slate-500 text-[12px] font-black uppercase tracking-widest mb-1">{title}</div>
+      <div className="text-xl font-black text-slate-900 dark:text-white tracking-tight">{value}</div>
+      <div className="text-[11px] text-slate-400 dark:text-slate-500 font-normal mt-1.5 uppercase tracking-wider">{subtitle}</div>
     </motion.div>
   );
 }

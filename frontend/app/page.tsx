@@ -7,8 +7,9 @@ import { cn } from "@/lib/utils";
 import {
   Brain, LineChart, Activity, Bot, Zap, ChevronRight, Menu, X,
   Star, CheckCircle2, Salad, Flame, ArrowUpRight, Cpu, Database,
-  ShieldCheck, Target, CloudCog,
+  ShieldCheck, Target, CloudCog, CloudSun
 } from "lucide-react";
+
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer,
@@ -394,6 +395,7 @@ function Integrations() {
           <div className="flex flex-wrap justify-center gap-10 md:gap-20 items-center opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
             {[
               { icon: <LineChart className="w-6 h-6 text-emerald-600" />, label: "Facebook Prophet" },
+              { icon: <CloudSun className="w-6 h-6 text-emerald-600" />, label: "Open-Meteo" },
               { icon: <Zap className="w-6 h-6 text-emerald-600" />, label: "FastAPI" },
               { icon: <Database className="w-6 h-6 text-emerald-600" />, label: "PostgreSQL" },
               { icon: <Cpu className="w-6 h-6 text-emerald-600" />, label: "Next.js" },

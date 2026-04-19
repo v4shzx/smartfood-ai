@@ -52,34 +52,52 @@ import { TicketModal } from "@/components/dashboard/shared/TicketModal";
 import { useDashboard } from "@/hooks/useDashboard";
 
 export default function Dashboard() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const userMenuRef = React.useRef<HTMLDivElement>(null);
   const notificationsRef = React.useRef<HTMLDivElement>(null);
 
-  const notifications = [
-    { id: 1, title: "Inventario Bajo", message: "Quedan pocos 'Tacos de Pollo'.", time: "Hace 5 min", type: "warning" },
-    { id: 2, title: "Venta Exitosa", message: "Nueva orden de $450.00 MXN.", time: "Hace 12 min", type: "success" },
-    { id: 3, title: "Nueva Predicción", message: "La IA sugiere subir stock de bebidas.", time: "Hace 1 hora", type: "info" },
-  ];
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
-        setIsUserMenuOpen(false);
-      }
-      if (notificationsRef.current && !notificationsRef.current.contains(event.target as Node)) {
-        setIsNotificationsOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-  
   const dashboard = useDashboard(t);
-  const { activeTab, setActiveTab, activeTitle, subscriptionTier } = dashboard;
+  const { activeTab, setActiveTab, activeTitle, subscriptionTier, kpis, invCritical } = dashboard;
+
+  const notifications = React.useMemo(() => {
+    const list = [];
+    
+    // 1. Critical Inventory Notifications
+    if (invCritical.length > 0) {
+      list.push({
+        id: "inv-alert",
+        title: t.dashboard.inventory_alerts,
+        message: `${invCritical[0].name} ${lang === 'es' ? 'está en nivel crítico' : 'is at critical level'}.`,
+        time: t.dashboard.today,
+        type: "warning"
+      });
+    }
+
+    // 2. Sales Notifications
+    if (kpis.todayOrders > 0) {
+      list.push({
+        id: "sales-alert",
+        title: t.dashboard.sales,
+        message: `${kpis.todayOrders} ${t.dashboard.processed_today}.`,
+        time: t.dashboard.today,
+        type: "success"
+      });
+    }
+
+    // 3. AI Status
+    list.push({
+      id: "ai-alert",
+      title: "SmartFood AI",
+      message: t.dashboard.prediction_desc.split('.')[0],
+      time: lang === 'es' ? 'Hace 1 min' : '1 min ago',
+      type: "info"
+    });
+
+    return list;
+  }, [invCritical, kpis, t.dashboard, lang]);
   const isProOrAbove = subscriptionTier === "profesional" || subscriptionTier === "empresarial";
   const router = useRouter();
 
@@ -368,7 +386,7 @@ export default function Dashboard() {
                 className="flex items-center group ml-2"
               >
                 <div className="w-11 h-11 rounded-2xl bg-emerald-600 flex items-center justify-center transition-all group-hover:scale-105 active:scale-95 shadow-lg shadow-emerald-600/20">
-                  <span className="text-xs font-normal text-white uppercase tracking-wider">AB</span>
+                  <span className="text-xs font-black text-white uppercase tracking-wider">CD</span>
                 </div>
               </button>
 

@@ -17,7 +17,8 @@ import {
   Brain,
   Zap,
   Users,
-  Sparkles
+  Sparkles,
+  Sun
 } from "lucide-react";
 import {
   Area,
@@ -51,9 +52,44 @@ interface HomeViewProps {
 export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscriptionTier }: HomeViewProps) {
   const isProOrAbove = subscriptionTier === "profesional" || subscriptionTier === "empresarial";
 
+  // Real-time weather logic
+  const [weather, setWeather] = React.useState({ temp: 24, status: t.dashboard.sunny });
+
+  React.useEffect(() => {
+    const fetchWeather = async (lat: number, lon: number) => {
+      try {
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+        const data = await res.json();
+        const code = data.current_weather.weathercode;
+        
+        // Mapping Open-Meteo codes to our i18n keys
+        let statusKey = t.dashboard.sunny;
+        if (code >= 1 && code <= 3) statusKey = t.dashboard.partly_cloudy;
+        if (code >= 45) statusKey = t.dashboard.rainy;
+
+        setWeather({
+          temp: Math.round(data.current_weather.temperature),
+          status: statusKey
+        });
+      } catch (e) {
+        console.error("Weather fetch failed", e);
+      }
+    };
+
+    // Try to get user location, fallback to CDMX
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => fetchWeather(pos.coords.latitude, pos.coords.longitude),
+        () => fetchWeather(19.4326, -99.1332) 
+      );
+    } else {
+      fetchWeather(19.4326, -99.1332);
+    }
+  }, [t.dashboard]);
+
   return (
     <>
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-10">
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.home}</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">
@@ -61,6 +97,18 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
               ? t.hero_p 
               : "Gestión simplificada de ventas y reportes base."}
           </p>
+        </motion.div>
+
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="flex items-center gap-2 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 px-4 py-2.5 rounded-2xl shadow-sm h-fit mt-1"
+        >
+          <Sun className="w-5 h-5 text-amber-500" />
+          <div className="text-right">
+            <div className="text-[12px] font-black text-slate-700 dark:text-slate-200 leading-none">{weather.temp}°C</div>
+            <div className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mt-1">{weather.status}</div>
+          </div>
         </motion.div>
       </div>
 

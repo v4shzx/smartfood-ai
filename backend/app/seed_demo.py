@@ -67,7 +67,9 @@ async def seed():
             ]
 
             for pid, name, cat, price in items_demo:
-                session.add(Product(id=pid, owner_id="u_demo", name=name, category=cat, price=price, available=True, on_hand=random.randint(10, 50)))
+                # Set p1 to 10 items intentionally to trigger critical stock alert
+                stock = 10 if pid == "p1" else random.randint(20, 50)
+                session.add(Product(id=pid, owner_id="u_demo", name=name, category=cat, price=price, available=True, on_hand=stock))
 
             # 4. Default Meal Plans
             plans = [
