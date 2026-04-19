@@ -252,17 +252,7 @@ export function PredictionView({
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-slate-100 dark:border-slate-800">
-          <div className="bg-linear-to-br from-slate-900 to-slate-800 dark:from-slate-800 dark:to-slate-950 p-6 rounded-[1.8rem] text-white">
-            <div className="flex items-center gap-2 mb-3">
-              <Zap className="w-4 h-4 text-amber-400" />
-              <span className="text-[10px] font-black uppercase tracking-widest">{t.dashboard.today_tip}</span>
-            </div>
-            <p className="text-[11px] font-normal leading-relaxed text-slate-300">
-              {t.dashboard.rain_tip}
-            </p>
-          </div>
-        </div>
+
       </div>
     </div>
   );
