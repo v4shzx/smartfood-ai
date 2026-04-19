@@ -456,7 +456,7 @@ function Features() {
         </motion.p>
       </motion.div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        {t.feats.map((f, i) => (
+        {t.feats.map((f: any, i: number) => (
           <motion.div 
             key={i} 
             initial={{ opacity: 0, y: 30 }} 
@@ -824,4 +824,5 @@ export default function Home() {
       </footer>
     </main>
   );
+}
 }

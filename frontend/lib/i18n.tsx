@@ -1312,7 +1312,7 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("app-lang", l);
   };
 
-  const t = T[lang] as unknown as Translations;
+  const t = T[lang] as unknown as Translation;
 
   return (
     <LangCtx.Provider value={{ lang, t, setLang: handleSetLang }}>
