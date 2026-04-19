@@ -8,11 +8,11 @@ import {
   FileCheck,
 } from "lucide-react";
 import { formatCurrencyMXN } from "@/lib/dashboard-utils";
-import { Translation } from "@/lib/i18n";
+import { Translations } from "@/lib/i18n";
 import { ReportStats } from "@/types/dashboard";
 
 interface ReportsViewProps {
-  t: Translation;
+  t: Translations;
   reportsType: "sales" | "inventory" | "finance";
   setReportsType: (t: "sales" | "inventory" | "finance") => void;
   reportsRange: "today" | "7d" | "30d" | "custom";

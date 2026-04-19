@@ -9,11 +9,11 @@ import {
   ArrowUpRight,
   TrendingDown,
 } from "lucide-react";
-import { Translation } from "@/lib/i18n";
+import { Translations } from "@/lib/i18n";
 import { TrendInsight } from "@/types/dashboard";
 
 interface TrendsViewProps {
-  t: Translation;
+  t: Translations;
   trendsInsights: TrendInsight[];
 }
 

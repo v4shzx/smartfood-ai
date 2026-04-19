@@ -1293,8 +1293,6 @@ export const T = {
   },
 } as const;
 
-export type Translations = typeof T.es | typeof T.en | typeof T.fr;
-
 const LangCtx = createContext<{ lang: Lang; t: Translations; setLang: (l: Lang) => void }>({
   lang: "es", t: T["es"], setLang: () => { },
 });
@@ -1415,6 +1413,15 @@ export function LangSwitcher() {
                 {lang === l.code && (
                   <motion.div layoutId="active-lang" className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
                 )}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+           )}
               </button>
             ))}
           </motion.div>
