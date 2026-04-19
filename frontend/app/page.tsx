@@ -1,5 +1,6 @@
 "use client";
 
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -34,7 +35,7 @@ function ThemeToggle() {
       className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-all shadow-sm"
     >
       {isDark
-        ? <Sun  className="w-4 h-4 text-amber-400" />
+        ? <Sun className="w-4 h-4 text-amber-400" />
         : <Moon className="w-4 h-4 text-slate-600" />}
     </button>
   );
@@ -54,8 +55,8 @@ const calorieData = [
 
 const macroData = [
   { name: "Protein", val: 140, goal: 150, color: "#2563eb" },
-  { name: "Carbs",  val: 210, goal: 200, color: "#4f46e5" },
-  { name: "Fat",    val: 55,  goal: 65,  color: "#64748b" },
+  { name: "Carbs", val: 210, goal: 200, color: "#4f46e5" },
+  { name: "Fat", val: 55, goal: 65, color: "#64748b" },
 ];
 
 // ─── Navbar ───────────────────────────────────────────────────────────────────
@@ -195,9 +196,9 @@ function Hero() {
   const { t } = useI18n();
   return (
     <section id="hero" className="pt-32 pb-24 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto relative z-10 flex flex-col items-center">
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }} 
-        animate={{ opacity: 1, y: 0 }} 
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="w-full max-w-5xl bg-white/5 dark:bg-slate-950/5 backdrop-blur-md rounded-[3rem] border border-white/10 dark:border-white/5 p-8 md:p-16 flex flex-col items-center text-center shadow-2xl shadow-slate-900/5 dark:shadow-black/20"
       >
@@ -218,19 +219,19 @@ function Hero() {
               "text-amber-500 dark:text-amber-400",
               "text-purple-600 dark:text-purple-400"
             ];
-            
+
             return (
               <span key={i} className="block">
-                <motion.span 
+                <motion.span
                   className={`inline-block ${colors[i % colors.length]}`}
-                  animate={{ 
+                  animate={{
                     scale: [1, 1.05, 1],
                   }}
-                  transition={{ 
-                    duration: 2, 
-                    repeat: Infinity, 
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
                     delay: i * 0.5,
-                    ease: "easeInOut" 
+                    ease: "easeInOut"
                   }}
                 >
                   {firstWord}
@@ -286,9 +287,9 @@ function DashboardMockup() {
             <div className="w-64 border-r border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/30 p-6 hidden md:flex flex-col gap-2">
               <div className="px-3 py-2 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">{t.nav.platform}</div>
               <SidebarItem icon={<LineChart />} label={t.dash_title} active />
-              <SidebarItem icon={<Salad />}     label="Meal Planner" />
-              <SidebarItem icon={<Activity />}  label="Metabolic Status" />
-              <SidebarItem icon={<Target />}    label="Goals & Tracking" />
+              <SidebarItem icon={<Salad />} label="Meal Planner" />
+              <SidebarItem icon={<Activity />} label="Metabolic Status" />
+              <SidebarItem icon={<Target />} label="Goals & Tracking" />
               <div className="mt-auto">
                 <div className="bg-emerald-600 rounded-2xl p-5 shadow-xl shadow-emerald-500/20">
                   <div className="flex items-center gap-2 text-white font-bold mb-2 text-sm">
@@ -313,8 +314,8 @@ function DashboardMockup() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
                 <StatCard title={t.stat1} value="1,840" subtitle={t.stat1s} icon={<Flame className="w-5 h-5 text-orange-500" />} />
-                <StatCard title={t.stat2} value="A+"    subtitle={t.stat2s} icon={<Star  className="w-5 h-5 text-emerald-500"  />} />
-                <StatCard title={t.stat3} value="High"  subtitle={t.stat3s} icon={<Zap   className="w-5 h-5 text-amber-500" />} />
+                <StatCard title={t.stat2} value="A+" subtitle={t.stat2s} icon={<Star className="w-5 h-5 text-emerald-500" />} />
+                <StatCard title={t.stat3} value="High" subtitle={t.stat3s} icon={<Zap className="w-5 h-5 text-amber-500" />} />
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -328,16 +329,16 @@ function DashboardMockup() {
                       <AreaChart data={calorieData}>
                         <defs>
                           <linearGradient id="colorCal" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%"  stopColor="#2563eb" stopOpacity={0.15} />
-                            <stop offset="95%" stopColor="#2563eb" stopOpacity={0}   />
+                            <stop offset="5%" stopColor="#2563eb" stopOpacity={0.15} />
+                            <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
                           </linearGradient>
                         </defs>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                         <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#94a3b8", fontWeight: 600 }} dy={15} />
                         <YAxis hide domain={["dataMin - 200", "dataMax + 200"]} />
                         <Tooltip contentStyle={{ borderRadius: "16px", border: "none", boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)", padding: "12px" }} cursor={{ stroke: "#cbd5e1", strokeWidth: 2 }} />
-                        <Area type="monotone" dataKey="target"   stroke="#94a3b8" strokeDasharray="6 6" fill="none"             strokeWidth={2} />
-                        <Area type="monotone" dataKey="calories" stroke="#2563eb" strokeWidth={4}        fillOpacity={1} fill="url(#colorCal)" />
+                        <Area type="monotone" dataKey="target" stroke="#94a3b8" strokeDasharray="6 6" fill="none" strokeWidth={2} />
+                        <Area type="monotone" dataKey="calories" stroke="#2563eb" strokeWidth={4} fillOpacity={1} fill="url(#colorCal)" />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
@@ -384,7 +385,7 @@ function Integrations() {
   return (
     <section className="py-20 relative z-10">
       <div className="max-w-7xl mx-auto px-4">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
@@ -400,7 +401,7 @@ function Integrations() {
               { icon: <Database className="w-6 h-6 text-emerald-600" />, label: "PostgreSQL" },
               { icon: <Cpu className="w-6 h-6 text-emerald-600" />, label: "Next.js" },
             ].map((item, i) => (
-              <motion.div 
+              <motion.div
                 key={i}
                 whileHover={{ scale: 1.1, y: -5 }}
                 className="flex items-center gap-2.5 text-xl font-black text-slate-800 dark:text-slate-200 cursor-default"
@@ -418,16 +419,16 @@ function Integrations() {
 // ─── Features ─────────────────────────────────────────────────────────────────
 
 const FEAT_STYLES = [
-  { icon: <Brain    className="text-emerald-600   w-6 h-6" />, bg: "bg-emerald-50   dark:bg-emerald-950/60"   },
-  { icon: <Target   className="text-teal-600 w-6 h-6" />, bg: "bg-teal-50 dark:bg-teal-950/60" },
-  { icon: <Activity className="text-slate-600  w-6 h-6 dark:text-slate-300" />, bg: "bg-slate-100  dark:bg-slate-800/60"  },
+  { icon: <Brain className="text-emerald-600   w-6 h-6" />, bg: "bg-emerald-50   dark:bg-emerald-950/60" },
+  { icon: <Target className="text-teal-600 w-6 h-6" />, bg: "bg-teal-50 dark:bg-teal-950/60" },
+  { icon: <Activity className="text-slate-600  w-6 h-6 dark:text-slate-300" />, bg: "bg-slate-100  dark:bg-slate-800/60" },
 ];
 
 function Features() {
   const { t } = useI18n();
   return (
     <section id="features" className="py-32 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -437,7 +438,7 @@ function Features() {
         {/* Decorative background glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none group-hover:bg-emerald-500/20 transition-colors" />
 
-        <motion.h2 
+        <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -445,7 +446,7 @@ function Features() {
         >
           {t.feat_title}
         </motion.h2>
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -457,10 +458,10 @@ function Features() {
       </motion.div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {t.feats.map((f: any, i: number) => (
-          <motion.div 
-            key={i} 
-            initial={{ opacity: 0, y: 30 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.1, duration: 0.6 }}
             whileHover={{ y: -10 }}
@@ -484,7 +485,7 @@ function Pricing() {
   const { t } = useI18n();
   return (
     <section id="pricing" className="py-32 px-4 max-w-7xl mx-auto text-center">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -492,7 +493,7 @@ function Pricing() {
         className="text-center mb-20 max-w-4xl mx-auto bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl rounded-[3rem] border border-white/20 dark:border-white/5 p-10 md:p-16 shadow-2xl shadow-slate-900/5 dark:shadow-black/20 relative overflow-hidden group"
       >
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none group-hover:bg-emerald-500/20 transition-colors" />
-        <motion.h2 
+        <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -500,7 +501,7 @@ function Pricing() {
         >
           {t.price_title}
         </motion.h2>
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -512,7 +513,7 @@ function Pricing() {
       </motion.div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
         {t.pricing_plans.map((plan: any, idx: number) => (
-          <motion.div 
+          <motion.div
             key={idx}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -521,20 +522,20 @@ function Pricing() {
             whileHover={{ y: -10 }}
             className={cn(
               "p-10 rounded-[3rem] border text-left relative overflow-hidden transition-all duration-500 flex flex-col h-full backdrop-blur-md",
-              plan.popular 
-                ? "bg-white/70 dark:bg-slate-900/80 border-emerald-500/50 dark:border-emerald-500/40 shadow-[0_20px_50px_rgba(16,185,129,0.15)] dark:shadow-[0_20px_50px_rgba(16,185,129,0.1)] group" 
+              plan.popular
+                ? "bg-white/70 dark:bg-slate-900/80 border-emerald-500/50 dark:border-emerald-500/40 shadow-[0_20px_50px_rgba(16,185,129,0.15)] dark:shadow-[0_20px_50px_rgba(16,185,129,0.1)] group"
                 : "bg-white/40 dark:bg-slate-900/40 border-slate-200/50 dark:border-slate-800/50 hover:bg-white/60 dark:hover:bg-slate-900/60 hover:shadow-2xl hover:shadow-slate-200/50 dark:hover:shadow-black/20"
             )}
           >
             {plan.popular && (
-              <div 
-                className="absolute top-0 right-0 w-64 h-64 rounded-full -mr-20 -mt-20 group-hover:opacity-75 transition-opacity duration-700 pointer-events-none" 
+              <div
+                className="absolute top-0 right-0 w-64 h-64 rounded-full -mr-20 -mt-20 group-hover:opacity-75 transition-opacity duration-700 pointer-events-none"
                 style={{
                   background: "radial-gradient(circle at center, rgba(16, 185, 129, 0.15), transparent 70%)"
                 }}
               />
             )}
-            
+
             <div className="flex justify-between items-start mb-4 relative z-10">
               <div>
                 <h3 className="text-3xl font-black mb-1 text-slate-900 dark:text-white">
@@ -545,7 +546,7 @@ function Pricing() {
                 </p>
               </div>
               {plan.popular && (
-                <motion.span 
+                <motion.span
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                   className="text-[10px] font-black bg-emerald-600 text-white px-4 py-1.5 rounded-full border border-emerald-500 shadow-lg shadow-emerald-500/40 uppercase tracking-widest"
@@ -572,17 +573,17 @@ function Pricing() {
             <ul className="space-y-4 mb-12 relative z-10 grow">
               {plan.feats.map((f: string, i: number) => (
                 <li key={i} className="flex gap-3 font-bold text-sm items-start text-slate-600 dark:text-slate-300">
-                  <CheckCircle2 className={cn("shrink-0 w-5 h-5", plan.popular ? "text-emerald-500" : "text-slate-300 dark:text-slate-600")} /> 
+                  <CheckCircle2 className={cn("shrink-0 w-5 h-5", plan.popular ? "text-emerald-500" : "text-slate-300 dark:text-slate-600")} />
                   <span className="leading-tight">{f}</span>
                 </li>
               ))}
             </ul>
 
-            <button 
+            <button
               className={cn(
                 "w-full py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-[0.98] relative z-10",
-                plan.popular 
-                  ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/20" 
+                plan.popular
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/20"
                   : "border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-100/50 dark:hover:bg-slate-800/50"
               )}
             >
@@ -612,7 +613,7 @@ function Contact() {
 
   return (
     <section id="contact" className="py-32 px-4 max-w-7xl mx-auto">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -623,7 +624,7 @@ function Contact() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none group-hover:bg-emerald-500/15 transition-colors" />
 
         <div className="text-center mb-16 relative z-10">
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -631,7 +632,7 @@ function Contact() {
           >
             {t.contact_title}
           </motion.h2>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -712,7 +713,7 @@ function CTA() {
   const { t } = useI18n();
   return (
     <section className="py-32 px-4 bg-transparent border-t border-slate-100 dark:border-slate-800/60">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
@@ -720,17 +721,17 @@ function CTA() {
         className="max-w-5xl mx-auto text-center rounded-[3.5rem] bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl p-16 md:p-24 border border-white/20 dark:border-white/5 shadow-2xl shadow-slate-900/5 dark:shadow-black/20 relative overflow-hidden transition-colors duration-500"
       >
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div 
-            className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full" 
+          <div
+            className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full"
             style={{ background: "radial-gradient(circle at center, rgba(52, 211, 153, 0.15), transparent 70%)" }}
           />
-          <div 
-            className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full" 
+          <div
+            className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full"
             style={{ background: "radial-gradient(circle at center, rgba(45, 212, 191, 0.15), transparent 70%)" }}
           />
         </div>
         <div className="relative z-10">
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -739,7 +740,7 @@ function CTA() {
           >
             {t.cta_title}
           </motion.h2>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -768,13 +769,12 @@ function CTA() {
 
 function SidebarItem({ icon, label, active = false }: { icon: React.ReactNode; label: string; active?: boolean }) {
   return (
-    <motion.div 
+    <motion.div
       whileHover={{ x: 5 }}
-      className={`flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-        active
+      className={`flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${active
           ? "bg-emerald-50 dark:bg-emerald-950/60 shadow-sm border border-emerald-100 dark:border-emerald-900/60 text-emerald-600 dark:text-emerald-300"
           : "text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60"
-      }`}
+        }`}
     >
       <div className={`${active ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400 dark:text-slate-500"} w-5 h-5 transition-colors`}>{icon}</div>
       {label}
@@ -784,7 +784,7 @@ function SidebarItem({ icon, label, active = false }: { icon: React.ReactNode; l
 
 function StatCard({ title, value, subtitle, icon }: { title: string; value: string; subtitle: string; icon: React.ReactNode }) {
   return (
-    <motion.div 
+    <motion.div
       whileHover={{ y: -5 }}
       className="bg-white dark:bg-slate-800/60 p-6 rounded-3xl border border-slate-100 dark:border-slate-700/50 shadow-sm flex items-start justify-between group hover:border-emerald-100 dark:hover:border-emerald-900 transition-colors cursor-default"
     >

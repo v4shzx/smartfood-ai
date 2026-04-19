@@ -39,7 +39,7 @@ async def seed():
                     id=uid,
                     email=email,
                     full_name=name,
-                    password_hash=pw_hash, # Use 'master' for master user, '123456' for others
+                    password_hash=pw_hash,
                     role=role,
                     subscription_tier=tier,
                     created_at=created_at
@@ -48,10 +48,17 @@ async def seed():
             
             await session.commit()
             print("Users committed.")
+        else:
+            print(f"Users already exist: {user_count}")
+            # Optional: list them
+            users_res = await session.execute(select(SchoolUser.id, SchoolUser.email))
+            for u in users_res.all():
+                print(f"  - {u.id}: {u.email}")
         
         # 1.5 Categories (Only for u_demo)
         cat_count_res = await session.execute(select(func.count(Category.id)))
-        if cat_count_res.scalar() == 0:
+        cat_count = cat_count_res.scalar() or 0
+        if cat_count == 0:
             print("Seeding categories...")
             categories_data = ["Comida", "Bebidas", "Snacks", "Desayuno", "Frutas", "Postres"]
             for i, cat_name in enumerate(categories_data):
@@ -132,8 +139,9 @@ async def seed():
         product_res = await session.execute(select(Product).where(Product.owner_id == "u_demo"))
         products = product_res.scalars().all()
         if products:
-            start_date = datetime(2026, 4, 1)
-            end_date = datetime(2026, 4, 23)
+            # Seed from 30 days ago until today to ensure dashboard has data
+            end_date = datetime.now()
+            start_date = end_date - timedelta(days=30)
             curr = start_date
             while curr <= end_date:
                 for _ in range(random.randint(8, 20)):
