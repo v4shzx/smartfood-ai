@@ -1,10 +1,11 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import products, cafeteria, auth, payment, stats, staff, sales, inventory, suppliers, admin
+from app.api.v1.endpoints import products, cafeteria, auth, payment, stats, staff, sales, inventory, suppliers, admin, categories
 
 api_router = APIRouter()
 
 # Register sub-routers here
 api_router.include_router(products.router, prefix="/products", tags=["products"])
+api_router.include_router(categories.router, prefix="/categories", tags=["categories"])
 api_router.include_router(cafeteria.router, prefix="/cafeteria", tags=["cafeteria"])
 api_router.include_router(auth.router, prefix="/auth", tags=["auth"])
 api_router.include_router(payment.router, prefix="/payments", tags=["payments"])

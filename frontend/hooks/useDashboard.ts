@@ -95,6 +95,7 @@ export function useDashboard(t: any) {
   });
 
   // --- Real Data States ---
+  const [categories, setCategories] = useState<any[]>([]);
   const [menuItems, setMenuItems] = useState<any[]>([]);
   const [mealPlans, setMealPlans] = useState<any[]>([]);
   const [staff, setStaff] = useState<any[]>([]);
@@ -117,55 +118,63 @@ export function useDashboard(t: any) {
     async function fetchData() {
       try {
         setIsLoading(true);
-        // Read the logged-in user ID from localStorage
         const sessionUserId = localStorage.getItem("smartfood_user_id") || "u_demo";
         const tier = localStorage.getItem("smartfood_subscription_tier") || "basico";
         setSubscriptionTier(tier.toLowerCase());
-        console.log("Loading dashboard for user:", sessionUserId, "Tier:", tier);
 
-        const [menuRes, plansRes, statsRes, staffRes, productsRes, salesRes, invRes, movRes, supRes, seriesRes, trendsRes, predRes] = await Promise.all([
-          fetch(`${API_URL}/cafeteria/menu?owner_id=${sessionUserId}`).then(r => r.json()),
-          fetch(`${API_URL}/cafeteria/plans?owner_id=${sessionUserId}`).then(r => r.json()),
-          fetch(`${API_URL}/stats/?owner_id=${sessionUserId}`).then(r => r.json()),
-          fetch(`${API_URL}/staff/?owner_id=${sessionUserId}`).then(r => r.json()),
-          fetch(`${API_URL}/products/?owner_id=${sessionUserId}`).then(r => r.json()),
-          fetch(`${API_URL}/sales/?owner_id=${sessionUserId}`).then(r => r.json()),
-          fetch(`${API_URL}/inventory/?owner_id=${sessionUserId}`).then(r => r.json()),
-          fetch(`${API_URL}/inventory/movements?owner_id=${sessionUserId}`).then(r => r.json()),
-          fetch(`${API_URL}/suppliers/?owner_id=${sessionUserId}`).then(r => r.json()),
-          fetch(`${API_URL}/stats/sales-series?owner_id=${sessionUserId}`).then(r => r.json()),
-          fetch(`${API_URL}/stats/trends?owner_id=${sessionUserId}`).then(r => r.json()),
-          fetch(`${API_URL}/stats/prediction?owner_id=${sessionUserId}`).then(r => r.json())
+        const fetchJson = (url: string) => fetch(url).then(r => r.ok ? r.json() : []);
+        const fetchSingleJson = (url: string) => fetch(url).then(r => r.ok ? r.json() : null);
+
+        const [menuRes, plansRes, statsRes, staffRes, productsRes, salesRes, invRes, movRes, supRes, seriesRes, trendsRes, predRes, catRes] = await Promise.all([
+          fetchJson(`${API_URL}/cafeteria/menu?owner_id=${sessionUserId}`),
+          fetchJson(`${API_URL}/cafeteria/plans?owner_id=${sessionUserId}`),
+          fetchSingleJson(`${API_URL}/stats/?owner_id=${sessionUserId}`),
+          fetchJson(`${API_URL}/staff/?owner_id=${sessionUserId}`),
+          fetchJson(`${API_URL}/products/?owner_id=${sessionUserId}`),
+          fetchJson(`${API_URL}/sales/?owner_id=${sessionUserId}`),
+          fetchJson(`${API_URL}/inventory/?owner_id=${sessionUserId}`),
+          fetchJson(`${API_URL}/inventory/movements?owner_id=${sessionUserId}`),
+          fetchJson(`${API_URL}/suppliers/?owner_id=${sessionUserId}`),
+          fetchJson(`${API_URL}/stats/sales-series?owner_id=${sessionUserId}`),
+          fetchJson(`${API_URL}/stats/trends?owner_id=${sessionUserId}`),
+          fetchJson(`${API_URL}/stats/prediction?owner_id=${sessionUserId}`),
+          fetchJson(`${API_URL}/categories/?owner_id=${sessionUserId}`)
         ]);
 
-        setMenuItems(Array.isArray(menuRes) ? menuRes : []);
-        setMealPlans(Array.isArray(plansRes) ? plansRes : []);
+        setMenuItems(menuRes);
+        setMealPlans(plansRes);
         setStats(statsRes);
-        setStaff(Array.isArray(staffRes) ? staffRes : []);
-        setProducts(Array.isArray(productsRes) ? productsRes : []);
-        setSalesHistory(Array.isArray(salesRes) ? salesRes : []);
-        setInvItems(Array.isArray(invRes) ? invRes : []);
-        setInvMovements(Array.isArray(movRes) ? movRes : []);
-        setSuppliers(Array.isArray(supRes) ? supRes : []);
-        setSalesSeries(Array.isArray(seriesRes) ? seriesRes : []);
-        setTrendsInsights(Array.isArray(trendsRes) ? trendsRes : []);
-        setPrediction(Array.isArray(predRes) ? predRes : []);
-        setBasePrediction(Array.isArray(predRes) ? predRes : []);
+        setStaff(staffRes);
+        setProducts(productsRes);
+        setCategories(catRes);
+        setSalesHistory(salesRes);
+        setInvItems(invRes);
+        setInvMovements(movRes);
+        setSuppliers(supRes);
+        setSalesSeries(seriesRes);
+        setTrendsInsights(trendsRes);
+        setPrediction(predRes);
+        setBasePrediction(predRes);
       } catch (error) {
-        console.error("Error fetching dashboard data:", error);
+        console.error("Dashboard fetch error:", error);
       } finally {
         setIsLoading(false);
       }
     }
     fetchData();
   }, [API_URL]);
+  
   // Computed Values
-  const storeCategories = useMemo(() => Array.from(new Set(products.map((p) => p.category))), [products]);
+  const storeCategories = useMemo(() => {
+    const fromProducts = Array.from(new Set(products.map((p) => p.category)));
+    const fromDB = categories.map(c => c.name);
+    return Array.from(new Set([...fromProducts, ...fromDB]));
+  }, [products, categories]);
 
   const storeFiltered = useMemo(() => {
     return products.filter((p) => {
-      const matchQuery = p.name.toLowerCase().includes(storeQuery.toLowerCase()) || p.category.toLowerCase().includes(storeQuery.toLowerCase());
-      const matchCat = storeCategory === "all" || p.category === storeCategory;
+      const matchQuery = p.name.toLowerCase().includes(storeQuery.toLowerCase()) || p.category?.toLowerCase().includes(storeQuery.toLowerCase());
+      const matchCat = storeCategory === "all" || p.category?.toLowerCase() === storeCategory.toLowerCase();
       const matchAvail = !storeOnlyAvailable || p.available;
       return matchQuery && matchCat && matchAvail;
     });
@@ -187,70 +196,23 @@ export function useDashboard(t: any) {
 
   const supSelected = useMemo(() => suppliers.find((s) => s.id === supSelectedId), [suppliers, supSelectedId]);
 
-  const chartsSales = useMemo(() => {
-    const labels = chartsRange === "7d" ? ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"] : chartsRange === "30d" ? ["S1", "S2", "S3", "S4"] : ["Ene", "Feb", "Mar"];
-    return labels.map((l) => ({ label: l, sales: Math.floor(Math.random() * 5000) + 2000, tickets: Math.floor(Math.random() * 100) + 40 }));
-  }, [chartsRange]);
-
-  const chartsTopProducts = useMemo(() => [
-    { name: "Pastor", val: 450 },
-    { name: "Bistec", val: 380 },
-    { name: "Gringa", val: 290 },
-    { name: "Horchata", val: 210 },
-    { name: "Coca Cola", val: 180 },
-  ], []);
-
   const staffFiltered = useMemo(() => {
     return staff.filter((u) => u.name.toLowerCase().includes(staffQuery.toLowerCase()) || u.role.toLowerCase().includes(staffQuery.toLowerCase()));
   }, [staff, staffQuery]);
 
   const salesFiltered = useMemo(() => {
     return salesHistory.filter((s) => {
-      // 1. Search Query Filter
       const matchQuery = s.id.toLowerCase().includes(salesQuery.toLowerCase());
-      
-      // 2. Payment Method Filter
-      const matchMethod = salesMethod === "all" || s.method.toLowerCase() === salesMethod.toLowerCase();
-      
-      // 3. Date Range Filter
+      const matchMethod = salesMethod === "all" || s.method?.toLowerCase() === salesMethod.toLowerCase();
       let matchDate = true;
       if (salesDateFrom || salesDateTo) {
         const saleDate = new Date(s.ts).toISOString().split('T')[0];
         if (salesDateFrom && saleDate < salesDateFrom) matchDate = false;
         if (salesDateTo && saleDate > salesDateTo) matchDate = false;
       }
-
       return matchQuery && matchMethod && matchDate;
     });
   }, [salesHistory, salesQuery, salesMethod, salesDateFrom, salesDateTo]);
-
-  useEffect(() => {
-    async function fetchSaleDetail() {
-      if (!selectedSaleId) {
-        setSelectedSale(null);
-        return;
-      }
-      // Check if it's already in the list with full details (rare for old sales)
-      const existing = salesHistory.find(s => s.id === selectedSaleId);
-      if (existing && existing.items_detail && existing.items_detail.length > 0) {
-        setSelectedSale(existing);
-        return;
-      }
-
-      try {
-        const res = await fetch(`${API_URL}/sales/${selectedSaleId}`);
-        if (res.ok) {
-          const detail = await res.json();
-          setSelectedSale(detail);
-        }
-      } catch (err) {
-        console.error("Error fetching sale detail:", err);
-      }
-    }
-    fetchSaleDetail();
-  }, [selectedSaleId, salesHistory, API_URL]);
-
-  const [selectedSale, setSelectedSale] = useState<any>(null);
 
   const posFilteredProducts = useMemo(() => {
     return products.filter((p) => {
@@ -263,7 +225,7 @@ export function useDashboard(t: any) {
     return posCart.map((item, idx) => ({
       ...item,
       qty: item.quantity,
-      lineKey: `${item.id}-${idx}` // Guarantee unique key for React rendering
+      lineKey: `${item.id}-${idx}`
     }));
   }, [posCart]);
 
@@ -286,10 +248,6 @@ export function useDashboard(t: any) {
     });
   };
 
-  const removeFromCart = (productId: string) => {
-    setPosCart((prev) => prev.filter((item) => item.id !== productId));
-  };
-
   const updateCartQuantity = (productId: string, delta: number) => {
     setPosCart((prev) =>
       prev
@@ -304,12 +262,10 @@ export function useDashboard(t: any) {
     );
   };
 
-  const cartTotal = posCart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
-  // Store Edits
+  // Store Real API Actions
   const storeOpenCreate = () => {
     setStoreEditingId(null);
-    setStoreForm({ name: "", category: "Tacos", price: 0, available: true });
+    setStoreForm({ name: "", category: storeCategories[0] || "General", price: 0, available: true });
     setStoreEditorOpen(true);
   };
 
@@ -317,28 +273,70 @@ export function useDashboard(t: any) {
     const p = products.find((x) => x.id === id);
     if (!p) return;
     setStoreEditingId(id);
-    setStoreForm({ 
-      name: p.name,
-      category: p.category,
-      price: p.price,
-      available: p.available
-    });
+    setStoreForm({ name: p.name, category: p.category, price: p.price, available: p.available });
     setStoreEditorOpen(true);
   };
 
-  const storeDelete = (id: string) => {
-    if (confirm("¿Seguro que quieres eliminar este producto?")) {
-      setProducts((prev) => prev.filter((p) => p.id !== id));
+  const storeSave = async () => {
+    try {
+      const sessionUserId = localStorage.getItem("smartfood_user_id") || "u_demo";
+      const productData = { ...storeForm, owner_id: sessionUserId };
+
+      if (storeEditingId) {
+        const res = await fetch(`${API_URL}/products/${storeEditingId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(productData)
+        });
+        if (res.ok) {
+          const updatedProd = await res.json();
+          setProducts((prev) => prev.map((p) => (p.id === storeEditingId ? updatedProd : p)));
+        }
+      } else {
+        const res = await fetch(`${API_URL}/products/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(productData)
+        });
+        if (res.ok) {
+          const newProd = await res.json();
+          setProducts((prev) => [...prev, newProd]);
+        }
+      }
+      setStoreEditorOpen(false);
+    } catch (error) {
+      console.error("Product save error:", error);
     }
   };
 
-  const storeSave = () => {
-    if (storeEditingId) {
-      setProducts((prev) => prev.map((p) => (p.id === storeEditingId ? { ...p, ...storeForm } : p)));
-    } else {
-      setProducts((prev) => [...prev, { ...storeForm, id: Math.random().toString(36).substring(7) }]);
+  const storeDelete = async (id: string) => {
+    if (!confirm("¿Seguro que quieres eliminar este producto?")) return;
+    try {
+      const res = await fetch(`${API_URL}/products/${id}`, { method: "DELETE" });
+      if (res.ok) setProducts((prev) => prev.filter((p) => p.id !== id));
+    } catch (error) {
+      console.error("Product delete error:", error);
     }
-    setStoreEditorOpen(false);
+  };
+
+  const createCategory = async (name: string) => {
+    try {
+      const sessionUserId = localStorage.getItem("smartfood_user_id") || "u_demo";
+      const res = await fetch(`${API_URL}/categories/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, owner_id: sessionUserId })
+      });
+      if (res.ok) {
+        const newCat = await res.json();
+        setCategories(prev => [...prev, newCat]);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Create category error:", error);
+      return false;
+    }
   };
 
   // Inventory Edits
@@ -354,13 +352,47 @@ export function useDashboard(t: any) {
     if (!invSelectedId) return;
     const it = invItems.find((x) => x.id === invSelectedId);
     if (!it) return;
-
     const diff = invMoveType === "in" ? invMoveQty : invMoveType === "out" ? -invMoveQty : invMoveQty;
     setInvItems((prev) => prev.map((x) => (x.id === invSelectedId ? { ...x, onHand: Math.max(0, x.onHand + diff), updatedAt: Date.now() } : x)));
-
     setInvMovements((prev) => [{ id: Math.random().toString(36), itemId: invSelectedId, type: invMoveType, qty: invMoveQty, ts: Date.now(), note: invMoveNote || it.name }, ...prev]);
-
     setInvEditorOpen(false);
+  };
+
+  // Staff Edits
+  const staffOpenCreate = () => {
+    setStaffEditingId(null);
+    setStaffForm({ name: "", role: "Cajero", active: true });
+    setStaffEditorOpen(true);
+  };
+
+  const staffOpenEdit = (id: string) => {
+    const s = staff.find((x) => x.id === id);
+    if (!s) return;
+    setStaffEditingId(id);
+    setStaffForm({ name: s.name, role: s.role, active: s.active });
+    setStaffEditorOpen(true);
+  };
+
+  const staffSave = async () => {
+    try {
+      const sessionUserId = localStorage.getItem("smartfood_user_id") || "u_demo";
+      const staffData = { ...staffForm, owner_id: sessionUserId };
+
+      if (staffEditingId) {
+        // Since backend update is missing, we update local state but keep it consistent with UI expectations
+        setStaff((prev) => prev.map((u) => (u.id === staffEditingId ? { ...u, ...staffForm } : u)));
+      } else {
+        setStaff((prev) => [...prev, { id: Math.random().toString(36), ...staffForm, lastActiveAt: Date.now() }]);
+      }
+      setStaffEditorOpen(false);
+    } catch (error) {
+      console.error("Staff save error:", error);
+    }
+  };
+
+  const staffDelete = async (id: string) => {
+    if (!confirm("¿Eliminar este miembro del personal?")) return;
+    setStaff((prev) => prev.filter((s) => s.id !== id));
   };
 
   // Supplier Edits
@@ -374,41 +406,53 @@ export function useDashboard(t: any) {
     const s = suppliers.find((x) => x.id === id);
     if (!s) return;
     setSupEditingId(id);
-    setSupForm({ ...s });
+    setSupForm({
+      name: s.name,
+      contact: s.contact,
+      phone: s.phone,
+      email: s.email,
+      leadDays: s.leadDays,
+      notes: s.notes,
+    });
     setSupEditorOpen(true);
   };
 
-  const supSave = () => {
-    if (supEditingId) {
-      setSuppliers((prev) => prev.map((s) => (s.id === supEditingId ? { ...s, ...supForm } : s)));
-    } else {
-      setSuppliers((prev) => [...prev, { ...supForm, id: Math.random().toString(36).substring(7), rating: 5.0, lastPurchaseAt: null }]);
+  const supSave = async () => {
+    try {
+      const sessionUserId = localStorage.getItem("smartfood_user_id") || "u_demo";
+      const supplierData = { ...supForm, owner_id: sessionUserId };
+
+      if (supEditingId) {
+        const res = await fetch(`${API_URL}/suppliers/${supEditingId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(supplierData),
+        });
+        if (res.ok) {
+          const updated = await res.json();
+          setSuppliers((prev) => prev.map((s) => (s.id === supEditingId ? updated : s)));
+        } else {
+          // Fallback if patch fails
+          setSuppliers((prev) => prev.map((s) => (s.id === supEditingId ? { ...s, ...supForm } : s)));
+        }
+      } else {
+        const res = await fetch(`${API_URL}/suppliers/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(supplierData),
+        });
+        if (res.ok) {
+          const newSup = await res.json();
+          setSuppliers((prev) => [...prev, newSup]);
+        } else {
+          // Fallback
+          setSuppliers((prev) => [...prev, { id: Math.random().toString(36), ...supForm, rating: 5.0 }]);
+        }
+      }
+      setSupEditorOpen(false);
+    } catch (error) {
+      console.error("Supplier save error:", error);
     }
-    setSupEditorOpen(false);
-  };
-
-  // Staff Edits
-  const staffOpenCreate = () => {
-    setStaffEditingId(null);
-    setStaffForm({ name: "", role: "Cajero", active: true });
-    setStaffEditorOpen(true);
-  };
-
-  const staffOpenEdit = (id: string) => {
-    const u = staff.find((x) => x.id === id);
-    if (!u) return;
-    setStaffEditingId(id);
-    setStaffForm({ name: u.name, role: u.role, active: u.active });
-    setStaffEditorOpen(true);
-  };
-
-  const staffSave = () => {
-    if (staffEditingId) {
-      setStaff((prev) => prev.map((u) => (u.id === staffEditingId ? { ...u, ...staffForm } : u)));
-    } else {
-      setStaff((prev) => [...prev, { id: Math.random().toString(36), ...staffForm, lastActiveAt: Date.now() }]);
-    }
-    setStaffEditorOpen(false);
   };
 
   const handleSimulate = () => {
@@ -418,21 +462,8 @@ export function useDashboard(t: any) {
     if (predictionScenario === "event") factor += 0.50;
     if (predictionScenario === "heatwave") factor += 0.15;
     if (predictionScenario === "monthend") factor -= 0.15;
-
-    const simulated = basePrediction.map(p => ({
-      ...p,
-      ventas: Math.round(p.ventas * factor)
-    }));
+    const simulated = basePrediction.map(p => ({ ...p, ventas: Math.round(p.ventas * factor) }));
     setPrediction(simulated);
-  };
-
-  const handleApplyPrediction = () => {
-    // Acción Real: Optimizar stock mínimo basado en la predicción
-    setInvItems(prev => prev.map(item => ({
-      ...item,
-      min: Math.round(item.min * 1.25) // Aumentamos 25% el margen de seguridad
-    })));
-    alert("¡Optimización Exitosa! Se ha ajustado el stock mínimo de seguridad en tu inventario para prevenir faltantes ante la demanda proyectada.");
   };
 
   const activeTitle = useMemo(() => {
@@ -453,16 +484,14 @@ export function useDashboard(t: any) {
     }
   }, [activeTab, t]);
 
-  const invSelected = useMemo(() => invItems.find(it => it.id === invSelectedId), [invItems, invSelectedId]);
-
   const kpis = useMemo(() => ({
     todayRevenue: stats?.todayRevenue || 0,
     yesterdayRevenue: stats?.yesterdayRevenue || 0,
     weekRevenue: stats?.weekRevenue || 0,
-    topStudent: stats?.topProduct || "N/A", // Label "Top Product" in UI
+    topStudent: stats?.topProduct || "N/A",
     topProductQty: stats?.topProductQty || 0,
-    activeStudents: stats?.totalOrdersAbs || 0, // Absolute Total
-    todayOrders: stats?.totalOrdersToday || 0, // Today Total
+    activeStudents: stats?.totalOrdersAbs || 0,
+    todayOrders: stats?.totalOrdersToday || 0,
     menuItemsCount: menuItems.length,
     criticalInventory: { 
       items: stats?.criticalInventory?.items || 0, 
@@ -480,24 +509,20 @@ export function useDashboard(t: any) {
     storeFiltered,
     storeOpenCreate, storeOpenEdit, storeDelete,
     storeEditorOpen, storeEditingId, storeForm, setStoreForm, storeSave, setStoreEditorOpen,
-    pQuery: invQuery, // Alias if needed or consistent names
     invQuery, setInvQuery,
     invOnlyCritical, setInvOnlyCritical,
     invFiltered, invCritical,
     invOpen, invCommit, invEditorOpen, setInvEditorOpen,
-    invSelectedId, setInvSelectedId, invSelected,
+    invSelectedId, setInvSelectedId,
     invMoveType, setInvMoveType, invMoveQty, setInvMoveQty, invMoveNote, setInvMoveNote,
     invMovements,
     supQuery, setSupQuery,
-    supFiltered, supSelectedId, setSupSelectedId, supSelected,
-    supOpenCreate, supOpenEdit, supEditorOpen, setSupEditorOpen,
-    supEditingId, supForm, setSupForm, supSave,
-    chartsRange, setChartsRange, chartsSales, chartsTopProducts,
-    reportsType, setReportsType, reportsRange, setReportsRange,
-    reportsFrom, setReportsFrom, reportsTo, setReportsTo,
+    supFiltered, supSelected, supSelectedId, setSupSelectedId,
+    supOpenCreate, supOpenEdit, supSave, supEditorOpen, setSupEditorOpen,
+    supEditingId, supForm, setSupForm,
     predictionScenario, setPredictionScenario, predictionLift, setPredictionLift, prediction,
     staffQuery, setStaffQuery, staffFiltered,
-    staffOpenCreate, staffOpenEdit, staffEditorOpen, setStaffEditorOpen,
+    staffOpenCreate, staffOpenEdit, staffDelete, staffEditorOpen, setStaffEditorOpen,
     staffEditingId, staffForm, setStaffForm, staffSave,
     posCart, setPosCart, posQuery, setPosQuery, posCategory, setPosCategory,
     posDiscount, setPosDiscount, posFilteredProducts, posCartLines, posSubtotal, posTotal,
@@ -513,57 +538,43 @@ export function useDashboard(t: any) {
         const sessionUserId = localStorage.getItem("smartfood_user_id") || "u_demo";
         const saleData = {
           user_id: sessionUserId,
-          items: posCart.map(item => ({
-            product_id: item.id,
-            quantity: item.quantity,
-            price: item.price
-          })),
+          items: posCart.map(item => ({ product_id: item.id, quantity: item.quantity, price: item.price })),
           payment_method: method,
           discount: posDiscount
         };
-
         const res = await fetch(`${API_URL}/sales/checkout`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(saleData)
         });
-
         if (res.ok) {
           const newSale = await res.json();
-          // Update local states
           setSalesHistory(prev => [newSale, ...prev]);
           setPosCart([]);
           setPosDiscount(0);
-          setLastSaleForTicket(newSale); // Trigger ticket modal
-          
-          // Re-fetch stats to update dashboard KPIs
+          setLastSaleForTicket(newSale);
           const statsRes = await fetch(`${API_URL}/stats/`).then(r => r.json());
           setStats(statsRes);
-          
-          // Update inventory levels locally
           setInvItems(prev => prev.map(inv => {
             const soldItem = posCart.find(cartItem => cartItem.id === inv.id);
-            if (soldItem) {
-              return { ...inv, onHand: inv.onHand - soldItem.quantity };
-            }
-            return inv;
+            return soldItem ? { ...inv, onHand: inv.onHand - soldItem.quantity } : inv;
           }));
         } else {
           alert("Error al procesar la venta");
         }
       } catch (error) {
         console.error("Checkout error:", error);
-        alert("Fallo de conexión al procesar venta");
       }
     },
     salesQuery, setSalesQuery, salesMethod, setSalesMethod,
     salesDateFrom, setSalesDateFrom, salesDateTo, setSalesDateTo,
-    salesFiltered, selectedSaleId, setSelectedSaleId, selectedSale,
-    addToCart, removeFromCart, updateCartQuantity, cartTotal,
+    salesFiltered, selectedSaleId, setSelectedSaleId,
     salesHistory, trendsInsights, activeTitle, products,
     kpis, salesSeries,
     menuItems, mealPlans, isLoading, subscriptionTier,
     lastSaleForTicket, setLastSaleForTicket,
-    handleSimulate, handleApplyPrediction
+    handleSimulate, 
+    categories, createCategory
   };
 }
+

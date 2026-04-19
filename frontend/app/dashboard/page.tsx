@@ -495,6 +495,7 @@ export default function Dashboard() {
               setStoreForm={dashboard.setStoreForm}
               storeSave={dashboard.storeSave}
               storeCloseEditor={() => dashboard.setStoreEditorOpen(false)}
+              createCategory={dashboard.createCategory}
             />
           )}
           {activeTab === "inventory" && (
