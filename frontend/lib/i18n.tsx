@@ -1293,7 +1293,7 @@ export const T = {
   },
 } as const;
 
-const LangCtx = createContext<{ lang: Lang; t: Translations; setLang: (l: Lang) => void }>({
+const LangCtx = createContext<{ lang: Lang; t: any; setLang: (l: Lang) => void }>({
   lang: "es", t: T["es"], setLang: () => { },
 });
 
@@ -1421,12 +1421,4 @@ export function LangSwitcher() {
     </div>
   );
 }
-           )}
-              </button>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
+
