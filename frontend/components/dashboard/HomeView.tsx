@@ -61,21 +61,6 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
               : "Gestión simplificada de ventas y reportes base."}
           </p>
         </motion.div>
-
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-3">
-          {isProOrAbove && (
-            <button className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-5 py-3 rounded-2xl text-xs font-normal uppercase tracking-widest hover:border-emerald-500/40 transition-all shadow-sm">
-              <PackageSearch className="w-4 h-4" /> Ver alertas
-            </button>
-          )}
-          <button 
-            onClick={() => setActiveTab(isProOrAbove ? "pos" : "sales")}
-            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-2xl text-xs font-normal uppercase tracking-widest shadow-lg shadow-emerald-500/20 active:scale-95 transition-all"
-          >
-            {isProOrAbove ? <ShoppingCart className="w-4 h-4" /> : <ClipboardList className="w-4 h-4" />}
-            {isProOrAbove ? "Abrir POS" : "Ver Ventas"}
-          </button>
-        </motion.div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -95,7 +80,7 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
         )}
       </div>
 
-      <div className={cn("grid grid-cols-1 gap-8", isProOrAbove ? "lg:grid-cols-3" : "lg:grid-cols-1")}>
+      <div className={cn("grid grid-cols-1 gap-8", isProOrAbove ? "lg:grid-cols-2" : "lg:grid-cols-1")}>
         <div className={cn("bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm", !isProOrAbove && "lg:col-span-1")}>
           <div className="flex items-center justify-between mb-8">
             <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">Rendimiento de Ventas</h3>
