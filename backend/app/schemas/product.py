@@ -6,6 +6,8 @@ class ProductBase(BaseModel):
     category: str
     price: float
     available: bool = True
+    on_hand: int = 0
+    min_stock: int = 5
     imageUrl: Optional[str] = None
 
 class ProductCreate(ProductBase):

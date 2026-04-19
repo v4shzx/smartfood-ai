@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ShoppingCart,
   X,
@@ -9,10 +9,17 @@ import {
   PackageSearch,
   Store,
   Plus,
+  Minus,
   DollarSign,
+  Trash2,
+  CreditCard,
+  Banknote,
+  Receipt,
+  Tag as TagIcon
 } from "lucide-react";
 import { formatCurrencyMXN } from "@/lib/dashboard-utils";
 import { useI18n } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 interface POSViewProps {
   t: any;
@@ -51,32 +58,17 @@ export function POSView({
 
   return (
     <>
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.pos}</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">Crea ventas rápido: productos, carrito, descuento y pago.</p>
-        </motion.div>
-
-        <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-3">
-          <button
-            onClick={posClear}
-            className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-5 py-3 rounded-2xl text-xs font-normal uppercase tracking-widest hover:border-rose-500/40 transition-all shadow-sm text-rose-600 dark:text-rose-300"
-          >
-            <X className="w-4 h-4" /> {t.dashboard.remove}
-          </button>
-          <button
-            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-2xl text-xs font-normal uppercase tracking-widest shadow-lg shadow-emerald-500/20 active:scale-95 transition-all"
-            onClick={() => setActiveTab("sales")}
-          >
-            <ClipboardList className="w-4 h-4" /> {t.dashboard.view_all}
-          </button>
         </motion.div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
         {/* Catalog */}
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm h-fit">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
               <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.store}</h3>
               <p className="text-xs text-slate-400 dark:text-slate-500 font-normal mt-1 uppercase tracking-widest">Búsqueda rápida</p>
@@ -93,34 +85,46 @@ export function POSView({
               </div>
             </div>
           </div>
+
           <div className="max-h-[820px] overflow-y-auto pr-3 -mr-3 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800 scroll-smooth">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {posFilteredProducts.map((p) => (
                 <motion.button
                   key={p.id}
-                  whileHover={{ y: -6, scale: 1.01 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={{ y: -4, scale: 1.02 }}
+                  whileTap={{ scale: 0.96 }}
                   onClick={() => posAdd(p.id)}
-                  className="group relative flex flex-col h-full bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-xl hover:border-emerald-500/30 transition-all duration-300 p-8"
+                  className="group relative flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:border-emerald-500/40 transition-all duration-300"
                 >
-                  <div className="flex items-center justify-between mb-4 w-full">
-                    <div className="flex items-center gap-2">
-                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                       <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{p.category}</span>
+                  {/* Category Header */}
+                  <div className="px-4 pt-4 flex items-center justify-between">
+                    <div className="flex flex-col text-left">
+                      <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 truncate max-w-[80px]">
+                        {p.category}
+                      </span>
+                      <span className={cn(
+                        "text-[8px] font-bold uppercase tracking-wider mt-0.5",
+                        p.on_hand <= p.min_stock ? "text-rose-500" : "text-emerald-500"
+                      )}>
+                        Stock: {p.on_hand}
+                      </span>
                     </div>
-                    <div className="bg-emerald-50 dark:bg-emerald-500/10 px-2 py-1 rounded-lg">
-                      <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400">{formatCurrencyMXN(p.price)}</span>
-                    </div>
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                   </div>
-                  
-                  <h4 className="text-xl font-black text-slate-900 dark:text-white leading-tight mb-8 text-left line-clamp-2">{p.name}</h4>
-                  
-                  <div className="mt-auto flex items-center justify-between w-full">
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-emerald-500 transition-colors">
-                      {lang === 'es' ? 'Añadir al carrito' : (lang === 'fr' ? 'Ajouter au panier' : 'Add to cart')}
-                    </div>
-                    <div className="w-10 h-10 rounded-2xl bg-slate-50 dark:bg-slate-800/30 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white shadow-sm transition-all duration-300">
-                      <Plus className="w-5 h-5" />
+
+                  {/* Body */}
+                  <div className="p-4 pt-2 flex flex-col flex-1">
+                    <h4 className="text-sm font-black text-slate-900 dark:text-white leading-tight mb-4 text-left line-clamp-2 min-h-[2.5rem]">
+                      {p.name}
+                    </h4>
+                    
+                    <div className="mt-auto flex items-center justify-between bg-slate-50 dark:bg-slate-800/50 p-2 rounded-2xl border border-slate-100 dark:border-slate-800">
+                      <span className="text-sm font-black text-emerald-600 dark:text-emerald-400">
+                        {formatCurrencyMXN(p.price)}
+                      </span>
+                      <div className="w-7 h-7 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                        <Plus className="w-3.5 h-3.5" />
+                      </div>
                     </div>
                   </div>
                 </motion.button>
@@ -129,77 +133,142 @@ export function POSView({
           </div>
         </div>
 
-        {/* Cart */}
-        <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.cart}</h3>
-            <div className="text-[10px] font-normal uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{posCartLines.length} items</div>
-          </div>
-          <div className="space-y-3">
-            {posCartLines.length === 0 && (
-              <div className="p-5 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 text-sm">
-                {t.dashboard.add_items_to_start}
+        {/* Cart Column */}
+        <div className="space-y-6">
+          <button
+            onClick={posClear}
+            className="w-full flex items-center justify-center gap-3 bg-rose-50/50 dark:bg-rose-500/5 border border-rose-200/50 dark:border-rose-500/20 px-5 py-4 rounded-[1.8rem] text-xs font-black uppercase tracking-widest text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-500/15 hover:border-rose-300 dark:hover:border-rose-500/30 transition-all duration-300 active:scale-[0.98] group"
+          >
+            <Trash2 className="w-4 h-4 group-hover:-rotate-12 transition-transform duration-300" /> 
+            {lang === 'es' ? 'Limpiar carrito' : (lang === 'fr' ? 'Vider le panier' : 'Clear cart')}
+          </button>
+
+          <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full overflow-hidden">
+            {/* Cart Header */}
+            <div className="p-8 pb-4 border-b border-slate-100 dark:border-slate-800/60 flex items-center justify-between">
+              <div>
+                <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.cart}</h3>
+                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">{posCartLines.length} {lang === 'es' ? 'productos' : 'items'}</p>
               </div>
-            )}
-            {posCartLines.map((l) => (
-              <div key={l.lineKey} className="flex items-center justify-between gap-3 p-4 rounded-2xl bg-slate-50/60 dark:bg-slate-800/40 border border-slate-100/60 dark:border-slate-800/60">
-                <div className="min-w-0">
-                  <div className="text-sm font-black text-slate-900 dark:text-white truncate">{l.name}</div>
-                  <div className="text-[10px] font-normal uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mt-1">
-                    {formatCurrencyMXN(l.price)} c/u
+              <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600">
+                <ShoppingCart className="w-5 h-5" />
+              </div>
+            </div>
+
+            {/* Cart Items */}
+            <div className="flex-1 overflow-y-auto max-h-[450px] p-6 space-y-3 no-scrollbar">
+              <AnimatePresence initial={false}>
+                {posCartLines.length === 0 ? (
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="py-12 flex flex-col items-center text-center px-6"
+                  >
+                    <div className="w-16 h-16 rounded-[2rem] bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center text-slate-300 dark:text-slate-700 mb-4">
+                      <Receipt className="w-8 h-8" />
+                    </div>
+                    <div className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest leading-relaxed">
+                      {t.dashboard.add_items_to_start}
+                    </div>
+                  </motion.div>
+                ) : (
+                  posCartLines.map((l) => (
+                    <motion.div 
+                      key={l.lineKey}
+                      layout
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      className="group flex items-center gap-4 p-4 rounded-[1.8rem] bg-slate-50/50 dark:bg-slate-800/30 border border-slate-100/50 dark:border-slate-800/50 hover:bg-white dark:hover:bg-slate-800/60 hover:border-emerald-500/20 transition-all"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 flex items-center justify-center shrink-0">
+                        <span className="text-[10px] font-black text-emerald-600">{l.qty}x</span>
+                      </div>
+                      
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[13px] font-black text-slate-900 dark:text-white truncate">{l.name}</div>
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+                          {formatCurrencyMXN(l.price)}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1 bg-white dark:bg-slate-950 p-1 rounded-xl border border-slate-100 dark:border-slate-800">
+                        <button 
+                          onClick={() => posDec(l.id)} 
+                          className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-rose-50 dark:hover:bg-rose-500/10 text-rose-500 transition-colors"
+                        >
+                          <Minus className="w-3.5 h-3.5" />
+                        </button>
+                        <button 
+                          onClick={() => posAdd(l.id)} 
+                          className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-500/10 text-emerald-500 transition-colors"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </motion.div>
+                  ))
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Cart Summary */}
+            <div className="p-8 pt-6 bg-slate-50/50 dark:bg-slate-800/20 border-t border-slate-100 dark:border-slate-800/60">
+              <div className="space-y-3 mb-8">
+                <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-widest text-slate-400">
+                  <span>{t.dashboard.subtotal}</span>
+                  <span className="text-slate-600 dark:text-slate-300">{formatCurrencyMXN(posSubtotal)}</span>
+                </div>
+                
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400">
+                    <TagIcon className="w-3.5 h-3.5" />
+                    <span>{t.dashboard.discount}</span>
+                  </div>
+                  <div className="w-[100px] flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-inner">
+                    <span className="text-[10px] font-black text-slate-400">$</span>
+                    <input
+                      inputMode="numeric"
+                      value={posDiscount}
+                      onChange={(e) => setPosDiscount(Number(e.target.value || 0))}
+                      className="w-full bg-transparent outline-none text-xs font-black text-slate-900 dark:text-white"
+                    />
                   </div>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <button onClick={() => posDec(l.id)} className="w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-950/30 font-normal text-slate-700 dark:text-slate-200">
-                    -
-                  </button>
-                  <div className="w-10 text-center font-black text-slate-900 dark:text-white">{l.qty}</div>
-                  <button onClick={() => posAdd(l.id)} className="w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-950/30 font-normal text-slate-700 dark:text-slate-200">
-                    +
-                  </button>
+
+                <div className="pt-4 flex items-center justify-between border-t border-slate-200 dark:border-slate-800/60">
+                  <span className="text-sm font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white">{t.dashboard.total}</span>
+                  <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight">{formatCurrencyMXN(posTotal)}</span>
                 </div>
               </div>
-            ))}
-          </div>
-          <div className="mt-6 space-y-3">
-            <div className="flex items-center justify-between text-sm font-normal text-slate-600 dark:text-slate-300">
-              <span>{t.dashboard.subtotal}</span>
-              <span className="font-black">{formatCurrencyMXN(posSubtotal)}</span>
-            </div>
-            <div className="flex items-center justify-between gap-3">
-              <div className="text-sm font-normal text-slate-600 dark:text-slate-300">{t.dashboard.discount}</div>
-              <div className="w-[140px] flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
-                <DollarSign className="w-4 h-4 text-slate-400" />
-                <input
-                  inputMode="numeric"
-                  value={posDiscount}
-                  onChange={(e) => setPosDiscount(Number(e.target.value || 0))}
-                  className="w-full bg-transparent outline-none text-sm font-black text-slate-900 dark:text-white"
-                />
+
+              {/* Checkout Buttons */}
+              <div className="grid grid-cols-1 gap-3">
+                <button
+                  onClick={() => posCheckout("Cash")}
+                  disabled={posCartLines.length === 0}
+                  className="group relative flex items-center justify-between bg-emerald-600 disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 text-white px-6 py-4 rounded-[1.5rem] text-xs font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <Banknote className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                    <span>{t.dashboard.checkout_cash}</span>
+                  </div>
+                  <span className="font-black opacity-80">{formatCurrencyMXN(posTotal)}</span>
+                </button>
+
+                <button
+                  onClick={() => posCheckout("Card")}
+                  disabled={posCartLines.length === 0}
+                  className="group flex items-center justify-between bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 disabled:opacity-50 text-slate-900 dark:text-white px-6 py-4 rounded-[1.5rem] text-xs font-black uppercase tracking-widest shadow-sm hover:border-emerald-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <CreditCard className="w-4 h-4 group-hover:rotate-12 transition-transform text-emerald-500" />
+                    <span>{t.dashboard.checkout_card}</span>
+                  </div>
+                  <span className="font-black opacity-60">{formatCurrencyMXN(posTotal)}</span>
+                </button>
               </div>
             </div>
-            <div className="flex items-center justify-between text-base font-normal text-slate-900 dark:text-white">
-              <span>{t.dashboard.total}</span>
-              <span className="font-black">{formatCurrencyMXN(posTotal)}</span>
-            </div>
-          </div>
-          <div className="mt-6 grid grid-cols-1 gap-3">
-            <button
-              onClick={() => posCheckout("Cash")}
-              disabled={posCartLines.length === 0}
-              className="flex items-center justify-between gap-3 bg-emerald-600 disabled:bg-slate-300 dark:disabled:bg-slate-800 disabled:text-slate-600 text-white px-5 py-3 rounded-2xl text-xs font-normal uppercase tracking-widest shadow-lg shadow-emerald-500/20 transition-all"
-            >
-              <span>{t.dashboard.checkout_cash}</span>
-              <span>{formatCurrencyMXN(posTotal)}</span>
-            </button>
-            <button
-              onClick={() => posCheckout("Card")}
-              disabled={posCartLines.length === 0}
-              className="flex items-center justify-between gap-3 bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 disabled:opacity-60 px-5 py-3 rounded-2xl text-xs font-normal uppercase tracking-widest shadow-sm"
-            >
-              <span>{t.dashboard.checkout_card}</span>
-              <span>{formatCurrencyMXN(posTotal)}</span>
-            </button>
           </div>
         </div>
       </div>
