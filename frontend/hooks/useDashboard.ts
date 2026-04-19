@@ -684,6 +684,7 @@ export function useDashboard(t: any) {
     salesFiltered, selectedSaleId, setSelectedSaleId,
     salesHistory, trendsInsights, activeTitle, products,
     kpis, salesSeries, chartsSales, chartsTopProducts,
+    chartsRange, setChartsRange,
     menuItems, mealPlans, isLoading, subscriptionTier,
     lastSaleForTicket, setLastSaleForTicket,
     handleSimulate, 
