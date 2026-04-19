@@ -160,10 +160,10 @@ export function useDashboard(t: any) {
         setStaff(staffRes);
         setProducts(productsRes);
         setCategories(catRes);
-        setSalesHistory(salesRes);
+        console.log('Fetched sales count:', salesRes.length);
         setInvItems(invRes);
         setInvMovements(movRes);
-        setSuppliers(supRes.map((s: any) => ({ ...s, leadDays: s.lead_days || s.leadDays || 3 })));
+        setSalesHistory(salesRes);
         setSalesSeries(seriesRes);
         setTrendsInsights(trendsRes);
         setPrediction(predRes);
@@ -177,7 +177,10 @@ export function useDashboard(t: any) {
     fetchData();
   }, []);
   
-  // Computed Values
+  // Debug: log salesHistory updates
+  useEffect(() => {
+    console.log('salesHistory updated, count:', salesHistory.length);
+  }, [salesHistory]);
   const storeCategories = useMemo(() => {
     const fromProducts = Array.from(new Set(products.map((p) => p.category)));
     const fromDB = categories.map(c => c.name);

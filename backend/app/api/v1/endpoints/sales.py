@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.core.database import get_db
+from app.models.product import Product
 from app.models.sales import Sale
 from pydantic import BaseModel
 from datetime import datetime
@@ -92,32 +93,37 @@ async def get_sales(
     owner_id: Optional[str] = Query("u_demo", description="Owner ID to filter sales"),
     db: AsyncSession = Depends(get_db)
 ):
-    result = await db.execute(select(Sale).where(Sale.user_id == owner_id).order_by(Sale.timestamp.desc()))
-    all_sales = result.scalars().all()
+    result = await db.execute(select(Sale, Product.name).join(Product, Sale.product_id == Product.id).where(Sale.user_id == owner_id).order_by(Sale.timestamp.desc()))
+    rows = result.all()
     
     grouped = {}
-    for s in all_sales:
-        parts = s.id.split('_')
+    for sale, prod_name in rows:
+        parts = sale.id.split('_')
         # POS sales: sale_UUID_PRODID (3 parts)
         # We group by sale_UUID
         if len(parts) == 3 and parts[0] == 'sale':
             ticket_id = f"{parts[0]}_{parts[1]}"
-        # If it's a seed sale or something else, use the full ID to keep it unique
         else:
-            ticket_id = s.id
-            
+            ticket_id = sale.id
+        
         if ticket_id not in grouped:
             grouped[ticket_id] = {
                 "id": ticket_id,
-                "ts": s.timestamp,
-                "total": 0,
+                "ts": sale.timestamp,
+                "total": 0.0,
                 "items_count": 0,
-                "method": s.payment_method,
+                "method": sale.payment_method,
                 "cashier": "Admin",
                 "items_detail": []
             }
-        grouped[ticket_id]["total"] += s.total_price
-        grouped[ticket_id]["items_count"] += s.quantity
+        grouped[ticket_id]["total"] += sale.total_price
+        grouped[ticket_id]["items_count"] += sale.quantity
+        # Append item detail (avoid duplicates by product name)
+        grouped[ticket_id]["items_detail"].append({
+            "name": prod_name,
+            "quantity": sale.quantity,
+            "price": sale.total_price / sale.quantity if sale.quantity else 0
+        })
     
     return [SaleResponse(**v) for v in grouped.values()]
 

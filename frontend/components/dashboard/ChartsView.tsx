@@ -107,18 +107,22 @@ export function ChartsView({
             <TrendingUp className="w-5 h-5 text-emerald-500" />
           </div>
           <div className="h-[400px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartsTopProducts} layout="vertical" margin={{ left: -20, right: 20 }}>
-                <XAxis type="number" hide />
-                <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 400, width: 80 }} stroke="rgba(148,163,184,0.8)" />
-                <Tooltip cursor={{ fill: "rgba(148,163,184,0.05)" }} contentStyle={{ borderRadius: 16, border: "none", boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1)" }} />
-                <Bar dataKey="val" radius={[0, 10, 10, 0]} barSize={24}>
-                  {chartsTopProducts.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+            {chartsTopProducts.length === 0 ? (
+              <div className="text-center text-slate-500 py-8">{t.dashboard.no_top_products || 'No hay productos destacados'}</div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartsTopProducts} layout="vertical" margin={{ left: -20, right: 20 }}>
+                  <XAxis type="number" hide />
+                  <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 400, width: 80 }} stroke="rgba(148,163,184,0.8)" />
+                  <Tooltip cursor={{ fill: "rgba(148,163,184,0.05)" }} contentStyle={{ borderRadius: 16, border: "none", boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1)" }} />
+                  <Bar dataKey="val" radius={[0, 10, 10, 0]} barSize={24}>
+                    {chartsTopProducts.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </div>
           <div className="mt-6 flex flex-wrap gap-4">
             {chartsTopProducts.slice(0, 3).map((p, i) => (
