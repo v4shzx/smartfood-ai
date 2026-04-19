@@ -31,7 +31,11 @@ class Settings(BaseSettings):
     @property
     def async_database_url(self) -> str:
         if self.DATABASE_URL:
-            return self.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
+            # Handle both postgres:// and postgresql:// from Railway/Heroku
+            url = self.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
+            if "postgresql+asyncpg://" not in url:
+                url = url.replace("postgres://", "postgresql+asyncpg://")
+            return url
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}/{self.POSTGRES_DB}"
 
     model_config = SettingsConfigDict(case_sensitive=True, env_file=".env")
