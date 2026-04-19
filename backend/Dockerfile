@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-WORKDIR /app
+WORKDIR /code
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
@@ -11,6 +11,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
+
+ENV PYTHONPATH=/code
 
 EXPOSE 8000
 
