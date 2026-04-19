@@ -431,7 +431,7 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                           }}
                           className="px-6 py-3 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 transition-all"
                         >
-                          Cancelar
+                          {lang === 'es' ? 'Cancelar' : (lang === 'fr' ? 'Annuler' : 'Cancel')}
                         </button>
                       </div>
                     </motion.div>

@@ -12,6 +12,7 @@ import {
   DollarSign,
 } from "lucide-react";
 import { formatCurrencyMXN } from "@/lib/dashboard-utils";
+import { useI18n } from "@/lib/i18n";
 
 interface POSViewProps {
   t: any;
@@ -46,6 +47,8 @@ export function POSView({
   posCheckout,
   setActiveTab,
 }: POSViewProps) {
+  const { lang } = useI18n();
+
   return (
     <>
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">

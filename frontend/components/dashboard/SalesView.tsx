@@ -10,6 +10,7 @@ import {
   X,
 } from "lucide-react";
 import { formatCurrencyMXN } from "@/lib/dashboard-utils";
+import { useI18n } from "@/lib/i18n";
 
 interface SalesViewProps {
   t: any;
@@ -42,6 +43,8 @@ export function SalesView({
   selectedSale,
   setActiveTab,
 }: SalesViewProps) {
+  const { lang } = useI18n();
+
   return (
     <>
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -66,7 +69,7 @@ export function SalesView({
       <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-2">
-            <div className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
+            <div className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 flex-1">
               <PackageSearch className="w-4 h-4 text-slate-400" />
               <input
                 value={salesQuery}
