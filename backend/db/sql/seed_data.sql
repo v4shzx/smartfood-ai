@@ -1,9 +1,9 @@
 -- Base Seed Data for SmartFood AI
 
 -- 1. Users (Admins/Owners)
-INSERT INTO users (id, full_name, email, password_hash, role, subscription_tier) VALUES
-('u_demo', 'Comedor DM', 'comedordm@gmail.com', '123456', 'admin', 'empresarial'),
-('u_demo_basico', 'Demo Básico', 'demo_basico@smartfood.ai', '123456', 'admin', 'basico')
+INSERT INTO users (id, full_name, email, password_hash, role, subscription_tier, created_at) VALUES
+('u_demo', 'Comedor DM', 'comedordm@gmail.com', '123456', 'admin', 'empresarial', '2026-01-15 10:00:00'),
+('u_demo_basico', 'Demo Básico', 'demo_basico@smartfood.ai', '123456', 'admin', 'basico', '2026-03-02 14:30:00')
 ON CONFLICT (id) DO NOTHING;
 
 -- 2. Staff (Workers linked to u_demo)

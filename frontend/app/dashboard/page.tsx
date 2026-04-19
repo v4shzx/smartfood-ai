@@ -604,6 +604,7 @@ export default function Dashboard() {
               t={t} 
               handleLogout={handleLogout} 
               mealPlans={dashboard.mealPlans}
+              subscriptionTier={subscriptionTier}
             />
           )}
         </div>

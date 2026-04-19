@@ -25,13 +25,47 @@ interface AccountViewProps {
   t: any;
   handleLogout: () => void;
   mealPlans: any[];
+  subscriptionTier: string;
 }
 
-export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
+export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: AccountViewProps) {
   const { lang } = useI18n();
+  const [userName, setUserName] = React.useState("User");
   const [email, setEmail] = React.useState("admin@smartfood.ai");
   const [isEditingEmail, setIsEditingEmail] = React.useState(false);
   const [tempEmail, setTempEmail] = React.useState(email);
+
+  React.useEffect(() => {
+    const storedName = localStorage.getItem("smartfood_user_name");
+    const storedEmail = localStorage.getItem("smartfood_user_id"); // Usually we use email, but let's check what's in localStorage
+    
+    // In our login, we save smartfood_user_name and smartfood_user_id (which might be the email or UUID)
+    // Let's try to find if we have email specifically or use ID as fallback for display
+    if (storedName) setUserName(storedName);
+    
+    // Let's use a safer approach for email if it's not explicitly stored
+    // For now use what we have, but ideally we store email too.
+    // Based on login/page.tsx:
+    // localStorage.setItem("smartfood_user_id", data.user_id);
+    // localStorage.setItem("smartfood_user_name", data.full_name);
+    if (storedEmail && storedEmail.includes('@')) {
+      setEmail(storedEmail);
+      setTempEmail(storedEmail);
+    }
+  }, []);
+
+  const getInitials = (name: string) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
+
+  const getTierLabel = (tier: string) => {
+    switch (tier) {
+      case 'administrador': return 'Administrador';
+      case 'empresarial': return t.dashboard.sub_enterprise || 'Empresarial';
+      case 'profesional': return t.dashboard.sub_pro;
+      default: return t.dashboard.sub_basic || 'Básico';
+    }
+  };
 
   const [isEditingPassword, setIsEditingPassword] = React.useState(false);
   const [passForm, setPassForm] = React.useState({
@@ -217,7 +251,7 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                 <div className="w-32 h-32 rounded-[2.5rem] bg-linear-to-br from-emerald-500 to-emerald-600 p-[3px] shadow-2xl shadow-emerald-500/20">
                   <div className="w-full h-full rounded-[2.2rem] bg-white dark:bg-slate-950 flex items-center justify-center p-1 overflow-hidden">
                     <div className="w-full h-full rounded-[1.8rem] bg-slate-100 dark:bg-slate-900 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-3xl font-black">
-                      AD
+                      {getInitials(userName)}
                     </div>
                   </div>
                 </div>
@@ -226,9 +260,9 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
                 </button>
               </div>
 
-              <h3 className="text-2xl font-black text-slate-900 dark:text-white">Admin User</h3>
+              <h3 className="text-2xl font-black text-slate-900 dark:text-white">{userName}</h3>
               <div className="flex items-center gap-2 mt-1 text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest text-[10px]">
-                <ShieldCheck className="w-3.5 h-3.5" /> {t.dashboard.admin_pro}
+                <ShieldCheck className="w-3.5 h-3.5" /> {getTierLabel(subscriptionTier)}
               </div>
 
               <div className="w-full mt-8 pt-8 border-t border-slate-100 dark:border-slate-800/60 space-y-4">
@@ -257,7 +291,7 @@ export function AccountView({ t, handleLogout, mealPlans }: AccountViewProps) {
               <div className="space-y-4 mb-8">
                 <div>
                   <div className="text-[10px] font-black uppercase tracking-[.25em] text-emerald-100/60 mb-1">{t.dashboard.sub_type}</div>
-                  <div className="text-sm font-bold bg-white/10 w-fit px-3 py-1 rounded-lg">{t.dashboard.sub_pro}</div>
+                  <div className="text-sm font-bold bg-white/10 w-fit px-3 py-1 rounded-lg">{getTierLabel(subscriptionTier)}</div>
                 </div>
                 
                 <div>

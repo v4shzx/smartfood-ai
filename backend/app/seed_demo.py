@@ -26,12 +26,12 @@ async def seed():
             print(f"Seeding initial users...")
             # 1. Demo Users (Admins/Owners)
             users_data = [
-                ("u_demo", "comedordm@gmail.com", "Comedor DM", "admin", "empresarial"),
-                ("u_demo_basico", "demo_basico@smartfood.ai", "Demo Básico", "admin", "basico"), # Restored this user
-                ("u_master", "master@smartfood.ai", "Master Account", "admin", "administrador"), # Master user with new Administrador tier
+                ("u_demo", "comedordm@gmail.com", "Comedor DM", "admin", "empresarial", datetime(2026, 1, 15, 10, 0)),
+                ("u_demo_basico", "demo_basico@smartfood.ai", "Demo Básico", "admin", "basico", datetime(2026, 3, 2, 14, 30)), 
+                ("u_master", "master@smartfood.ai", "Master Account", "admin", "administrador", datetime(2025, 12, 20, 9, 15)), 
             ]
             
-            for uid, email, name, role, tier in users_data:
+            for uid, email, name, role, tier, created_at in users_data:
                 # Assign password based on user ID for security demonstration
                 pw_hash = "master" if uid == "u_master" else "123456" 
                 
@@ -41,7 +41,8 @@ async def seed():
                     full_name=name,
                     password_hash=pw_hash, # Use 'master' for master user, '123456' for others
                     role=role,
-                    subscription_tier=tier
+                    subscription_tier=tier,
+                    created_at=created_at
                 )
                 session.add(u)
             
