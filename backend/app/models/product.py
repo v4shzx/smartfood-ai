@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Float, Boolean, ForeignKey
+from sqlalchemy import Column, String, Float, Boolean, ForeignKey, Integer
 from app.core.database import Base
 
 class Product(Base):
@@ -10,4 +10,5 @@ class Product(Base):
     category = Column(String, index=True)
     price = Column(Float)
     available = Column(Boolean, default=True)
-    on_hand = Column(Float, default=0.0)
+    on_hand = Column(Integer, default=0)
+    min_stock = Column(Integer, default=5)

@@ -3,7 +3,7 @@ from sqlalchemy.sql import func
 from app.core.database import Base
 
 class SchoolUser(Base):
-    __tablename__ = "school_users"
+    __tablename__ = "users"
 
     id = Column(String, primary_key=True, index=True)
     email = Column(String, unique=True, index=True)
