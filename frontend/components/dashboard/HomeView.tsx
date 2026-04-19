@@ -37,9 +37,12 @@ interface HomeViewProps {
   t: any;
   kpis: {
     todayRevenue: number;
+    yesterdayRevenue: number;
     weekRevenue: number;
-    topStudent: string;
+    topProduct: string;
+    topProductQty: number;
     activeStudents: number;
+    todayOrders: number;
     menuItemsCount: number;
     criticalInventory: { items: number; sku: string; remaining: number };
   };
@@ -121,7 +124,7 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
           icon={<DollarSign className="w-6 h-6 text-sky-600" />} 
           trend={kpis.todayRevenue >= kpis.yesterdayRevenue ? "+Trend" : "-Trend"}
         />
-        <StatCard title={t.dashboard.top_product} value={kpis.topStudent} subtitle={`${kpis.topProductQty} ${t.dashboard.units_sold}`} icon={<Store className="w-6 h-6 text-amber-600" />} />
+        <StatCard title={t.dashboard.top_product} value={kpis.topProduct} subtitle={`${kpis.topProductQty} ${t.dashboard.units_sold}`} icon={<Store className="w-6 h-6 text-amber-600" />} />
         {isProOrAbove ? (
           <StatCard title={t.dashboard.critical_stock} value={`${kpis.criticalInventory.items} items`} subtitle={`Alerta: ${kpis.criticalInventory.sku}`} icon={<AlertTriangle className="w-6 h-6 text-rose-600" />} trend="Alerta" />
         ) : (
@@ -147,7 +150,7 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
             <div>
               <div className="text-[10px] font-black text-emerald-100 uppercase tracking-[0.2em] mb-1">{t.dashboard.ai_prediction_tomorrow}</div>
               <div className="text-2xl font-black text-white tracking-tight">
-                {kpis.topStudent !== "N/A" ? kpis.topStudent : t.dashboard.calculating}
+                {kpis.topProduct !== "N/A" ? kpis.topProduct : t.dashboard.calculating}
               </div>
               <div className="text-xs text-emerald-50/70 font-medium mt-1 flex items-center gap-2">
                 <Sparkles className="w-3.5 h-3.5" /> {t.dashboard.max_probability} • {t.dashboard.view_analysis}

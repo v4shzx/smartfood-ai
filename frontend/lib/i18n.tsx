@@ -12,6 +12,8 @@ export const LANGUAGES: { code: Lang; label: string; flag: string }[] = [
   { code: "fr", label: "Français", flag: "🇫🇷" },
 ];
 
+export type Translation = typeof T.es;
+
 export const T = {
   es: {
     nav: { home: "Inicio", features: "Características", platform: "Plataforma", testimonials: "Testimonios", pricing: "Precios", contact: "Contacto", login: "Iniciar sesión", cta: "Comenzar" },

@@ -9,25 +9,30 @@ import {
   ArrowUpRight,
   TrendingDown,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Translation } from "@/lib/i18n";
+import { TrendInsight } from "@/types/dashboard";
 
 interface TrendsViewProps {
-  t: any;
-  trendsInsights: any[];
+  t: Translation;
+  trendsInsights: TrendInsight[];
 }
 
 export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
-  const renderInsight = (ins: any) => {
+  const renderInsight = (ins?: TrendInsight | null) => {
     if (!ins) return { title: "", desc: "" };
-    const template = t.dashboard.trends_insights?.[ins.key];
-    if (!template) return { title: ins.title || "Insight", desc: ins.desc || "" };
+    
+    // @ts-ignore - Dynamic key access
+    const template = (t.dashboard.trends_insights as any)?.[ins.key];
+    if (!template) return { title: ins.key || "Insight", desc: "" };
 
     let desc = template.desc;
     if (ins.params) {
       Object.entries(ins.params).forEach(([key, val]) => {
         // If the parameter is a day key, translate it using the days dict
-        const finalVal = key === "day" && t.dashboard.trends_insights.days[val as string] 
-          ? t.dashboard.trends_insights.days[val as string] 
+        // @ts-ignore
+        const daysDict = t.dashboard.trends_insights.days as Record<string, string>;
+        const finalVal = key === "day" && daysDict[val as string] 
+          ? daysDict[val as string] 
           : val;
         desc = desc.replace(`{${key}}`, String(finalVal));
       });
@@ -36,9 +41,10 @@ export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
     return { title: template.title, desc };
   };
 
-  const relevant = trendsInsights.filter(i => !i.category || i.category === "relevant");
+  const relevant = trendsInsights.filter(i => !i.category || i.category === "relevant" || i.category === "growth");
   const opportunities = trendsInsights.filter(i => i.category === "opportunity");
-  const wasteRaw = trendsInsights.find(i => i.category === "waste");
+  const wasteRaw = trendsInsights.find(i => i.category === "warning" || i.key.includes('merma'));
+  
   const waste = renderInsight(wasteRaw);
 
   return (
@@ -60,7 +66,7 @@ export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
             {relevant.map((ins, i) => {
               const info = renderInsight(ins);
               return (
-                <div key={i} className="group p-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/20 hover:border-emerald-500/30 hover:bg-white dark:hover:bg-slate-800 transition-all">
+                <div key={`${ins.key}-${i}`} className="group p-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/20 hover:border-emerald-500/30 hover:bg-white dark:hover:bg-slate-800 transition-all">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-4">
                       <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-emerald-500 shrink-0">
@@ -90,7 +96,7 @@ export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
               {opportunities.map((opp, i) => {
                 const info = renderInsight(opp);
                 return (
-                  <div key={i} className="p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10">
+                  <div key={`${opp.key}-${i}`} className="p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10">
                     <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 mb-1">{info.title}</div>
                     <div className="text-sm font-normal text-slate-700 dark:text-white">{info.desc}</div>
                   </div>
@@ -119,5 +125,13 @@ export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
         </div>
       </div>
     </>
+  );
+}
+
+function ArrowRight({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+    </svg>
   );
 }

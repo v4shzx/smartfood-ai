@@ -1,7 +1,21 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { formatCurrencyMXN } from "@/lib/dashboard-utils";
+import { 
+  MenuItem, 
+  Product, 
+  StaffMember, 
+  Sale, 
+  InventoryItem, 
+  InventoryMovement, 
+  Supplier, 
+  DashboardStats, 
+  TrendInsight, 
+  PredictionData, 
+  ReportStats,
+  Category,
+  SidebarTab
+} from "@/types/dashboard";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
@@ -23,20 +37,7 @@ type ApiSupplier = {
 export function useDashboard(t: any) {
   const [subscriptionTier, setSubscriptionTier] = useState<string>("basico");
 
-  const [activeTab, setActiveTab] = useState<
-    | "home"
-    | "pos"
-    | "sales"
-    | "store"
-    | "inventory"
-    | "suppliers"
-    | "charts"
-    | "trends"
-    | "reports"
-    | "prediction"
-    | "staff"
-    | "account"
-  >("home");
+  const [activeTab, setActiveTab] = useState<SidebarTab>("home");
 
   // Filter & Search States
   const [storeQuery, setStoreQuery] = useState("");
@@ -71,17 +72,16 @@ export function useDashboard(t: any) {
   const [selectedSaleId, setSelectedSaleId] = useState<string | null>(null);
 
   // POS State
-  const [posCart, setPosCart] = useState<any[]>([]);
+  const [posCart, setPosCart] = useState<any[]>([]); // Items are augmented with quantity
   const [posQuery, setPosQuery] = useState("");
   const [posDiscount, setPosDiscount] = useState(0);
-  const [posCategory, setPosCategory] = useState("all");
 
   // Editor States
   const [storeEditorOpen, setStoreEditorOpen] = useState(false);
   const [storeEditingId, setStoreEditingId] = useState<string | null>(null);
   const [storeForm, setStoreForm] = useState({
     name: "",
-    category: "Tacos" as any,
+    category: "Tacos",
     price: 0,
     available: true,
     min_stock: 5,
@@ -108,26 +108,26 @@ export function useDashboard(t: any) {
   const [staffEditingId, setStaffEditingId] = useState<string | null>(null);
   const [staffForm, setStaffForm] = useState({
     name: "",
-    role: "Cajero" as any,
+    role: "Cajero",
     active: true,
   });
 
   // --- Real Data States ---
-  const [categories, setCategories] = useState<any[]>([]);
-  const [menuItems, setMenuItems] = useState<any[]>([]);
-  const [mealPlans, setMealPlans] = useState<any[]>([]);
-  const [staff, setStaff] = useState<any[]>([]);
-  const [products, setProducts] = useState<any[]>([]);
-  const [salesHistory, setSalesHistory] = useState<any[]>([]);
-  const [invItems, setInvItems] = useState<any[]>([]);
-  const [invMovements, setInvMovements] = useState<any[]>([]);
-  const [suppliers, setSuppliers] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [mealPlans, setMealPlans] = useState<any[]>([]); // Legacy plans if any
+  const [staff, setStaff] = useState<StaffMember[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [salesHistory, setSalesHistory] = useState<Sale[]>([]);
+  const [invItems, setInvItems] = useState<InventoryItem[]>([]);
+  const [invMovements, setInvMovements] = useState<InventoryMovement[]>([]);
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [salesSeries, setSalesSeries] = useState<any[]>([]);
-  const [trendsInsights, setTrendsInsights] = useState<any[]>([]);
-  const [prediction, setPrediction] = useState<any[]>([]);
-  const [basePrediction, setBasePrediction] = useState<any[]>([]);
-  const [stats, setStats] = useState<any>(null);
-  const [lastSaleForTicket, setLastSaleForTicket] = useState<any>(null);
+  const [trendsInsights, setTrendsInsights] = useState<TrendInsight[]>([]);
+  const [prediction, setPrediction] = useState<PredictionData[]>([]);
+  const [basePrediction, setBasePrediction] = useState<PredictionData[]>([]);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [lastSaleForTicket, setLastSaleForTicket] = useState<Sale | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
 
@@ -175,7 +175,6 @@ export function useDashboard(t: any) {
         setStaff(staffRes);
         setProducts(productsRes);
         setCategories(catRes);
-        console.log('Fetched sales count:', salesRes.length);
         setInvItems(invRes);
         setInvMovements(movRes);
         setSalesHistory(salesRes);
@@ -202,10 +201,6 @@ export function useDashboard(t: any) {
     fetchData();
   }, []);
   
-  // Debug: log salesHistory updates
-  useEffect(() => {
-    console.log('salesHistory updated, count:', salesHistory.length);
-  }, [salesHistory]);
   const storeCategories = useMemo(() => {
     const fromProducts = Array.from(new Set(products.map((p) => p.category)));
     const fromDB = categories.map(c => c.name);
@@ -261,6 +256,10 @@ export function useDashboard(t: any) {
       return matchQuery && matchMethod && matchDate;
     });
   }, [salesHistory, salesQuery, salesMethod, salesDateFrom, salesDateTo]);
+
+  const selectedSale = useMemo(() => {
+    return salesHistory.find((s) => s.id === selectedSaleId) || null;
+  }, [salesHistory, selectedSaleId]);
 
   const posFilteredProducts = useMemo(() => {
     return products.filter((p) => {
@@ -324,7 +323,7 @@ export function useDashboard(t: any) {
   }, [salesHistory]);
 
   // Actions
-  const addToCart = (product: any) => {
+  const addToCart = (product: Product) => {
     setPosCart((prev) => {
       const existing = prev.find((item) => item.id === product.id);
       if (existing) {
@@ -375,13 +374,13 @@ export function useDashboard(t: any) {
           body: JSON.stringify(productData)
         });
         if (res.ok) {
-          const updatedProd = await res.json();
+          const updatedProd: Product = await res.json();
           setProducts((prev) => prev.map((p) => (p.id === storeEditingId ? updatedProd : p)));
           setInvItems((prev) => prev.map((it) => it.id === storeEditingId ? {
             ...it,
             name: updatedProd.name,
             onHand: updatedProd.on_hand,
-            min: updatedProd.min_stock
+            min: updatedProd.min_stock ?? 5
           } : it));
         }
       } else {
@@ -391,14 +390,14 @@ export function useDashboard(t: any) {
           body: JSON.stringify(productData)
         });
         if (res.ok) {
-          const newProd = await res.json();
+          const newProd: Product = await res.json();
           setProducts((prev) => [...prev, newProd]);
           setInvItems((prev) => [...prev, {
             id: newProd.id,
             name: newProd.name,
             sku: `SKU-${newProd.id}`,
             onHand: newProd.on_hand,
-            min: newProd.min_stock,
+            min: newProd.min_stock ?? 5,
             unit: "pcs",
             updatedAt: Date.now()
           }]);
@@ -429,7 +428,7 @@ export function useDashboard(t: any) {
         body: JSON.stringify({ name, owner_id: sessionUserId })
       });
       if (res.ok) {
-        const newCat = await res.json();
+        const newCat: Category = await res.json();
         setCategories(prev => [...prev, newCat]);
         return true;
       }
@@ -465,7 +464,7 @@ export function useDashboard(t: any) {
       });
 
       if (res.ok) {
-        const updatedProduct = await res.json();
+        const updatedProduct: Product = await res.json();
         // Update local state for inventory items
         setInvItems((prev) => prev.map((x) => (x.id === invSelectedId ? { 
           ...x, 
@@ -473,11 +472,8 @@ export function useDashboard(t: any) {
           updatedAt: Date.now() 
         } : x)));
         
-        // Update local state for products (since they are the same entity in this simplified model)
-        setProducts((prev) => prev.map((p) => (p.id === invSelectedId ? { 
-          ...p, 
-          on_hand: updatedProduct.on_hand 
-        } : p)));
+        // Update local state for products
+        setProducts((prev) => prev.map((p) => (p.id === invSelectedId ? updatedProduct : p)));
 
         setInvMovements((prev) => [{ 
           id: Math.random().toString(36), 
@@ -527,7 +523,7 @@ export function useDashboard(t: any) {
           alert("Error al actualizar el miembro del personal");
           return;
         }
-        const updated = await res.json();
+        const updated: StaffMember = await res.json();
         setStaff((prev) => prev.map((u) => (u.id === staffEditingId ? updated : u)));
       } else {
         const res = await fetch(`${API_URL}/staff/`, {
@@ -539,7 +535,7 @@ export function useDashboard(t: any) {
           alert("Error al guardar el miembro del personal");
           return;
         }
-        const created = await res.json();
+        const created: StaffMember = await res.json();
         setStaff((prev) => [...prev, created]);
       }
       setStaffEditorOpen(false);
@@ -548,7 +544,7 @@ export function useDashboard(t: any) {
     }
   };
 
-  const staffDelete = async (id: string) => {
+  const staffDelete = (id: string) => {
     if (!confirm("¿Eliminar este miembro del personal?")) return;
     setStaff((prev) => prev.filter((s) => s.id !== id));
   };
@@ -588,11 +584,10 @@ export function useDashboard(t: any) {
           body: JSON.stringify(supplierData),
         });
         if (res.ok) {
-          const updated = await res.json();
-          const mapped = { ...updated, leadDays: updated.lead_days };
+          const updated: ApiSupplier = await res.json();
+          const mapped: Supplier = { ...updated, leadDays: updated.lead_days || 3, contact: updated.contact || "", phone: updated.phone || "", email: updated.email || "", notes: updated.notes || "" };
           setSuppliers((prev) => prev.map((s) => (s.id === supEditingId ? mapped : s)));
         } else {
-          // Fallback if patch fails
           setSuppliers((prev) => prev.map((s) => (s.id === supEditingId ? { ...s, ...supForm } : s)));
         }
       } else {
@@ -602,11 +597,10 @@ export function useDashboard(t: any) {
           body: JSON.stringify(supplierData),
         });
         if (res.ok) {
-          const newSup = await res.json();
-          const mapped = { ...newSup, leadDays: newSup.lead_days };
+          const newSup: ApiSupplier = await res.json();
+          const mapped: Supplier = { ...newSup, leadDays: newSup.lead_days || 3, contact: newSup.contact || "", phone: newSup.phone || "", email: newSup.email || "", notes: newSup.notes || "" };
           setSuppliers((prev) => [...prev, mapped]);
         } else {
-          // Fallback
           setSuppliers((prev) => [...prev, { id: Math.random().toString(36), ...supForm, rating: 5.0 }]);
         }
       }
@@ -649,7 +643,7 @@ export function useDashboard(t: any) {
     todayRevenue: stats?.todayRevenue || 0,
     yesterdayRevenue: stats?.yesterdayRevenue || 0,
     weekRevenue: stats?.weekRevenue || 0,
-    topStudent: stats?.topProduct || "N/A",
+    topProduct: stats?.topProduct || "N/A",
     topProductQty: stats?.topProductQty || 0,
     activeStudents: stats?.totalOrdersAbs || 0,
     todayOrders: stats?.totalOrdersToday || 0,
@@ -661,7 +655,7 @@ export function useDashboard(t: any) {
     }
   }), [stats, menuItems]);
 
-  const reportsStats = useMemo(() => {
+  const reportsStats = useMemo<ReportStats>(() => {
     let filteredSales = salesHistory;
     
     // Range filter
@@ -688,23 +682,26 @@ export function useDashboard(t: any) {
     const revenue = filteredSales.reduce((acc, s) => acc + (s.total || 0), 0);
     const tickets = filteredSales.length;
     
-    // Guess merma from inventory movements "out" or "adjust" in that range
     const rangeMovements = invMovements.filter(m => {
       const movDate = new Date(m.ts).toISOString().split('T')[0];
       if (reportsRange === "today") return movDate === todayStr;
       if (reportsRange === "custom" && reportsFrom && reportsTo) return movDate >= reportsFrom && movDate <= reportsTo;
-      return true; // Simplified for 7d/30d for now
+      return true;
     });
     
     const mermaItems = rangeMovements.filter(m => m.type === "out" || m.type === "adjust");
-    const mermaValue = mermaItems.length * 15; // Estimado $15 por item de merma ya que no tenemos costo unitario real guardado en movimiento
+    const mermaValue = mermaItems.length * 15;
 
     return {
       revenue,
       tickets,
       merma: mermaValue
     };
-  }, [salesHistory, reportsType, reportsRange, reportsFrom, reportsTo, invMovements]);
+  }, [salesHistory, reportsRange, reportsFrom, reportsTo, invMovements]);
+
+  const handleApplyPrediction = () => {
+    setPrediction(basePrediction);
+  };
 
   return {
     activeTab, setActiveTab,
@@ -731,7 +728,7 @@ export function useDashboard(t: any) {
     staffQuery, setStaffQuery, staffFiltered,
     staffOpenCreate, staffOpenEdit, staffDelete, staffEditorOpen, setStaffEditorOpen,
     staffEditingId, staffForm, setStaffForm, staffSave,
-    posCart, setPosCart, posQuery, setPosQuery, posCategory, setPosCategory,
+    posCart, setPosCart, posQuery, setPosQuery,
     posDiscount, setPosDiscount, posFilteredProducts, posCartLines, posSubtotal, posTotal,
     posAdd: (id: string) => {
       const p = products.find(x => x.id === id);
@@ -755,12 +752,12 @@ export function useDashboard(t: any) {
           body: JSON.stringify(saleData)
         });
         if (res.ok) {
-          const newSale = await res.json();
+          const newSale: Sale = await res.json();
           setSalesHistory(prev => [newSale, ...prev]);
           setPosCart([]);
           setPosDiscount(0);
           setLastSaleForTicket(newSale);
-          const statsRes = await fetch(`${API_URL}/stats/`).then(r => r.json());
+          const statsRes: DashboardStats = await fetch(`${API_URL}/stats/`).then(r => r.json());
           setStats(statsRes);
           setInvItems(prev => prev.map(inv => {
             const soldItem = posCart.find(cartItem => cartItem.id === inv.id);
@@ -775,10 +772,11 @@ export function useDashboard(t: any) {
     },
     salesQuery, setSalesQuery, salesMethod, setSalesMethod,
     salesDateFrom, setSalesDateFrom, salesDateTo, setSalesDateTo,
-    salesFiltered, selectedSaleId, setSelectedSaleId,
+    salesFiltered, selectedSale, selectedSaleId, setSelectedSaleId,
     salesHistory, trendsInsights, activeTitle, products,
     kpis, salesSeries, chartsSales, chartsTopProducts,
     chartsRange, setChartsRange,
+    handleApplyPrediction,
     reportsType, setReportsType,
     reportsRange, setReportsRange,
     reportsFrom, setReportsFrom,

@@ -8,9 +8,11 @@ import {
   FileCheck,
 } from "lucide-react";
 import { formatCurrencyMXN } from "@/lib/dashboard-utils";
+import { Translation } from "@/lib/i18n";
+import { ReportStats } from "@/types/dashboard";
 
 interface ReportsViewProps {
-  t: any;
+  t: Translation;
   reportsType: "sales" | "inventory" | "finance";
   setReportsType: (t: "sales" | "inventory" | "finance") => void;
   reportsRange: "today" | "7d" | "30d" | "custom";
@@ -19,11 +21,7 @@ interface ReportsViewProps {
   setReportsFrom: (d: string) => void;
   reportsTo: string;
   setReportsTo: (d: string) => void;
-  reportsStats: {
-    revenue: number;
-    tickets: number;
-    merma: number;
-  };
+  reportsStats: ReportStats;
 }
 
 export function ReportsView({
@@ -58,6 +56,21 @@ export function ReportsView({
   const handleExport = () => {
     const generatedLabel = generatedAt || new Date().toLocaleString();
     const reportTitle = `${t.dashboard.reports} - ${getRangeLabel()}`;
+    const templates = t.dashboard.templates as any;
+    const templateLabel = activeTemplate ? templates?.[activeTemplate]?.label || activeTemplate : null;
+    
+    let templateDesc = "";
+    if (activeTemplate === "daily_cut") templateDesc = "Corte operativo del día con foco en ventas y cierre";
+    else if (activeTemplate === "weekly_exec") templateDesc = "Resumen ejecutivo para seguimiento gerencial";
+    else if (activeTemplate === "critical_inventory") templateDesc = "Prioriza inventario crítico y reposición";
+    else if (activeTemplate === "sales_by_product") templateDesc = "Concentrado de venta por producto en el rango activo";
+
+    let templateHighlights: string[] = [];
+    if (activeTemplate === "critical_inventory") templateHighlights = ["Inventario crítico", "Reposición sugerida", "Unidades en riesgo"];
+    else if (activeTemplate === "sales_by_product") templateHighlights = ["Productos top", "Rotación", "Ticket promedio"];
+    else if (activeTemplate === "weekly_exec") templateHighlights = ["Tendencia semanal", "Ingresos acumulados", "Comparativo ejecutivo"];
+    else templateHighlights = ["Cierre del día", "Ingresos actuales", "Tickets emitidos"];
+
     const popup = window.open("", "_blank", "width=1100,height=900");
     if (!popup) {
       alert("No se pudo abrir la vista de exportación.");
@@ -90,6 +103,7 @@ export function ReportsView({
         <body>
           <h1>${t.dashboard.reports}</h1>
           <div class="meta">${t.dashboard.type_label}: ${reportsType} · ${t.dashboard.range_label}: ${getRangeLabel()} · Generado: ${generatedLabel}</div>
+          ${templateLabel ? `<div class="section"><h2>Plantilla</h2><ul class="list"><li>${templateLabel}</li><li>${templateDesc}</li></ul></div>` : ""}
           <div class="grid">
             <div class="card">
               <div class="label">${t.dashboard.incomes}</div>
@@ -119,6 +133,12 @@ export function ReportsView({
               <li>${t.dashboard.templates.weekly_exec}</li>
               <li>${t.dashboard.templates.critical_inventory}</li>
               <li>${t.dashboard.templates.sales_by_product}</li>
+            </ul>
+          </div>
+          <div class="section">
+            <h2>Enfoque del documento</h2>
+            <ul class="list">
+              ${templateHighlights.map((item) => `<li>${item}</li>`).join("")}
             </ul>
           </div>
           <div class="footer">${t.dashboard.generated_at || "Generado"}: ${generatedLabel}</div>
@@ -180,7 +200,7 @@ export function ReportsView({
         </motion.div>
       </div>
 
-      <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm transition-all">
+      <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm transition-all text-slate-900 dark:text-white">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/30 transition-all">
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-1">{t.dashboard.type_label}</div>
@@ -207,7 +227,7 @@ export function ReportsView({
             <button 
               onClick={handleGenerate}
               disabled={isGenerating}
-              className="flex-1 flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20 active:scale-95 transition-all"
+              className="flex-1 flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20 active:scale-95 transition-all text-white"
             >
               {isGenerating ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -244,7 +264,7 @@ export function ReportsView({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm transition-all hover:border-emerald-500/20">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm transition-all hover:border-emerald-500/20 text-slate-900 dark:text-white">
           <div className="flex items-center justify-between mb-8">
             <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm flex items-center gap-2">
               <FileCheck className="w-5 h-5 text-emerald-500" /> {t.dashboard.preview_label}
@@ -271,7 +291,7 @@ export function ReportsView({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm transition-all hover:border-emerald-500/20">
+        <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm transition-all hover:border-emerald-500/20 text-slate-900 dark:text-white">
           <div className="flex items-center justify-between mb-8">
             <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.templates_label}</h3>
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">{t.dashboard.auto_label}</div>

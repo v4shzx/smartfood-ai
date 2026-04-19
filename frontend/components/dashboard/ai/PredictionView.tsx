@@ -24,6 +24,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import type { ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { cn } from "@/lib/utils";
 
 interface PredictionViewProps {
@@ -35,6 +36,7 @@ interface PredictionViewProps {
   prediction: any[];
   trends: any[];
   onSimulate: () => void;
+  onApply?: () => void;
 }
 
 export function PredictionView({
@@ -46,6 +48,7 @@ export function PredictionView({
   prediction,
   trends,
   onSimulate,
+  onApply,
 }: PredictionViewProps) {
   // Calculate some quick stats from prediction data
   const maxVentas = Math.max(...prediction.map(p => p.ventas || 0));
@@ -209,7 +212,10 @@ export function PredictionView({
                   }} 
                   itemStyle={{ fontSize: '12px', fontWeight: 900, color: '#0f172a' }}
                   labelStyle={{ fontSize: '10px', fontWeight: 700, color: '#64748b', marginBottom: '5px' }}
-                  formatter={(value: number) => [`$${value.toLocaleString('es-MX')}`, t.dashboard.projection_label]}
+                  formatter={(value: ValueType | undefined) => {
+                    const num = Array.isArray(value) ? Number(value[0] ?? 0) : Number(value ?? 0);
+                    return [`$${num.toLocaleString('es-MX')}`, t.dashboard.projection_label];
+                  }}
                   labelFormatter={(label) => `${t.dashboard.hour_label}: ${label}`}
                 />
                 <Area 
@@ -227,6 +233,15 @@ export function PredictionView({
 
 
       </div>
+
+      {onApply && (
+        <button
+          onClick={onApply}
+          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-4 rounded-[1.8rem] text-xs font-black uppercase tracking-[0.2em] transition-all shadow-lg shadow-emerald-500/20"
+        >
+          {t.dashboard.apply_prediction || "Aplicar predicción"}
+        </button>
+      )}
     </div>
   );
 }
