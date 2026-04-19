@@ -53,6 +53,83 @@ export function SalesView({
   const totalIncomes = salesFiltered.reduce((acc, s) => acc + s.total, 0);
   const avgTicket = salesFiltered.length ? totalIncomes / salesFiltered.length : 0;
 
+  const handleExportPDF = () => {
+    if (!selectedSale) return;
+
+    const printWindow = window.open('', '_blank', 'width=800,height=900');
+    if (!printWindow) return;
+
+    const itemsHtml = selectedSale.items_detail?.map((li: any) => `
+      <tr>
+        <td style="padding: 10px 0; border-bottom: 1px solid #eee;">${li.quantity}x ${li.name}</td>
+        <td style="padding: 10px 0; border-bottom: 1px solid #eee; text-align: right;">${formatCurrencyMXN(li.price * li.quantity)}</td>
+      </tr>
+    `).join('');
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Ticket ${selectedSale.id}</title>
+          <style>
+            body { font-family: sans-serif; padding: 40px; color: #333; line-height: 1.5; }
+            .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #333; padding-bottom: 20px; }
+            .details { margin-bottom: 30px; display: flex; justify-content: space-between; font-size: 14px; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+            .totals { text-align: right; border-top: 2px solid #333; padding-top: 20px; }
+            .footer { text-align: center; margin-top: 50px; font-size: 12px; color: #777; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1 style="margin: 0; font-size: 24px;">SMARTFOOD AI</h1>
+            <p style="margin: 5px 0; color: #666;">Reporte de Transacción Digital</p>
+          </div>
+          
+          <div class="details">
+            <div>
+              <strong>Folio:</strong> ${selectedSale.id}<br>
+              <strong>Cajero:</strong> ${selectedSale.cashier || 'Admin'}
+            </div>
+            <div style="text-align: right;">
+              <strong>Fecha:</strong> ${new Date(selectedSale.ts).toLocaleString()}<br>
+              <strong>Método:</strong> ${selectedSale.method === 'cash' ? 'Efectivo' : 'Tarjeta'}
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr style="border-bottom: 2px solid #eee;">
+                <th style="text-align: left; padding-bottom: 10px;">Descripción</th>
+                <th style="text-align: right; padding-bottom: 10px;">Importe</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsHtml}
+            </tbody>
+          </table>
+
+          <div class="totals">
+            <p style="margin: 5px 0;">Subtotal: <strong>${formatCurrencyMXN(selectedSale.subtotal || selectedSale.total)}</strong></p>
+            <p style="margin: 5px 0;">Descuento: <strong>-${formatCurrencyMXN(selectedSale.discount || 0)}</strong></p>
+            <h2 style="margin-top: 10px; color: #10b981;">TOTAL: ${formatCurrencyMXN(selectedSale.total)}</h2>
+          </div>
+
+          <div class="footer">
+            <p>Este documento es un comprobante de venta digital generado por SmartFood AI.</p>
+          </div>
+
+          <script>
+            window.onload = function() {
+              window.print();
+              setTimeout(function() { window.close(); }, 500);
+            };
+          </script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  };
+
   return (
     <>
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
@@ -200,7 +277,7 @@ export function SalesView({
                     </div>
                     <div className="text-[12px] text-slate-500 dark:text-slate-400 mt-1">
                       {d.toLocaleString(undefined, { year: "numeric", month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit" })} · {t.dashboard.cashier}:{" "}
-                      <span className="font-bold">Admin</span> · Items: <span className="font-bold">{s.items_count}</span>
+                      <span className="font-bold">{s.cashier || "Admin"}</span> · Items: <span className="font-bold">{s.items_count}</span>
                     </div>
                   </div>
                   <div className="shrink-0 text-right">
@@ -216,20 +293,25 @@ export function SalesView({
 
       <AnimatePresence>
         {selectedSale && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50">
-            <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setSelectedSaleId(null)} />
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }} 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md"
+          >
+            <div className="absolute inset-0" onClick={() => setSelectedSaleId(null)} />
             <motion.div
-              initial={{ opacity: 0, y: 18, scale: 0.98 }}
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10, scale: 0.98 }}
-              className="absolute right-4 left-4 md:left-auto md:right-10 top-24 md:top-28 md:w-[520px] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-[2rem] shadow-2xl p-6 md:p-8"
+              exit={{ opacity: 0, y: 20, scale: 0.95 }}
+              className="relative w-full max-w-[560px] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] shadow-2xl p-6 md:p-10 overflow-hidden"
             >
               <div className="flex items-start justify-between gap-4 mb-6">
                 <div>
                   <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{t.dashboard.detail}</div>
                   <div className="text-2xl font-black text-slate-900 dark:text-white mt-1">{selectedSale.id}</div>
                   <div className="text-[12px] text-slate-500 dark:text-slate-400 mt-1">
-                    {new Date(selectedSale.ts).toLocaleString()} · {t.dashboard.cashier}: <span className="font-bold">{selectedSale.cashier}</span>
+                    {new Date(selectedSale.ts).toLocaleString()} · {t.dashboard.cashier}: <span className="font-bold">{selectedSale.cashier || "Admin"}</span>
                   </div>
                 </div>
                 <button onClick={() => setSelectedSaleId(null)} className="w-10 h-10 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
@@ -254,11 +336,11 @@ export function SalesView({
               <div className="mt-6 space-y-2">
                 <div className="flex items-center justify-between text-sm font-bold text-slate-600 dark:text-slate-300">
                   <span>{t.dashboard.subtotal}</span>
-                  <span className="font-black">{formatCurrencyMXN(selectedSale.subtotal)}</span>
+                  <span className="font-black">{formatCurrencyMXN(selectedSale.subtotal || selectedSale.total)}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm font-bold text-slate-600 dark:text-slate-300">
                   <span>{t.dashboard.discount}</span>
-                  <span className="font-black">-{formatCurrencyMXN(selectedSale.discount)}</span>
+                  <span className="font-black">-{formatCurrencyMXN(selectedSale.discount || 0)}</span>
                 </div>
                 <div className="flex items-center justify-between text-base font-bold text-slate-900 dark:text-white pt-2">
                   <span>{t.dashboard.total}</span>
@@ -267,10 +349,16 @@ export function SalesView({
               </div>
 
               <div className="mt-6 flex gap-3">
-                <button className="flex-1 bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-sm">
-                  {t.dashboard.reprint_ticket}
+                <button 
+                  onClick={() => setSelectedSaleId(null)}
+                  className="flex-1 bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-sm"
+                >
+                  {lang === 'es' ? 'Cerrar' : (lang === 'fr' ? 'Fermer' : 'Close')}
                 </button>
-                <button className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20">
+                <button 
+                  onClick={handleExportPDF}
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20"
+                >
                   {t.dashboard.export}
                 </button>
               </div>

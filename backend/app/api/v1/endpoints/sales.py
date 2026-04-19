@@ -20,6 +20,7 @@ class SaleResponse(BaseModel):
     total: float
     items_count: int
     method: str
+    cashier: str = "Admin"
     items_detail: List[TicketItem] = []
     subtotal: float = 0.0
     discount: float = 0.0
@@ -80,6 +81,7 @@ async def checkout(request: CheckoutRequest, db: AsyncSession = Depends(get_db))
         total=subtotal - request.discount,
         items_count=sum(i.quantity for i in request.items),
         method=request.payment_method,
+        cashier="Admin",
         items_detail=items_detail,
         subtotal=subtotal,
         discount=request.discount
@@ -101,7 +103,6 @@ async def get_sales(
         if len(parts) == 3 and parts[0] == 'sale':
             ticket_id = f"{parts[0]}_{parts[1]}"
         # If it's a seed sale or something else, use the full ID to keep it unique
-        # unless it was intentionally meant to be grouped (not the case in current seed)
         else:
             ticket_id = s.id
             
@@ -112,6 +113,7 @@ async def get_sales(
                 "total": 0,
                 "items_count": 0,
                 "method": s.payment_method,
+                "cashier": "Admin",
                 "items_detail": []
             }
         grouped[ticket_id]["total"] += s.total_price
@@ -143,6 +145,7 @@ async def get_sale_detail(ticket_id: str, db: AsyncSession = Depends(get_db)):
         total=total,
         items_count=sum(i.quantity for i, _ in rows),
         method=first_row.payment_method,
+        cashier="Admin",
         items_detail=items_detail,
         subtotal=total,
         discount=0.0
