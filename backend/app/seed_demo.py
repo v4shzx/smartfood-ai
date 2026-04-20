@@ -97,7 +97,7 @@ async def seed():
 
             for pid, name, cat, price in items_demo:
                 stock = 10 if pid == "p1" else random.randint(20, 50)
-                session.add(Product(id=pid, owner_id="u_demo", name=name, category=cat, price=price, available=True, on_hand=stock))
+                session.add(Product(id=pid, owner_id="u_demo", name=name, category=cat, price=price, available=True, on_hand=stock, min_stock=5))
             await session.commit()
 
         # 4. Default Meal Plans

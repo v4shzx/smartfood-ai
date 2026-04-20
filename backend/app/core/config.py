@@ -12,6 +12,10 @@ class Settings(BaseSettings):
     # CORS
     BACKEND_CORS_ORIGINS: List[Union[str, AnyHttpUrl]] = []
 
+    # Email Settings (Resend)
+    RESEND_API_KEY: str | None = None
+    CONTACT_EMAIL: str = "onboarding@resend.dev"  # Default test email for Resend
+
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")
     @classmethod
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:

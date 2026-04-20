@@ -17,7 +17,7 @@ export type Translations = Translation;
 
 export const T = {
   es: {
-    nav: { home: "Inicio", features: "Características", platform: "Plataforma", testimonials: "Testimonios", pricing: "Precios", contact: "Contacto", login: "Iniciar sesión", cta: "Comenzar" },
+    nav: { home: "Inicio", features: "Características", platform: "Plataforma", testimonials: "Testimonios", pricing: "Precios", contact: "Contacto", docs: "Documentación", docs_cta: "¡Ingresa ya!", login: "Iniciar sesión", cta: "Comenzar" },
     badge: "V2.0: Modelos IA más potentes y rápidos",
     h1: "Predice la demanda. Reduce desperdicios. Maximiza ganancias",
     hero_p: "Con SmartFood, anticipa la demanda de alimentos usando IA y machine learning. Ajusta tu inventario automáticamente y visualiza todo con dashboards claros y accionables.",
@@ -35,7 +35,7 @@ export const T = {
     reviews: [
       { review: "SmartFood AI reemplazó completamente a mi nutricionista. La forma en que ajusta mis macros dinámicamente es increíble." },
       { review: "El motor de predicción es impecable. Literalmente me dice qué comer antes de que mi energía caiga." },
-      { review: "Minimalista, increíblemente rápido y los insights son accionables. Stripe para la nutrición es la comparación perfecta." },
+      { review: "Minimaliste, increíblemente rápido y los insights son accionables. Stripe para la nutrition es la comparación perfecta." },
     ],
     price_title: "Planes de Servicio",
     price_sub: "Elige el plan que mejor se adapte a tu negocio.",
@@ -63,7 +63,7 @@ export const T = {
         price: "$899",
         unit: "MXN / mes",
         desc: "Solución definitiva para empresas",
-        feats: ["Todo lo de Profesional", "Inventario inteligente", "Punto de venta (POS)", "Predicción en tiempo real", "Alertas automáticas", "Multiples sucursales", "Multiusuarios con roles", "Integraciones (API / ERP)"],
+        feats: ["Todo lo de Profesional", "Inventario inteligente", "Punto de venta (POS)", "Predicción en tiempo real", "Alertes automáticas", "Multiples sucursales", "Multiusuarios con roles", "Integraciones (API / ERP)"],
         btn: "Comprar ahora",
         popular: false
       }
@@ -72,7 +72,7 @@ export const T = {
     contact_title: "Contáctanos",
     contact_sub: "Estamos aquí para ayudarte. Envíanos un mensaje.",
     contact_form: {
-      name: "Nombre Completo",
+      name: "Nombre Complet",
       email: "Correo Electrónico",
       subject: "Asunto",
       message: "Mensaje",
@@ -91,7 +91,7 @@ export const T = {
     dash_sub: "Tendencias metabólicas predichas por IA para hoy.",
     dash_accuracy: "94% Precisión",
     macro_title: "Objetivos de Macros IA",
-    recalc: "Recalcular con IA",
+    recalc: "Recalculer con IA",
     stat1: "Cal. Netas", stat2: "Puntuación", stat3: "Energía",
     stat1s: "Objetivo: 2,000", stat2s: "Top 5% esta semana", stat3s: "Alta hasta las 8 PM",
     coach: "\"Necesitas 20g más de proteína hoy. Intenta añadir un yogur griego a tu merienda.\"",
@@ -165,7 +165,7 @@ export const T = {
       reports: "Reportes",
       aiEngine: "Inteligencia Artificial",
       prediction: "Predicción",
-      adm_title: "Administración",
+      adm_title: "Administration",
       staff: "Personal",
       collapse: "Colapsar menú",
       expand: "Expandir menú",
@@ -325,7 +325,7 @@ export const T = {
       change: "Cambiar",
       update: "Actualizar",
       configure: "Configurar",
-      notifications: "Notificaciones",
+      notifications: "Notifications",
       view_all_reports: "Ver todos los reportes",
       today: "Hoy",
       items: "items",
@@ -355,7 +355,7 @@ export const T = {
       select_supplier_desc: "Selecciona un proveedor para ver detalles",
       supplier: "Proveedor",
       business_name: "Razón Social / Nombre",
-      contact_label: "Contacto",
+      contact_label: "Contact",
       phone: "Teléfono",
       email: "Email",
       staff_desc: "Gestión de roles, accesos y actividad del equipo.",
@@ -406,7 +406,7 @@ export const T = {
         }
       },
       reports_desc: "Genera reportes y exporta.",
-      type_label: "Tipo",
+      type_label: "Type",
       range_label: "Rango",
       generate_btn: "Generar",
       export_pdf_btn: "Exportar PDF",
@@ -443,10 +443,191 @@ export const T = {
       pass_mismatch_error: "Las contraseñas no coinciden",
       pass_length_error: "La contraseña debe tener al menos 6 caracteres",
       generated_at: "Generado"
+    },
+    docs: {
+      title: "Documentación",
+      subtitle: "Todo lo que necesitas saber para dominar SmartFood AI",
+      search_placeholder: "Buscar en la guía...",
+      getting_started: "Primeros Pasos",
+      core_features: "Funcionalidades Core",
+      ai_intelligence: "Inteligencia Artificial",
+      admin_guide: "Administración",
+      ai_science: "Ciencia de Datos",
+      security_privacy: "Seguridad y Privacidad",
+      sidebar_title: "Contenido de la Guía",
+      on_this_page: "En esta página",
+      features: {
+        dashboard: { title: "Dashboard", desc: "Monitorea métricas en tiempo real." },
+        prediction: { title: "Predicción", desc: "IA que anticipa tu demanda." },
+        sales: { title: "Ventas", desc: "Registra cobros en segundos." },
+        team: { title: "Equipo", desc: "Gestiona accesos y roles." }
+      },
+      sections: {
+        welcome: {
+          title: "Bienvenido a SmartFood AI",
+          content: "SmartFood AI es la plataforma líder para la optimización de cafeterías y comedores industriales basada en inteligencia artificial. Nuestra misión es erradicar el desperdicio alimentario mientras maximizamos la rentabilidad de los negocios gastronómicos mediante el uso de algoritmos predictivos de última generación.",
+          items: [
+            { title: "Introducción", desc: "SmartFood AI no es solo un software de ventas, es un ecosistema completo diseñado para ayudar a gerentes de comedores a tomar decisiones informadas basadas en datos reales." },
+            { title: "Propósito", desc: "Buscamos reducir el desperdicio en un 30% promedio mediante predicciones precisas que ajustan la producción diaria a la demanda real de los comensales." },
+            { title: "Alcance", desc: "Nuestra solución es escalable y se adapta desde pequeñas cafeterías escolares hasta comedores industriales de gran volumen con múltiples sucursales." },
+            { title: "Beneficios Clave", desc: "Ahorro directo en materia prima, optimización del tiempo del personal, y visualización clara de la salud financiera del negocio." }
+          ]
+        },
+        setup: {
+          title: "Configuración Inicial",
+          content: "Para comenzar a operar, es vital configurar correctamente los cimientos de tu negocio en la plataforma.",
+          items: [
+            { title: "Perfil de Negocio", desc: "Completa tus datos en 'Mi Cuenta', configurando la moneda base, zona horaria y los impuestos aplicables para tu región." },
+            { title: "Estructura de Categorías", desc: "Define grupos lógicos (ej. Bebidas, Platillos Fuertes, Postres). Esto ayuda a la IA a identificar qué tipos de productos tienen mejor rendimiento por temporada." },
+            { title: "Carga de Productos", desc: "Añade cada ítem de tu menú con su precio de venta y costo. Puedes marcarlos como 'disponibles' o 'agotados' instantáneamente." },
+            { title: "Inventario Inicial", desc: "Es fundamental registrar tus existencias actuales para que el sistema empiece a avisarte sobre stocks críticos desde la primera venta." }
+          ]
+        },
+        dashboard_overview: {
+          title: "Vista General (Home)",
+          content: "El Dashboard es tu cabina de mando. Aquí consolidamos billones de puntos de datos en 4 KPIs críticos.",
+          items: [
+            { title: "Lectura de KPIs", desc: "Observa los ingresos diarios comparados contra el día anterior, el número de órdenes procesadas y el producto estrella del periodo." },
+            { title: "Alertas Inteligentes", desc: "El sistema resalta automáticamente los productos que están por debajo de su stock mínimo definido para una compra rápida." },
+            { title: "Gráficas de Rendimiento", desc: "Visualiza la tendencia de ventas de los últimos 7 días para entender el flujo de tu negocio a lo largo de la semana." },
+            { title: "Atajos de Operación", desc: "Accede rápidamente al POS o a la gestión de inventario directamente desde los widgets de la pantalla principal." }
+          ]
+        },
+        pos: {
+          title: "Punto de Venta (POS)",
+          content: "Nuestro POS está optimizado para flujos de alta transaccionalidad y facilidad de uso.",
+          items: [
+            { title: "Venta Rápida", desc: "Selecciona productos mediante la cuadrícula visual o usa un lector de códigos de barras. El sistema calcula el total automáticamente." },
+            { title: "Descuentos", desc: "Aplica descuentos porcentuales a la cuenta total de forma sencilla para promociones especiales o cortesías." },
+            { title: "Métodos de Pago", desc: "Gestiona pagos en efectivo (con calculadora de cambio) o tarjeta. Cada método se registra para el corte de caja final." },
+            { title: "Gestión de Carrito", desc: "Modifica cantidades, elimina ítems o limpia el carrito con un solo clic antes de procesar el cobro final." }
+          ]
+        },
+        sales_registry: {
+          title: "Registro de Ventas",
+          content: "Explora cada transacción histórica con detalle forense para auditorías y aclaraciones.",
+          items: [
+            { title: "Historial Transaccional", desc: "Lista completa de todas las ventas con folio único, hora exacta, cajero que atendió y monto total." },
+            { title: "Filtros Avanzados", desc: "Busca ventas específicas por rango de fechas, método de pago o nombre del producto vendido." },
+            { title: "Reimpresión de Tickets", desc: "Genera copias digitales o físicas de tickets pasados en cualquier momento desde el registro." },
+            { title: "Anulación de Ventas", desc: "Capacidad para cancelar transacciones erróneas (sujeto a permisos de Administrador) para corregir el inventario." }
+          ]
+        },
+        inventory: {
+          title: "Gestión de Inventario",
+          content: "Control de insumos en tiempo real para evitar quiebres de stock o sobreinventario.",
+          items: [
+            { title: "Control de Existencias", desc: "Visualiza el 'On Hand' real de cada producto. El sistema descuenta existencias automáticamente tras cada venta." },
+            { title: "Registro de Movimientos", desc: "Lleva una bitácora de todas las entradas (compras) y salidas (mermas o transferencias) de inventario." },
+            { title: "Ajustes Manuales", desc: "Realiza correcciones de inventario tras inventarios físicos para asegurar que el sistema coincida con la realidad." },
+            { title: "Alertas de Stock Crítico", desc: "Configura el stock mínimo por producto. La IA te avisará visualmente cuando sea necesario reabastecer." }
+          ]
+        },
+        store: {
+          title: "Gestión de Tienda",
+          content: "El catálogo es el corazón de tu operación. Administra tus productos y precios.",
+          items: [
+            { title: "Catálogo Digital", desc: "Gestiona el nombre, categoría y disponibilidad de todos tus productos en un solo lugar." },
+            { title: "Precios y Costos", desc: "Actualiza tus precios de venta de forma masiva o individual según cambien tus costos con proveedores." },
+            { title: "Control de Disponibilidad", desc: "Activa o desactiva productos del POS con un interruptor para que los cajeros no vendan lo que no hay." },
+            { title: "Organización por Categorías", desc: "Mueve productos entre categorías para optimizar la navegación en el POS y los reportes analíticos." }
+          ]
+        },
+        suppliers: {
+          title: "Proveedores",
+          content: "Gestiona tu cadena de suministro eficientemente para un reabastecimiento sin fricciones.",
+          items: [
+            { title: "Directorio de Contactos", desc: "Almacena nombres, teléfonos y correos de tus proveedores clave para un acceso rápido." },
+            { title: "Pedidos", desc: "Registra qué productos te surte cada proveedor y mantén un historial de tus órdenes de compra pasadas." },
+            { title: "Lead Time y Calificación", desc: "Registra cuántos días tarda cada proveedor en entregar y califica su servicio para optimizar tus compras futuras." },
+            { title: "Historial de Compras", desc: "Consulta cuánto has comprado a cada proveedor para negociar mejores precios basados en volumen." }
+          ]
+        },
+        prediction: {
+          title: "Predicción de Demanda",
+          content: "Usa el poder de la IA para saber exactamente cuánto cocinar mañana.",
+          items: [
+            { title: "Modelos Predictivos", desc: "Nuestros algoritmos analizan años de datos para detectar patrones de consumo semanales y mensuales." },
+            { title: "Impacto Climático", desc: "La IA ajusta las predicciones según el pronóstico del clima. (ej. vende más bebidas calientes en días fríos)." },
+            { title: "Simulación de Escenarios", desc: "Prueba qué pasaría con tus ventas bajo escenarios de 'Lluvia', 'Promoción' o 'Día Festivo'." },
+            { title: "Ajuste de Producción", desc: "Recibe recomendaciones sobre cuántas unidades preparar de cada platillo para minimizar la merma." }
+          ]
+        },
+        trends: {
+          title: "Análisis de Tendencias",
+          content: "Descubre patrones ocultos en tus datos que los reportes tradicionales no muestran.",
+          items: [
+            { title: "Identificación de Patrones", desc: "La IA detecta qué productos se suelen vender juntos para sugerirte promociones cruzadas (Cross-selling)." },
+            { title: "Análisis de Horas Pico", desc: "Identifica tus horas de mayor afluencia para optimizar los horarios del personal y la preparación de alimentos." },
+            { title: "Recomendaciones de IA", desc: "Recibe sugerencias automáticas para mover el inventario que tiene baja rotación mediante ofertas." },
+            { title: "Oportunidades de Negocio", desc: "Detecta nichos desatendidos o categorías que están creciendo rápidamente en tu mercado local." }
+          ]
+        },
+        analytics: {
+          title: "Gráficas Avanzadas",
+          content: "Visualización de datos de nivel empresarial para una comprensión profunda del negocio.",
+          items: [
+            { title: "Ingresos vs Transacciones", desc: "Compara cuánto dinero entra contra cuántas ventas se hacen para medir el ticket promedio." },
+            { title: "Distribución por Categoría", desc: "Entiende qué porcentaje de tus ingresos viene de cada grupo de productos (ej. el 40% son snacks)." },
+            { title: "Volumen de Productos", desc: "Analiza cuáles son los 5 productos con más movimiento para asegurar su stock prioritario." },
+            { title: "Análisis de Rentabilidad", desc: "Cruza tus ventas con tus costos registrados para ver el margen real de beneficio por cada producto." }
+          ]
+        },
+        reports: {
+          title: "Reportes y Exportación",
+          content: "Genera documentos oficiales listos para imprimir o compartir.",
+          items: [
+            { title: "Cortes de Caja", desc: "Resúmenes diarios que facilitan el cuadre de efectivo y tarjetas al finalizar cada turno." },
+            { title: "Informes de Inventario", desc: "Exporta una lista valorizada de tus existencias actuales para auditorías contables." },
+            { title: "Resumen Financiero", desc: "Informes mensuales con ingresos, costos y mermas para una visión clara de la utilidad." },
+            { title: "Exportación Profesional", desc: "Todos los reportes se generan en PDF con un diseño limpio, listo para ser enviado por correo." }
+          ]
+        },
+        staff: {
+          title: "Gestión de Personal",
+          content: "Administra a tu equipo de trabajo y controla sus niveles de acceso.",
+          items: [
+            { title: "Control de Usuarios", desc: "Crea cuentas individuales para cada empleado para que sus acciones queden registradas bajo su nombre." },
+            { title: "Roles y Permisos", desc: "Asigna perfiles como 'Cajero', 'Gerente' o 'Administrador' para restringir acceso a funciones sensibles." },
+            { title: "Monitor de Actividad", desc: "Visualiza la última vez que cada usuario inició sesión y qué transacciones ha procesado últimamente." },
+            { title: "Seguridad del Equipo", desc: "Gestiona el cambio de contraseñas y la baja de personal de forma centralizada y segura." }
+          ]
+        },
+        account: {
+          title: "Mi Cuenta y Seguridad",
+          content: "Gestiona tu identidad, suscripción y preferencias visuales.",
+          items: [
+            { title: "Seguridad de Acceso", desc: "Actualiza tu correo y contraseña regularmente para mantener tu portal protegido contra accesos no autorizados." },
+            { title: "Gestión de Suscripción", desc: "Visualiza tu plan actual (Básico, Pro o Enterprise) y mantente al tanto de la renovación de tu servicio." },
+            { title: "Métodos de Pago", desc: "Añade tarjetas de crédito o débito para el pago automatizado de tus herramientas SmartFood AI." },
+            { title: "Preferencias Visuales", desc: "Configura el Modo Oscuro para reducir la fatiga visual y elige tus unidades de medida preferidas." }
+          ]
+        },
+        ai_logic: {
+          title: "El Motor de SmartFood",
+          content: "Conoce la ciencia que impulsa nuestras predicciones del 94% de precisión.",
+          items: [
+            { title: "Algoritmos Utilizados", desc: "Combinamos Regresión Lineal para tendencias y Redes Neuronales LSTM para patrones temporales complejos." },
+            { title: "Procesamiento de Datos", desc: "Tus datos se limpian y anonimizan antes de ser procesados en nuestros servidores de alto rendimiento." },
+            { title: "Variables Externas", desc: "Inyectamos datos de APIs meteorológicas y calendarios de eventos locales para afinar el pronóstico." },
+            { title: "Entrenamiento del Modelo", desc: "La IA aprende de tus ventas diarias; entre más tiempo uses el sistema, más precisas serán las predicciones." }
+          ]
+        },
+        security_tech: {
+          title: "Arquitectura de Seguridad",
+          content: "Tus datos son tu activo más valioso. Los protegemos con estándares bancarios.",
+          items: [
+            { title: "Aislamiento de Datos", desc: "Implementamos arquitectura Multi-Tenant que garantiza que tu información nunca se mezcle con otros negocios." },
+            { title: "Cifrado de Extremo a Extremo", desc: "Toda la comunicación entre el dashboard y el servidor viaja cifrada mediante protocolos TLS 1.3 de última generación." },
+            { title: "Cumplimiento y Privacidad", desc: "Respetamos las normativas de protección de datos, asegurando que solo tú tengas control sobre tu información comercial." },
+            { title: "Backups Automáticos", desc: "Realizamos copias de seguridad cada 24 horas para que tu negocio nunca pierda su historial operativo ante cualquier fallo." }
+          ]
+        }
+      }
     }
   },
   en: {
-    nav: { home: "Home", features: "Features", platform: "Platform", testimonials: "Testimonials", pricing: "Pricing", contact: "Contact", login: "Log in", cta: "Start Now" },
+    nav: { home: "Home", features: "Features", platform: "Platform", testimonials: "Testimonials", pricing: "Pricing", contact: "Contact", docs: "Documentation", docs_cta: "Log In Now!", login: "Log in", cta: "Start Now" },
     badge: "V2.0: Smarter & Faster AI Models",
     h1: "Predict demand. Reduce waste. Maximize profits",
     hero_p: "With SmartFood, anticipate food demand using AI and machine learning. Automatically adjust your inventory and visualize everything with clear, actionable dashboards.",
@@ -868,16 +1049,196 @@ export const T = {
       pass_mismatch_error: "Passwords do not match",
       pass_length_error: "Password must be at least 6 characters",
       generated_at: "Generated"
+    },
+    docs: {
+      title: "Documentation",
+      subtitle: "Everything you need to know to master SmartFood AI",
+      search_placeholder: "Search the guide...",
+      getting_started: "Getting Started",
+      core_features: "Core Features",
+      ai_intelligence: "AI Intelligence",
+      admin_guide: "Administration",
+      ai_science: "Data Science",
+      security_privacy: "Security & Privacy",
+      on_this_page: "On this page",
+      features: {
+        dashboard: { title: "Dashboard", desc: "Monitor real-time metrics." },
+        prediction: { title: "Prediction", desc: "AI that anticipates your demand." },
+        sales: { title: "Sales", desc: "Record payments in seconds." },
+        team: { title: "Team", desc: "Manage access and roles." }
+      },
+      sections: {
+        welcome: {
+          title: "Welcome to SmartFood AI",
+          content: "SmartFood AI is the leading platform for optimizing cafeterias and industrial dining halls based on artificial intelligence. Our mission is to eradicate food waste while maximizing profitability for culinary businesses through the use of state-of-the-art predictive algorithms.",
+          items: [
+            { title: "Introduction", desc: "SmartFood AI is not just a point of sale software; it's a complete ecosystem designed to help dining hall managers make informed decisions based on real data." },
+            { title: "Purpose", desc: "We aim to reduce waste by an average of 30% through precise predictions that align daily production with the actual demand of diners." },
+            { title: "Scope", desc: "Our solution is scalable, adapting from small school cafeterias to high-volume industrial dining halls with multiple branches." },
+            { title: "Key Benefits", desc: "Direct savings in raw materials, optimization of staff time, and clear visualization of business financial health." }
+          ]
+        },
+        setup: {
+          title: "Initial Setup",
+          content: "To start operating, it is vital to correctly configure your business foundations within the platform.",
+          items: [
+            { title: "Business Profile", desc: "Complete your details in 'My Account', setting the base currency, time zone, and applicable taxes for your region." },
+            { title: "Category Structure", desc: "Define logical groups (e.g., Drinks, Main Courses, Desserts). This helps the AI identify which types of products perform better by season." },
+            { title: "Product Loading", desc: "Add each item of your menu with its selling price and cost. You can mark them as 'available' or 'out of stock' instantly." },
+            { title: "Initial Inventory", desc: "It is fundamental to record your current stock so the system starts notifying you about critical levels from the very first sale." }
+          ]
+        },
+        dashboard_overview: {
+          title: "General View (Home)",
+          content: "The Dashboard is your control center. Here we consolidate billions of data points into 4 critical KPIs.",
+          items: [
+            { title: "KPI Reading", desc: "Observe daily revenue compared to the previous day, the number of processed orders, and the star product of the period." },
+            { title: "Smart Alerts", desc: "The system automatically highlights products that are below their defined minimum stock for quick purchasing." },
+            { title: "Performance Charts", desc: "Visualize the sales trend of the last 7 days to understand your business flow throughout the week." },
+            { title: "Operation Shortcuts", desc: "Quickly access the POS or inventory management directly from the home screen widgets." }
+          ]
+        },
+        pos: {
+          title: "Point of Sale (POS)",
+          content: "Our POS is optimized for high transaction flows and ease of use.",
+          items: [
+            { title: "Quick Sale", desc: "Select products via visual grid or use a barcode scanner. The system calculates the total automatically." },
+            { title: "Discounts", desc: "Apply percentage discounts to the total bill easily for special promotions or courtesies." },
+            { title: "Payment Methods", desc: "Manage cash payments (with change calculator) or card. Each method is recorded for the final cash cut." },
+            { title: "Cart Management", desc: "Modify quantities, remove items, or clear the cart with a single click before processing the final payment." }
+          ]
+        },
+        sales_registry: {
+          title: "Sales Registry",
+          content: "Explore each historical transaction with forensic detail for audits and clarifications.",
+          items: [
+            { title: "Transactional History", desc: "Complete list of all sales with unique folio, exact time, cashier who served, and total amount." },
+            { title: "Advanced Filters", desc: "Search for specific sales by date range, payment method, or name of the product sold." },
+            { title: "Ticket Reprinting", desc: "Generate digital or physical copies of past tickets at any time from the registry." },
+            { title: "Sale Voiding", desc: "Ability to cancel erroneous transactions (subject to Admin permissions) to correct inventory." }
+          ]
+        },
+        inventory: {
+          title: "Inventory Management",
+          content: "Real-time supply control to avoid stockouts or overstock.",
+          items: [
+            { title: "Stock Control", desc: "Visualize the real 'On Hand' for each product. The system automatically discounts stock after each sale." },
+            { title: "Movement Registry", desc: "Keep a log of all entries (purchases) and exits (waste or transfers) of inventory." },
+            { title: "Manual Adjustments", desc: "Perform inventory corrections after physical counts to ensure the system matches reality." },
+            { title: "Critical Stock Alerts", desc: "Configure minimum stock per product. The AI will visually notify you when restocking is necessary." }
+          ]
+        },
+        store: {
+          title: "Store Management",
+          content: "The catalog is the heart of your operation. Manage your products and prices.",
+          items: [
+            { title: "Digital Catalog", desc: "Manage the name, category, and availability of all your products in one place." },
+            { title: "Prices and Costs", desc: "Update your selling prices in bulk or individually as your costs with suppliers change." },
+            { title: "Availability Control", desc: "Toggle products on/off for the POS with a switch so cashiers don't sell what isn't there." },
+            { title: "Category Organization", desc: "Move products between categories to optimize POS navigation and analytical reports." }
+          ]
+        },
+        suppliers: {
+          title: "Suppliers",
+          content: "Manage your supply chain efficiently for frictionless restocking.",
+          items: [
+            { title: "Contact Directory", desc: "Store names, phones, and emails of your key suppliers for quick access." },
+            { title: "Orders", desc: "Record which products each supplier provides and keep a history of your past purchase orders." },
+            { title: "Lead Time and Rating", desc: "Record how many days each supplier takes to deliver and rate their service to optimize future purchases." },
+            { title: "Purchase History", desc: "See how much you have bought from each supplier to negotiate better prices based on volume." }
+          ]
+        },
+        prediction: {
+          title: "Demand Prediction",
+          content: "Use the power of AI to know exactly how much to cook tomorrow.",
+          items: [
+            { title: "Predictive Models", desc: "Our algorithms analyze years of data to detect weekly and monthly consumption patterns." },
+            { title: "Weather Impact", desc: "AI adjusts predictions based on the weather forecast. (e.g., sell more hot drinks on cold days)." },
+            { title: "Scenario Simulation", desc: "Test what would happen with your sales under 'Rain', 'Promotion', or 'Holiday' scenarios." },
+            { title: "Production Adjustment", desc: "Receive recommendations on how many units to prepare for each dish to minimize waste." }
+          ]
+        },
+        trends: {
+          title: "Trend Analysis",
+          content: "Discover hidden patterns in your data that traditional reports don't show.",
+          items: [
+            { title: "Pattern Identification", desc: "AI detects which products are usually sold together to suggest cross-selling promotions." },
+            { title: "Peak Hour Analysis", desc: "Identify your highest traffic hours to optimize staff schedules and food preparation." },
+            { title: "AI Recommendations", desc: "Receive automatic suggestions to move slow-rotating inventory through offers." },
+            { title: "Business Opportunities", desc: "Detect underserved niches or categories that are growing rapidly in your local market." }
+          ]
+        },
+        analytics: {
+          title: "Advanced Charts",
+          content: "Enterprise-level data visualization for a deep understanding of the business.",
+          items: [
+            { title: "Revenue vs. Transactions", desc: "Compare how much money comes in against how many sales are made to measure the average ticket." },
+            { title: "Category Distribution", desc: "Understand what percentage of your revenue comes from each product group (e.g., 40% are snacks)." },
+            { title: "Product Volume", desc: "Analyze which 5 products have the most movement to ensure their priority stock." },
+            { title: "Profitability Analysis", desc: "Cross your sales with your registered costs to see the real profit margin per product." }
+          ]
+        },
+        reports: {
+          title: "Reports and Export",
+          content: "Generate official documents ready to print or share.",
+          items: [
+            { title: "Cash Cuts", desc: "Daily summaries that facilitate cash and card reconciliation at the end of each shift." },
+            { title: "Inventory Reports", desc: "Export a valued list of your current stock for accounting audits." },
+            { title: "Financial Summary", desc: "Monthly reports with revenue, costs, and waste for a clear view of profit." },
+            { title: "Professional Export", desc: "All reports are generated in PDF with a clean design, ready to be sent by email." }
+          ]
+        },
+        staff: {
+          title: "Staff Management",
+          content: "Manage your work team and control their access levels.",
+          items: [
+            { title: "User Control", desc: "Create individual accounts for each employee so their actions are recorded under their name." },
+            { title: "Roles and Permissions", desc: "Assign profiles like 'Cashier', 'Manager', or 'Admin' to restrict access to sensitive functions." },
+            { title: "Activity Monitor", desc: "Visualize the last time each user logged in and what transactions they have processed lately." },
+            { title: "Team Security", desc: "Manage password changes and staff decommissioning centrally and safely." }
+          ]
+        },
+        account: {
+          title: "My Account and Security",
+          content: "Manage your identity, subscription, and visual preferences.",
+          items: [
+            { title: "Access Security", desc: "Update your email and password regularly to keep your portal protected against unauthorized access." },
+            { title: "Subscription Management", desc: "View your current plan (Basic, Pro, or Enterprise) and stay on top of your service renewal." },
+            { title: "Payment Methods", desc: "Add credit or debit cards for the automated payment of your SmartFood AI tools." },
+            { title: "Visual Preferences", desc: "Configure Dark Mode to reduce eye strain and choose your preferred measurement units." }
+          ]
+        },
+        ai_logic: {
+          title: "The SmartFood Engine",
+          content: "Know the science driving our 94% accurate predictions.",
+          items: [
+            { title: "Algorithms Used", desc: "We combine Linear Regression for trends and LSTM Neural Networks for complex temporal patterns." },
+            { title: "Data Processing", desc: "Your data is cleaned and anonymized before being processed on our high-performance servers." },
+            { title: "External Variables", desc: "We inject data from weather APIs and local event calendars to fine-tune the forecast." },
+            { title: "Model Training", desc: "The AI learns from your daily sales; the longer you use the system, the more accurate predictions will be." }
+          ]
+        },
+        security_tech: {
+          title: "Security Architecture",
+          content: "Your data is your most valuable asset. We protect it with banking standards.",
+          items: [
+            { title: "Data Isolation", desc: "We implement Multi-Tenant architecture that guarantees your information never mixes with other businesses." },
+            { title: "End-to-End Encryption", desc: "All communication between the dashboard and server travels encrypted via latest TLS 1.3 protocols." },
+            { title: "Compliance and Privacy", desc: "We respect data protection regulations, ensuring only you have control over your commercial information." },
+            { title: "Automatic Backups", desc: "We perform backups every 24 hours so your business never loses its operational history in case of any failure." }
+          ]
+        }
+      }
     }
   },
   fr: {
-    nav: { home: "Accueil", features: "Fonctionnalités", platform: "Plateforme", testimonials: "Témoignages", pricing: "Tarifs", contact: "Contact", login: "Connexion", cta: "Commencer" },
+    nav: { home: "Accueil", features: "Fonctionnalités", platform: "Plateforme", testimonials: "Témoignages", pricing: "Tarifs", contact: "Contact", docs: "Documentation", docs_cta: "S'inscrire!", login: "Connexion", cta: "Commencer" },
     badge: "V2.0 : Modèles IA plus intelligents et rapides",
     h1: "Prédisez la demande. Réduisez le gaspillage. Maximisez les profits",
     hero_p: "Avec SmartFood, anticipez la demande alimentaire grâce à l'IA et au machine learning. Ajustez automatiquement votre inventaire et visualisez tout avec des tableaux de bord clairs et exploitables.",
     try: "Essayer SmartFood AI",
     demo: "Voir la Démo",
-    integrations: "Propulsé par des technologies de haute performance et de nouvelle génération",
+    integrations: "Propulsé por des technologies de haute performance et de nouvelle génération",
     feat_title: "L'intelligence à chaque repas.",
     feat_sub: "Optimisez la gestion de votre inventaire. Laissez l'IA construire la stratégie parfaite pour votre entreprise.",
     feats: [
@@ -916,7 +1277,7 @@ export const T = {
         name: "Entreprise",
         price: "$899",
         unit: "MXN / mois",
-        desc: "Solution complète pour passer à l'échelle",
+        desc: "Solution complète para passer à l'échelle",
         feats: ["Tout ce qui est dans Growth", "Inventaire intelligent", "Point de Vente (POS)", "Prédiction en temps réel", "Alertes automatiques", "Plusieurs succursales", "Multi-utilisateurs avec rôles", "Intégrations (API / ERP)"],
         btn: "Acheter maintenant",
         popular: false
@@ -940,9 +1301,9 @@ export const T = {
     cta_sub: "Rejoignez des milliers de personnes qui optimisent leur corps grâce à la plateforme de nutrition IA la plus avancée.",
     cta_btn: "Essayer SmartFood AI maintenant",
     footer: "Conçu avec intelligence.",
-    footer_dev: "Conçu et développé par Alejandro Balderas Rios",
+    footer_dev: "Conçu et développé por Alejandro Balderas Rios",
     dash_title: "Aperçus Quotidiens",
-    dash_sub: "Tendances métaboliques prédites par IA pour aujourd'hui.",
+    dash_sub: "Tendances métaboliques prédites por IA pour aujourd'hui.",
     dash_accuracy: "94% de Précision",
     macro_title: "Objectifs Macros IA",
     recalc: "Recalculer avec IA",
@@ -958,7 +1319,7 @@ export const T = {
       subtitle: "Entrez vos identifiants para accéder à votre tableau de bord",
       google: "Continuer avec Google",
       apple: "Continuer avec Apple",
-      microsoft: "Continuer avec Microsoft",
+      microsoft: "Continuer with Microsoft",
       or: "ou e-mail",
       email_label: "Adresse e-mail",
       email_placeholder: "nom@entreprise.com",
@@ -1081,7 +1442,7 @@ export const T = {
       model_precision: "Précision du Modèle",
       optimal: "Optimal",
       daily_revenue_projection: "Projection des Revenus Quotidiens",
-      based_on_history: "Basé sur le comportement historique par heure",
+      based_on_history: "Basé sur le comportement historique por heure",
       ia_strategy: "Stratégie IA",
       today_tip: "Conseil du Jour",
       rain_tip: "Appliquez le scénario **Pluie** pour voir comment une baisse de la demande impacterait votre stock critique.",
@@ -1128,7 +1489,7 @@ export const T = {
       checkout_cash: "Encaisser Espèces",
       checkout_card: "Encaisser Carte",
       empty_cart: "Le panier est vide",
-      add_items_to_start: "Ajoutez des produits pour commencer une vente.",
+      add_items_to_start: "Ajoutez des produits pour commencer una vente.",
       confirm_sale: "Confirmer cette vente ?",
       sale_success: "Vente traitée avec succès !",
       cart: "Panier",
@@ -1227,7 +1588,7 @@ export const T = {
       temporal_performance: "Performance temporelle",
       top_products_sub: "Par volume (unités)",
       no_top_products: "Aucun produit phare dans cette période.",
-      trends_desc: "Découvrez les modèles cachés traités par notre moteur d'IA.",
+      trends_desc: "Découvrez les modèles cachés traités por notre moteur d'IA.",
       insights_relevante: "Insights Pertinents",
       no_insights_data: "Pas assez de données pour générer des informations pour l'instant.",
       opportunities: "Opportunités",
@@ -1242,7 +1603,7 @@ export const T = {
       hour_label: "Heure",
       trends_insights: {
         peak_demand: { title: "Pic de Demande", desc: "À {hour}:00, le flux de clients le plus élevé est historiquement enregistré." },
-        no_peak_data: { title: "Pic de Demande", desc: "Pas encore assez de données pour identifier les pics de demande." },
+        no_peak_data: { title: "Pic de Demande", desc: "Pas encore assez de données para identifier les pics de demande." },
         star_product: { title: "Produit Vedette", desc: "{product} est votre produit vedette, en tête de la génération de revenus." },
         no_star_data: { title: "Produit Vedette", desc: "Vos produits les plus populaires apparaîtront ici dès que las ventes commenceront." },
         low_stock: { title: "État des Stocks", desc: "Attention : Vous avez {count} produits en stock critique ou épuisés." },
@@ -1293,6 +1654,186 @@ export const T = {
       pass_mismatch_error: "Les mots de passe ne correspondent pas",
       pass_length_error: "Le mot de passe doit comporter au moins 6 caractères",
       generated_at: "Généré"
+    },
+    docs: {
+      title: "Documentation",
+      subtitle: "Tout ce que vous devez savoir pour maîtriser SmartFood AI",
+      search_placeholder: "Rechercher dans le guide...",
+      getting_started: "Premiers Pas",
+      core_features: "Fonctionnalités Core",
+      ai_intelligence: "Intelligence Artificielle",
+      admin_guide: "Administration",
+      ai_science: "Science des Données",
+      security_privacy: "Sécurité et Confidentialité",
+      on_this_page: "Sur cette page",
+      features: {
+        dashboard: { title: "Dashboard", desc: "Suivez vos mesures en temps réel." },
+        prediction: { title: "Prédiction", desc: "Une IA qui anticipe votre demande." },
+        sales: { title: "Ventes", desc: "Enregistrez les paiements en quelques secondes." },
+        team: { title: "Équipe", desc: "Gérez les accès et les rôles." }
+      },
+      sections: {
+        welcome: {
+          title: "Bienvenue sur SmartFood AI",
+          content: "SmartFood AI est la plateforme leader pour l'optimisation des cafétérias et des cantines industrielles basée sur l'intelligence artificielle. Notre mission est d'éradiquer le gaspillage alimentaire tout en maximisant la rentabilité des entreprises culinaires grâce à l'utilisation d'algorithmes prédictifs de pointe.",
+          items: [
+            { title: "Introduction", desc: "SmartFood AI n'est pas seulement un logiciel de point de vente ; c'est un écosystème complet conçu pour aider les gestionnaires de cantines à prendre des décisions éclairées basées sur des données réelles." },
+            { title: "Objectif", desc: "Nous visons à réduire le gaspillage de 30 % en moyenne grâce à des prédictions précises qui alignent la production quotidienne sur la demande réelle des convives." },
+            { title: "Portée", desc: "Notre solution est évolutive, s'adaptant des petites cafétérias scolaires aux cantines industrielles à grand volume avec plusieurs succursales." },
+            { title: "Avantages Clés", desc: "Économies directes sur les matières premières, optimisation du temps du personnel et visualisation claire de la santé financière de l'entreprise." }
+          ]
+        },
+        setup: {
+          title: "Configuration Initiale",
+          content: "Pour commencer à opérer, il est vital de configurer correctement les bases de votre entreprise sur la plateforme.",
+          items: [
+            { title: "Profil d'Entreprise", desc: "Complétez vos coordonnées dans 'Mon Compte', en configurant la devise de base, le fuseau horaire et les taxes applicables à votre région." },
+            { title: "Structure des Catégories", desc: "Définissez des groupes logiques (ex. Boissons, Plats Principaux, Desserts). Cela aide l'IA à identifier quels types de produits sont les plus performants par saison." },
+            { title: "Chargement des Produits", desc: "Ajoutez chaque article de votre menu avec son prix de vente et son coût. Vous pouvez les marquer comme 'disponibles' ou 'en rupture de stock' instantanément." },
+            { title: "Inventaire Initial", desc: "Il est fondamental d'enregistrer vos stocks actuels pour que le système commence à vous informer des niveaux critiques dès la première vente." }
+          ]
+        },
+        dashboard_overview: {
+          title: "Vue Générale (Home)",
+          content: "Le Dashboard est votre centre de commandement. Ici, nous consolidons des milliards de points de données en 4 KPI critiques.",
+          items: [
+            { title: "Lecture des KPI", desc: "Observez les revenus quotidiens comparés à la veille, le nombre de commandes traitées et le produit vedette de la période." },
+            { title: "Alertes Intelligentes", desc: "Le système met automatiquement en évidence les produits qui sont en dessous de leur stock minimum défini pour un achat rapide." },
+            { title: "Graphiques de Performance", desc: "Visualisez la tendance des ventes des 7 derniers jours pour comprendre le flux de votre entreprise tout au long de la semaine." },
+            { title: "Raccourcis Opérationnels", desc: "Accédez rapidement au POS ou à la gestion des stocks directement depuis les widgets de l'écran d'accueil." }
+          ]
+        },
+        pos: {
+          title: "Point de Vente (POS)",
+          content: "Notre POS est optimisé pour les flux de transactions élevés et la facilité d'utilisation.",
+          items: [
+            { title: "Vente Rapide", desc: "Sélectionnez des produits via une grille visuelle ou utilisez un lecteur de code-barres. Le système calcule le total automatiquement." },
+            { title: "Remises", desc: "Appliquez facilement des remises en pourcentage sur la facture totale pour des promotions spéciales ou des courtoisies." },
+            { title: "Modes de Paiement", desc: "Gérez les paiements en espèces (avec calculateur de monnaie) ou par carte. Chaque méthode est enregistrée pour la clôture de caisse finale." },
+            { title: "Gestion du Panier", desc: "Modifiez les quantités, supprimez des articles ou videz le panier d'un seul clic avant de traiter le paiement final." }
+          ]
+        },
+        sales_registry: {
+          title: "Registre des Ventes",
+          content: "Explorez chaque transaction historique avec des détails médico-légaux pour les audits et les clarifications.",
+          items: [
+            { title: "Historique Transactionnel", desc: "Liste complète de toutes les ventes avec un folio unique, l'heure exacte, le caissier qui a servi et le montant total." },
+            { title: "Filtres Avancés", desc: "Recherchez des ventes spécifiques par plage de dates, mode de paiement ou nom du produit vendu." },
+            { title: "Réimpression de Tickets", desc: "Générez des copies numériques ou physiques des tickets passés à tout moment depuis le registre." },
+            { title: "Annulation de Ventes", desc: "Possibilité d'annuler des transactions erronées (sous réserve des autorisations Admin) pour corriger l'inventaire." }
+          ]
+        },
+        inventory: {
+          title: "Gestion des Stocks",
+          content: "Contrôle des fournitures en temps réel pour éviter les ruptures de stock ou le surstockage.",
+          items: [
+            { title: "Contrôle des Stocks", desc: "Visualisez le 'On Hand' réel de chaque produit. Le système décompte automatiquement les stocks après chaque vente." },
+            { title: "Registre des Mouvements", desc: "Tenez un journal de toutes les entrées (achats) et sorties (pertes ou transferts) de stock." },
+            { title: "Ajustements Manuels", desc: "Effectuez des corrections de stock après des inventaires physiques pour vous assurer que le système correspond à la réalité." },
+            { title: "Alertes de Stock Critique", desc: "Configurez le stock minimum par produit. L'IA vous avertira visuellement lorsqu'un réapprovisionnement est nécessaire." }
+          ]
+        },
+        store: {
+          title: "Gestion de Boutique",
+          content: "Le catalogue est le cœur de votre exploitation. Gérez vos produits et vos prix.",
+          items: [
+            { title: "Catalogue Numérique", desc: "Gérez le nom, la catégorie et la disponibilité de tous vos produits en un seul endroit." },
+            { title: "Prix et Coûts", desc: "Actualisez vos prix de vente en gros ou individuellement à mesure que vos coûts auprès des fournisseurs changent." },
+            { title: "Contrôle de Disponibilité", desc: "Activez ou désactivez des produits pour le POS avec un interrupteur afin que les caissiers ne vendent pas ce qui n'est pas là." },
+            { title: "Organisation par Catégories", desc: "Déplacez des produits entre les catégories pour optimiser la navigation sur le POS et les rapports analytiques." }
+          ]
+        },
+        suppliers: {
+          title: "Fournisseurs",
+          content: "Gérez votre chaîne d'approvisionnement efficacement pour un réapprovisionnement sans friction.",
+          items: [
+            { title: "Répertoire de Contacts", desc: "Stockez les noms, téléphones et e-mails de vos principaux fournisseurs pour un accès rapide." },
+            { title: "Commandes", desc: "Enregistrez quels produits chaque fournisseur vous livre et conservez un historique de vos bons de commande passés." },
+            { title: "Délai de Livraison et Évaluation", desc: "Enregistrez le nombre de jours que chaque fournisseur met à livrer et évaluez leur service pour optimiser vos futurs achats." },
+            { title: "Historique des Achats", desc: "Consultez combien vous avez acheté à chaque fournisseur pour négocier de meilleurs prix basés sur le volume." }
+          ]
+        },
+        prediction: {
+          title: "Prédiction de la Demande",
+          content: "Utilisez la puissance de l'IA pour savoir exactement combien cuisiner demain.",
+          items: [
+            { title: "Modèles Prédictifs", desc: "Nos algorithmes analysent des années de données pour détecter les habitudes de consommation hebdomadaires et mensuelles." },
+            { title: "Impact Météo", desc: "L'IA ajuste les prévisions selon la météo. (ex. vendez plus de boissons chaudes les jours froids)." },
+            { title: "Simulation de Scénarios", desc: "Testez ce qui se passerait avec vos ventes selon les scénarios 'Pluie', 'Promotion' ou 'Jour Férié'." },
+            { title: "Ajustement de la Production", desc: "Recevez des recommandations sur le nombre d'unités à préparer pour chaque plat afin de minimiser le gaspillage." }
+          ]
+        },
+        trends: {
+          title: "Analyse des Tendances",
+          content: "Découvrez des modèles cachés dans vos données que les rapports traditionnels ne montrent pas.",
+          items: [
+            { title: "Identification des Modèles", desc: "L'IA détecte quels produits sont généralement vendus ensemble pour suggérer des promotions croisées (Cross-selling)." },
+            { title: "Analyse des Heures de Pointe", desc: "Identifiez vos heures de plus forte affluence pour optimiser les horaires du personnel et la préparation des repas." },
+            { title: "Recommandations de l'IA", desc: "Recevez des suggestions automatiques pour faire tourner les stocks à faible rotation via des offres." },
+            { title: "Opportunités Commerciales", desc: "Détectez des niches mal desservies ou des catégories qui croissent rapidement sur votre marché local." }
+          ]
+        },
+        analytics: {
+          title: "Graphiques Avancés",
+          content: "Visualisation des données de niveau entreprise pour une compréhension approfondie de l'activité.",
+          items: [
+            { title: "Revenu vs Transactions", desc: "Comparez l'argent qui entre par rapport au nombre de ventes effectuées pour mesurer le ticket moyen." },
+            { title: "Distribution par Catégorie", desc: "Comprenez quel pourcentage de vos revenus provient de chaque groupe de produits (ex. 40 % sont des snacks)." },
+            { title: "Volume de Produits", desc: "Analysez quels sont les 5 produits ayant le plus de mouvement pour assurer leur stock prioritaire." },
+            { title: "Analyse de Rentabilité", desc: "Croisez vos ventes avec vos coûts enregistrés pour voir la marge bénéficiaire réelle par produit." }
+          ]
+        },
+        reports: {
+          title: "Rapports et Exportation",
+          content: "Générez des documents officiels prêts à être imprimés ou partagés.",
+          items: [
+            { title: "Clôtures de Caisse", desc: "Résumés quotidiens qui facilitent le rapprochement des espèces et des cartes à la fin de chaque service." },
+            { title: "Rapports d'Inventaire", desc: "Exportez une liste valorisée de vos stocks actuels pour les audits comptables." },
+            { title: "Résumé Financier", desc: "Rapports mensuels avec revenus, coûts et pertes pour une vision claire du bénéfice." },
+            { title: "Exportation Professionnelle", desc: "Tous les rapports sont générés en PDF avec un design propre, prêt à être envoyé par e-mail." }
+          ]
+        },
+        staff: {
+          title: "Gestion du Personnel",
+          content: "Gérez votre équipe de travail et contrôlez leurs niveaux d'accès.",
+          items: [
+            { title: "Contrôle des Utilisateurs", desc: "Créez des comptes individuels pour chaque employé afin que leurs actions soient enregistrées sous leur nom." },
+            { title: "Rôles et Permissions", desc: "Attribuez des profils tels que 'Caissier', 'Gérant' ou 'Admin' pour restreindre l'accès aux fonctions sensibles." },
+            { title: "Moniteur d'Activité", desc: "Visualisez la dernière fois que chaque utilisateur s'est connecté et quelles transactions il a traitées récemment." },
+            { title: "Sécurité de l'Équipe", desc: "Gérez les changements de mots de passe et le départ du personnel de manière centralisée et sécurisée." }
+          ]
+        },
+        account: {
+          title: "Mon Compte et Sécurité",
+          content: "Gérez votre identité, votre abonnement et vos préférences visuelles.",
+          items: [
+            { title: "Sécurité des Accès", desc: "Mettez régulièrement à jour votre e-mail et votre mot de passe pour protéger votre portail contre les accès non autorisés." },
+            { title: "Gestion de l'Abonnement", desc: "Visualisez votre plan actuel (Basique, Pro ou Entreprise) et restez informé du renouvellement de votre service." },
+            { title: "Modes de Paiement", desc: "Ajoutez des cartes de crédit ou de débit pour le paiement automatisé de vos outils SmartFood AI." },
+            { title: "Préférences Visuelles", desc: "Configurez le Mode Sombre pour réduire la fatigue visuelle et choisissez vos unités de mesure préférées." }
+          ]
+        },
+        ai_logic: {
+          title: "Le Moteur SmartFood",
+          content: "Découvrez la science qui alimente nos prédictions avec une précision de 94 %.",
+          items: [
+            { title: "Algorithmes Utilisés", desc: "Nous combinons la régression linéaire pour les tendances et les réseaux de neurones LSTM pour les modèles temporels complexes." },
+            { title: "Traitement des Données", desc: "Vos données sont nettoyées et anonymisées avant d'être traitées sur nos serveurs haute performance." },
+            { title: "Variables Externes", desc: "Nous injectons des données provenant d'API météo et de calendriers d'événements locaux pour affiner les prévisions." },
+            { title: "Entraînement du Modèle", desc: "L'IA apprend de vos ventes quotidiennes ; plus vous utilisez le système, plus les prédictions seront précises." }
+          ]
+        },
+        security_tech: {
+          title: "Architecture de Sécurité",
+          content: "Vos données sont votre atout le plus précieux. Nous les protégeons avec des normes bancaires.",
+          items: [
+            { title: "Isolation des Données", desc: "Nous mettons en œuvre une architecture Multi-Tenant qui garantit que vos informations ne se mélangent jamais à celles d'autres entreprises." },
+            { title: "Chiffrement de Bout en Bout", desc: "Toute communication entre le tableau de bord et le serveur voyage chiffrée via les derniers protocoles TLS 1.3." },
+            { title: "Conformité et Confidentialité", desc: "Nous respectons les réglementations sur la protection des données, garantissant que vous seul avez le contrôle sur vos informations commerciales." },
+            { title: "Sauvegardes Automatiques", desc: "Nous effectuons des sauvegardes toutes les 24 heures pour que votre entreprise ne perde jamais son historique opérationnel en cas de défaillance." }
+          ]
+        }
+      }
     }
   },
 } as const;
@@ -1425,4 +1966,3 @@ export function LangSwitcher() {
     </div>
   );
 }
-

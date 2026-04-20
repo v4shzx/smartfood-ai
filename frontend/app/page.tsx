@@ -18,6 +18,7 @@ import {
 import { useI18n, LangSwitcher } from "@/lib/i18n";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
+import { ENDPOINTS } from "@/lib/api-config";
 
 // ─── Theme Toggle ─────────────────────────────────────────────────────────────
 
@@ -98,6 +99,7 @@ function Navbar() {
     { href: "#features", label: t.nav.features, id: "features" },
     { href: "#pricing", label: t.nav.pricing, id: "pricing" },
     { href: "#contact", label: t.nav.contact, id: "contact" },
+    { href: "/docs", label: t.nav.docs, id: "docs" },
   ];
 
   return (
@@ -601,14 +603,47 @@ function Pricing() {
 function Contact() {
   const { t } = useI18n();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: ""
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value, name } = e.target;
+    // The inputs don't have name attributes yet in the draft, I'll add them or use id
+    setFormData(prev => ({
+      ...prev,
+      [name || id]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
+
+    try {
+      const response = await fetch(ENDPOINTS.contact, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert("¡Mensaje enviado con éxito!");
+        setFormData({ name: "", email: "", subject: "", message: "" });
+      } else {
+        const error = await response.json();
+        alert(`Error: ${error.detail || "No se pudo enviar el mensaje"}`);
+      }
+    } catch (err) {
+      alert("Error de conexión con el servidor");
+    } finally {
       setIsSubmitting(false);
-      alert("Message sent! (Simulation)");
-    }, 2000);
+    }
   };
 
   return (
@@ -650,6 +685,9 @@ function Contact() {
                 <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_form.name}</label>
                 <input
                   type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   required
                   className="w-full bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-6 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
                   placeholder={t.contact_form.placeholder_name}
@@ -659,6 +697,9 @@ function Contact() {
                 <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_form.email}</label>
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   required
                   className="w-full bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-6 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
                   placeholder={t.contact_form.placeholder_email}
@@ -670,6 +711,9 @@ function Contact() {
               <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_form.subject}</label>
               <input
                 type="text"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
                 required
                 className="w-full bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-6 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
                 placeholder={t.contact_form.placeholder_subject}
@@ -679,6 +723,9 @@ function Contact() {
             <div className="space-y-2 text-left">
               <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_form.message}</label>
               <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
                 required
                 rows={5}
                 className="w-full bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-6 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none"

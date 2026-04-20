@@ -14,4 +14,5 @@ export const ENDPOINTS = {
   cafeteria: `${BASE_URL}/cafeteria`,
   categories: `${BASE_URL}/categories`,
   admin: `${BASE_URL}/admin`,
+  contact: `${BASE_URL}/contact`,
 };
