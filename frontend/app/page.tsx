@@ -3,12 +3,12 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
   Brain, LineChart, Activity, Bot, Zap, ChevronRight, Menu, X,
   Star, CheckCircle2, Salad, Flame, ArrowUpRight, Cpu, Database,
-  ShieldCheck, Target, CloudCog, CloudSun
+  ShieldCheck, Target, CloudCog, CloudSun, Check, AlertCircle
 } from "lucide-react";
 
 import {
@@ -19,6 +19,40 @@ import { useI18n, LangSwitcher } from "@/lib/i18n";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { ENDPOINTS } from "@/lib/api-config";
+
+// ─── Toast Component ─────────────────────────────────────────────────────────
+
+function Toast({ message, type, onClose }: { message: string; type: "success" | "error"; onClose: () => void }) {
+  React.useEffect(() => {
+    const timer = setTimeout(onClose, 5000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50, scale: 0.9 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+      className={cn(
+        "fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl backdrop-blur-xl border min-w-[320px]",
+        type === "success" 
+          ? "bg-emerald-500/90 border-emerald-400/50 text-white" 
+          : "bg-rose-500/90 border-rose-400/50 text-white"
+      )}
+    >
+      <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+        {type === "success" ? <Check className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+      </div>
+      <div className="flex-1">
+        <p className="font-bold text-sm leading-tight">{type === "success" ? "¡Éxito!" : "Atención"}</p>
+        <p className="text-xs opacity-90 font-medium mt-0.5">{message}</p>
+      </div>
+      <button onClick={onClose} className="p-1 hover:bg-white/10 rounded-lg transition-colors">
+        <X className="w-4 h-4" />
+      </button>
+    </motion.div>
+  );
+}
 
 // ─── Theme Toggle ─────────────────────────────────────────────────────────────
 
@@ -600,7 +634,7 @@ function Pricing() {
 
 // ─── Contact ──────────────────────────────────────────────────────────────────
 
-function Contact() {
+function Contact({ setToast }: { setToast: (t: any) => void }) {
   const { t } = useI18n();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -612,7 +646,6 @@ function Contact() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value, name } = e.target;
-    // The inputs don't have name attributes yet in the draft, I'll add them or use id
     setFormData(prev => ({
       ...prev,
       [name || id]: value
@@ -633,14 +666,14 @@ function Contact() {
       });
 
       if (response.ok) {
-        alert("¡Mensaje enviado con éxito!");
+        setToast({ message: "¡Mensaje enviado con éxito! Nos pondremos en contacto pronto.", type: "success" });
         setFormData({ name: "", email: "", subject: "", message: "" });
       } else {
         const error = await response.json();
-        alert(`Error: ${error.detail || "No se pudo enviar el mensaje"}`);
+        setToast({ message: error.detail || "No se pudo enviar el mensaje. Intenta de nuevo.", type: "error" });
       }
     } catch (err) {
-      alert("Error de conexión con el servidor");
+      setToast({ message: "Error de conexión con el servidor. Revisa tu internet.", type: "error" });
     } finally {
       setIsSubmitting(false);
     }
@@ -849,6 +882,8 @@ function StatCard({ title, value, subtitle, icon }: { title: string; value: stri
 
 export default function Home() {
   const { t } = useI18n();
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+
   return (
     <main className="bg-transparent min-h-screen font-sans antialiased text-slate-900 dark:text-white selection:bg-emerald-100 dark:selection:bg-emerald-900/50 selection:text-emerald-900 dark:selection:text-emerald-200">
       <Navbar />
@@ -857,8 +892,19 @@ export default function Home() {
       <Integrations />
       <Features />
       <Pricing />
-      <Contact />
+      <Contact setToast={setToast} />
       <CTA />
+      
+      <AnimatePresence>
+        {toast && (
+          <Toast 
+            message={toast.message} 
+            type={toast.type} 
+            onClose={() => setToast(null)} 
+          />
+        )}
+      </AnimatePresence>
+
       <footer className="py-16 border-t border-slate-100 dark:border-slate-800/60 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <p className="text-xs font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-4">
