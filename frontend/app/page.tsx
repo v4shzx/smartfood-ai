@@ -645,10 +645,10 @@ function Contact({ setToast }: { setToast: (t: any) => void }) {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { id, value, name } = e.target;
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name || id]: value
+      [name]: value
     }));
   };
 
@@ -898,6 +898,7 @@ export default function Home() {
       <AnimatePresence>
         {toast && (
           <Toast 
+            key="toast"
             message={toast.message} 
             type={toast.type} 
             onClose={() => setToast(null)} 
