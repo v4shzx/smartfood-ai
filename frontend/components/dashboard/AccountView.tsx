@@ -123,11 +123,13 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
     setIsBillingLoading(true);
     
     try {
+      const sessionUserId = localStorage.getItem("smartfood_user_id") || "u_demo";
       const [exp_month, exp_year] = (newCardForm.exp || "01/29").split('/').map(Number);
       const res = await fetch(`${API_URL}/payments/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          user_id: sessionUserId,
           brand: "Visa",
           last4: newCardForm.number.slice(-4),
           exp_month: exp_month || 1,

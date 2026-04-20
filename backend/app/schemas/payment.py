@@ -10,7 +10,7 @@ class PaymentMethodBase(BaseModel):
     is_primary: bool = False
 
 class PaymentMethodCreate(PaymentMethodBase):
-    pass
+    user_id: str
 
 class PaymentMethod(PaymentMethodBase):
     id: str

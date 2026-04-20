@@ -1,5 +1,5 @@
-from typing import List, Any
-from fastapi import APIRouter, Depends, HTTPException
+from typing import List, Any, Optional
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update
 from app.core.database import get_db
@@ -11,16 +11,17 @@ router = APIRouter()
 
 @router.get("/", response_model=List[PaymentMethod])
 async def get_payment_methods(
+    user_id: Optional[str] = Query("u_demo", description="User ID to filter payment methods"),
     db: AsyncSession = Depends(get_db),
     skip: int = 0,
     limit: int = 100,
 ) -> Any:
     """
-    Retrieve payment methods for the demo user (simulating current user).
+    Retrieve payment methods for a specific user.
     """
     result = await db.execute(
         select(PaymentMethodModel)
-        .where(PaymentMethodModel.user_id == "u_demo")
+        .where(PaymentMethodModel.user_id == user_id)
         .offset(skip)
         .limit(limit)
     )
@@ -38,7 +39,7 @@ async def create_payment_method(
     """
     db_obj = PaymentMethodModel(
         id=f"pm_{uuid.uuid4().hex[:8]}",
-        user_id="u_demo",
+        user_id=method_in.user_id,
         brand=method_in.brand,
         last4=method_in.last4,
         exp_month=method_in.exp_month,
@@ -47,11 +48,11 @@ async def create_payment_method(
     )
     
     if db_obj.is_primary:
-        # Unset other primary methods
+        # Unset other primary methods for this specific user
         await db.execute(
             update(PaymentMethodModel)
             .where(
-                PaymentMethodModel.user_id == "u_demo",
+                PaymentMethodModel.user_id == method_in.user_id,
                 PaymentMethodModel.is_primary == True
             )
             .values(is_primary=False)
@@ -106,7 +107,7 @@ async def set_primary_payment_method(
     await db.execute(
         update(PaymentMethodModel)
         .where(
-            PaymentMethodModel.user_id == "u_demo",
+            PaymentMethodModel.user_id == method.user_id,
             PaymentMethodModel.is_primary == True
         )
         .values(is_primary=False)

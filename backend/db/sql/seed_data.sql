@@ -3,7 +3,18 @@
 -- 1. Users (Admins/Owners)
 INSERT INTO users (id, full_name, email, password_hash, role, subscription_tier, created_at) VALUES
 ('u_demo', 'Comedor DM', 'comedordm@gmail.com', '123456', 'admin', 'empresarial', '2026-01-15 10:00:00'),
-('u_demo_basico', 'Demo Básico', 'demo_basico@smartfood.ai', '123456', 'admin', 'basico', '2026-03-02 14:30:00')
+('u_demo_basico', 'Demo Básico', 'demo_basico@smartfood.ai', '123456', 'admin', 'basico', '2026-03-02 14:30:00'),
+('u_master', 'Master Account', 'master@smartfood.ai', 'master', 'admin', 'administrador', '2025-12-20 09:15:00')
+ON CONFLICT (id) DO NOTHING;
+
+-- 1.5 Categories (Linked to u_demo)
+INSERT INTO categories (id, owner_id, name) VALUES
+('cat_0', 'u_demo', 'Comida'),
+('cat_1', 'u_demo', 'Bebidas'),
+('cat_2', 'u_demo', 'Snacks'),
+('cat_3', 'u_demo', 'Desayuno'),
+('cat_4', 'u_demo', 'Frutas'),
+('cat_5', 'u_demo', 'Postres')
 ON CONFLICT (id) DO NOTHING;
 
 -- 2. Staff (Workers linked to u_demo)
