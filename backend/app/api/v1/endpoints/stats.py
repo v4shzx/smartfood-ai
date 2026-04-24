@@ -171,6 +171,54 @@ def _compute_hourly_prediction_from_total(forecast_total: float, hourly_average:
         prediction.append({"hour": f"{hour}:00", "ventas": ventas})
     return prediction
 
+
+def _scenario_hourly_profile(
+    scenario: str,
+    base_weights: Dict[int, float],
+    rain_probability: float,
+    temperature_c: float,
+    event_multiplier: float,
+) -> Dict[int, float]:
+    """Adjust hourly distribution by scenario so peak hour can move, not only total volume."""
+    adjusted = dict(base_weights)
+
+    if scenario == "rain":
+        # Rain usually suppresses early traffic and concentrates demand around lunch.
+        for hour in adjusted:
+            if hour < 11:
+                adjusted[hour] *= max(0.55, 1 - (0.45 * rain_probability))
+            elif 12 <= hour <= 15:
+                adjusted[hour] *= 1 + (0.25 * rain_probability)
+    elif scenario == "event":
+        # Events push demand later in the day.
+        late_boost = max(1.0, min(event_multiplier, 2.0))
+        for hour in adjusted:
+            if 18 <= hour <= 21:
+                adjusted[hour] *= late_boost
+            elif 10 <= hour <= 13:
+                adjusted[hour] *= 0.9
+    elif scenario == "heatwave":
+        # Heat shifts demand to beverages/afternoon windows.
+        if temperature_c > 30:
+            temp_factor = min((temperature_c - 30) * 0.02, 0.25)
+            for hour in adjusted:
+                if 14 <= hour <= 17:
+                    adjusted[hour] *= 1 + temp_factor
+                elif hour < 11:
+                    adjusted[hour] *= 1 - (temp_factor * 0.6)
+    elif scenario == "monthend":
+        # End-of-month tends to compress demand around lunch and dinner peaks.
+        for hour in adjusted:
+            if 13 <= hour <= 15 or 19 <= hour <= 20:
+                adjusted[hour] *= 1.12
+            elif hour < 10:
+                adjusted[hour] *= 0.9
+
+    total = sum(adjusted.values())
+    if total <= 0:
+        return base_weights
+    return {hour: value / total for hour, value in adjusted.items()}
+
 @router.get("/")
 async def get_dashboard_stats(
     owner_id: Optional[str] = Query("u_demo", description="Owner ID to filter stats"),
@@ -510,7 +558,16 @@ async def get_prediction_scenario(
         scenario_key = "baseline"
 
     scenario_total = max(round(base_total * factor, 2), 0.0)
-    prediction = _compute_hourly_prediction_from_total(scenario_total, hourly_average)
+    base_weights = _fallback_hourly_weights(hourly_average)
+    scenario_weights = _scenario_hourly_profile(
+        scenario_key,
+        base_weights,
+        rain_probability,
+        temperature_c,
+        event_multiplier,
+    )
+    scenario_hourly_average = {hour: scenario_weights[hour] * 100.0 for hour in FORECAST_HOURS}
+    prediction = _compute_hourly_prediction_from_total(scenario_total, scenario_hourly_average)
     if sum(float(item["ventas"]) for item in prediction) <= 0:
         prediction = _build_baseline_prediction(hourly_average)
 
