@@ -219,12 +219,12 @@ export function useDashboard(t: any) {
   const invFiltered = useMemo(() => {
     return invItems.filter((it) => {
       const matchQuery = it.name.toLowerCase().includes(invQuery.toLowerCase()) || it.sku.toLowerCase().includes(invQuery.toLowerCase());
-      const matchCritical = !invOnlyCritical || it.onHand <= it.min;
+      const matchCritical = !invOnlyCritical || it.on_hand <= it.min_stock;
       return matchQuery && matchCritical;
     });
   }, [invItems, invQuery, invOnlyCritical]);
 
-  const invCritical = useMemo(() => invItems.filter((it) => it.onHand <= it.min), [invItems]);
+  const invCritical = useMemo(() => invItems.filter((it) => it.on_hand <= it.min_stock), [invItems]);
 
   const invSelected = useMemo(() => invItems.find((it) => it.id === invSelectedId), [invItems, invSelectedId]);
 
@@ -379,8 +379,8 @@ export function useDashboard(t: any) {
           setInvItems((prev) => prev.map((it) => it.id === storeEditingId ? {
             ...it,
             name: updatedProd.name,
-            onHand: updatedProd.on_hand,
-            min: updatedProd.min_stock ?? 5
+            on_hand: updatedProd.on_hand,
+            min_stock: updatedProd.min_stock ?? 5
           } : it));
         }
       } else {
@@ -396,10 +396,10 @@ export function useDashboard(t: any) {
             id: newProd.id,
             name: newProd.name,
             sku: `SKU-${newProd.id}`,
-            onHand: newProd.on_hand,
-            min: newProd.min_stock ?? 5,
+            on_hand: newProd.on_hand,
+            min_stock: newProd.min_stock ?? 5,
             unit: "pcs",
-            updatedAt: Date.now()
+            updated_at: Date.now()
           }]);
         }
       }
@@ -454,7 +454,7 @@ export function useDashboard(t: any) {
     if (!it) return;
     
     const diff = invMoveType === "in" ? invMoveQty : invMoveType === "out" ? -invMoveQty : invMoveQty;
-    const newStock = Math.max(0, it.onHand + diff);
+    const newStock = Math.max(0, it.on_hand + diff);
 
     try {
       const res = await fetch(`${API_URL}/products/${invSelectedId}`, {
@@ -468,8 +468,8 @@ export function useDashboard(t: any) {
         // Update local state for inventory items
         setInvItems((prev) => prev.map((x) => (x.id === invSelectedId ? { 
           ...x, 
-          onHand: updatedProduct.on_hand, 
-          updatedAt: Date.now() 
+          on_hand: updatedProduct.on_hand, 
+          updated_at: Date.now() 
         } : x)));
         
         // Update local state for products
