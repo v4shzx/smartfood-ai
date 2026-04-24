@@ -68,24 +68,30 @@ def _forecast_next_day_total(daily_sales: List[Dict[str, Union[float, datetime]]
     if df.empty:
         return None
 
-    df["ds"] = pd.to_datetime(df["ds"]).dt.tz_localize(None)
+    # Normalize datetimes safely for both naive and tz-aware inputs.
+    df["ds"] = pd.to_datetime(df["ds"], utc=True, errors="coerce").dt.tz_convert(None)
     df["y"] = pd.to_numeric(df["y"], errors="coerce").fillna(0.0)
+    df = df.dropna(subset=["ds"])
 
-    if df["y"].sum() <= 0:
+    if df.empty or df["y"].sum() <= 0:
         return None
 
-    model = Prophet(
-        daily_seasonality=True,
-        weekly_seasonality=True,
-        yearly_seasonality=False,
-        changepoint_prior_scale=0.05,
-        seasonality_prior_scale=10.0,
-    )
-    model.fit(df)
-    future = model.make_future_dataframe(periods=1, freq="D")
-    forecast = model.predict(future)
-    next_day_value = float(forecast["yhat"].iloc[-1])
-    return max(round(next_day_value, 2), 0.0)
+    try:
+        model = Prophet(
+            daily_seasonality=True,
+            weekly_seasonality=True,
+            yearly_seasonality=False,
+            changepoint_prior_scale=0.05,
+            seasonality_prior_scale=10.0,
+        )
+        model.fit(df)
+        future = model.make_future_dataframe(periods=1, freq="D")
+        forecast = model.predict(future)
+        next_day_value = float(forecast["yhat"].iloc[-1])
+        return max(round(next_day_value, 2), 0.0)
+    except Exception:
+        # Never break the endpoint; caller will use heuristic fallback.
+        return None
 
 @router.get("/")
 async def get_dashboard_stats(
