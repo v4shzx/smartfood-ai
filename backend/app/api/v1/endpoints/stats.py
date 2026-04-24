@@ -478,8 +478,6 @@ async def get_prediction(owner_id: Optional[str] = Query("u_demo"), db: AsyncSes
     )
     daily_sales_result = await db.execute(daily_sales_query)
     daily_sales = [{"ds": row[0], "y": float(row[1] or 0.0)} for row in daily_sales_result.all()]
-    fallback_mape = _fallback_daily_mape(daily_sales)
-    fallback_mape = _fallback_daily_mape(daily_sales)
 
     forecast_total = _forecast_next_day_total(daily_sales)
     if forecast_total is None:
@@ -527,6 +525,7 @@ async def get_prediction_scenario(
     )
     daily_sales_result = await db.execute(daily_sales_query)
     daily_sales = [{"ds": row[0], "y": float(row[1] or 0.0)} for row in daily_sales_result.all()]
+    fallback_mape = _fallback_daily_mape(daily_sales)
 
     prophet_meta = _forecast_prophet_with_meta(daily_sales)
     base_total: Optional[float] = None
@@ -628,6 +627,7 @@ async def get_prediction_meta(owner_id: Optional[str] = Query("u_demo"), db: Asy
     )
     daily_sales_result = await db.execute(daily_sales_query)
     daily_sales = [{"ds": row[0], "y": float(row[1] or 0.0)} for row in daily_sales_result.all()]
+    fallback_mape = _fallback_daily_mape(daily_sales)
 
     prophet_meta = _forecast_prophet_with_meta(daily_sales)
     if prophet_meta is not None:
