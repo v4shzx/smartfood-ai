@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
@@ -59,6 +59,7 @@ export default function Dashboard() {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
   const userMenuRef = React.useRef<HTMLDivElement>(null);
   const notificationsRef = React.useRef<HTMLDivElement>(null);
 
@@ -116,6 +117,17 @@ export default function Dashboard() {
   const isEnterpriseOrAbove = subscriptionTier === "empresarial" || subscriptionTier === "administrador";
   const router = useRouter();
 
+  React.useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const updateViewportMode = (event?: MediaQueryListEvent) => {
+      setIsMobileViewport(event ? event.matches : mediaQuery.matches);
+    };
+
+    updateViewportMode();
+    mediaQuery.addEventListener("change", updateViewportMode);
+    return () => mediaQuery.removeEventListener("change", updateViewportMode);
+  }, []);
+
   const handleLogout = () => {
     // Simulated logout logic
     localStorage.removeItem("app-session"); // Assuming there's some session key
@@ -128,6 +140,7 @@ export default function Dashboard() {
   };
 
   return (
+    <MotionConfig reducedMotion={isMobileViewport ? "always" : "never"}>
     <div className="flex min-h-screen overflow-x-clip bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-500 font-sans font-normal selection:bg-emerald-500/30">
       <AnimatePresence>
         {isMobileSidebarOpen && (
@@ -138,7 +151,10 @@ export default function Dashboard() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsMobileSidebarOpen(false)}
-            className="fixed inset-0 z-40 bg-slate-950/45 backdrop-blur-sm lg:hidden"
+            className={cn(
+              "fixed inset-0 z-40 bg-slate-950/45 lg:hidden",
+              isMobileViewport ? "" : "backdrop-blur-sm"
+            )}
           />
         )}
       </AnimatePresence>
@@ -340,7 +356,10 @@ export default function Dashboard() {
         )}
       >
         {/* Header */}
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white/70 px-4 shadow-[0_1px_0_0_rgba(0,0,0,0.02)] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/70 sm:h-20 sm:px-6 lg:px-8">
+        <header className={cn(
+          "sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white/70 px-4 shadow-[0_1px_0_0_rgba(0,0,0,0.02)] dark:border-slate-800 dark:bg-slate-950/70 sm:h-20 sm:px-6 lg:px-8",
+          isMobileViewport ? "" : "backdrop-blur-xl"
+        )}>
           <div className="flex items-center gap-4">
             <div className="lg:hidden">
               <button
@@ -378,7 +397,10 @@ export default function Dashboard() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.95 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
-                    className="absolute right-0 mt-3 w-[min(20rem,calc(100vw-1rem))] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 overflow-hidden z-50 p-2 backdrop-blur-xl"
+                    className={cn(
+                      "absolute right-0 mt-3 w-[min(20rem,calc(100vw-1rem))] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 overflow-hidden z-50 p-2",
+                      isMobileViewport ? "" : "backdrop-blur-xl"
+                    )}
                   >
                     <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800/50 mb-2">
                       <div className="text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white">{t.dashboard.notifications}</div>
@@ -449,7 +471,10 @@ export default function Dashboard() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.95 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
-                    className="absolute right-0 mt-3 w-[min(14rem,calc(100vw-1rem))] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 overflow-hidden z-50 p-2 backdrop-blur-xl"
+                    className={cn(
+                      "absolute right-0 mt-3 w-[min(14rem,calc(100vw-1rem))] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 overflow-hidden z-50 p-2",
+                      isMobileViewport ? "" : "backdrop-blur-xl"
+                    )}
                   >
                     {/* User info removed as requested */}
                     
@@ -676,5 +701,6 @@ export default function Dashboard() {
         lang={lang}
       />
     </div>
+    </MotionConfig>
   );
 }
