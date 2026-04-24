@@ -71,7 +71,7 @@ export default function Dashboard() {
       list.push({
         id: "inv-alert",
         title: t.dashboard.inventory_alerts,
-        message: `${invCritical[0].name} ${lang === 'es' ? 'está en nivel crítico' : 'is at critical level'}.`,
+        message: `${invCritical[0].name} ${t.dashboard.critical_level}.`,
         time: t.dashboard.today,
         type: "warning"
       });
@@ -93,12 +93,12 @@ export default function Dashboard() {
       id: "ai-alert",
       title: "SmartFood AI",
       message: t.dashboard.prediction_desc.split('.')[0],
-      time: lang === 'es' ? 'Hace 1 min' : '1 min ago',
+      time: t.dashboard.one_min_ago,
       type: "info"
     });
 
     return list;
-  }, [invCritical, kpis, t.dashboard, lang]);
+  }, [invCritical, kpis, t.dashboard]);
   const isProOrAbove = subscriptionTier === "profesional" || subscriptionTier === "empresarial" || subscriptionTier === "administrador";
   const isEnterpriseOrAbove = subscriptionTier === "empresarial" || subscriptionTier === "administrador";
   const router = useRouter();
@@ -613,6 +613,7 @@ export default function Dashboard() {
       <TicketModal 
         sale={dashboard.lastSaleForTicket} 
         onClose={() => dashboard.setLastSaleForTicket(null)} 
+        t={t}
       />
 
       <ProductEditorModal

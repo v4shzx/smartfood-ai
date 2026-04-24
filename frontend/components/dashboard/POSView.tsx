@@ -61,7 +61,7 @@ export function POSView({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.pos}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">Crea ventas rápido: productos, carrito, descuento y pago.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">{t.dashboard.pos_subtitle}</p>
         </motion.div>
       </div>
 
@@ -71,7 +71,7 @@ export function POSView({
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
               <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.store}</h3>
-              <p className="text-xs text-slate-400 dark:text-slate-500 font-normal mt-1 uppercase tracking-widest">Búsqueda rápida</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 font-normal mt-1 uppercase tracking-widest">{t.dashboard.quick_search}</p>
             </div>
             <div className="w-full md:w-[320px]">
               <div className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
@@ -105,11 +105,10 @@ export function POSView({
                       <span className={cn(
                         "text-[8px] font-bold uppercase tracking-wider mt-0.5",
                         p.on_hand <= p.min_stock ? "text-rose-500" : "text-emerald-500"
-                      )}>
-                        Stock: {p.on_hand}
-                      </span>
-                    </div>
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                        )}>
+                        {t.dashboard.stock}: {p.on_hand}
+                        </span>
+                        </div>                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                   </div>
 
                   {/* Body */}
@@ -140,7 +139,7 @@ export function POSView({
             className="w-full flex items-center justify-center gap-3 bg-rose-50/50 dark:bg-rose-500/5 border border-rose-200/50 dark:border-rose-500/20 px-5 py-4 rounded-[1.8rem] text-xs font-black uppercase tracking-widest text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-500/15 hover:border-rose-300 dark:hover:border-rose-500/30 transition-all duration-300 active:scale-[0.98] group"
           >
             <Trash2 className="w-4 h-4 group-hover:-rotate-12 transition-transform duration-300" /> 
-            {lang === 'es' ? 'Limpiar carrito' : (lang === 'fr' ? 'Vider le panier' : 'Clear cart')}
+            {t.dashboard.clear_cart}
           </button>
 
           <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full overflow-hidden">
@@ -148,7 +147,7 @@ export function POSView({
             <div className="p-8 pb-4 border-b border-slate-100 dark:border-slate-800/60 flex items-center justify-between">
               <div>
                 <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.cart}</h3>
-                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">{posCartLines.length} {lang === 'es' ? 'productos' : 'items'}</p>
+                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">{posCartLines.length} {t.dashboard.items}</p>
               </div>
               <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600">
                 <ShoppingCart className="w-5 h-5" />
