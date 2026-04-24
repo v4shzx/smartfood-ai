@@ -51,9 +51,10 @@ async def get_products(
 @router.post("/", response_model=ProductResponse)
 async def create_product(product_in: ProductCreate, db: AsyncSession = Depends(get_db)):
     import uuid
+    product_data = product_in.model_dump(exclude={"id"})
     db_product = Product(
         id=product_in.id or str(uuid.uuid4()),
-        **product_in.dict()
+        **product_data
     )
     db.add(db_product)
     await db.commit()
