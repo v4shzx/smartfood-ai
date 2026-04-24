@@ -1,7 +1,13 @@
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
+const rawUrl = process.env.NEXT_PUBLIC_API_URL || "";
+let baseUrl = rawUrl.endsWith("/") ? rawUrl.slice(0, -1) : rawUrl;
 
-// Asegurar que no termine en /
-export const BASE_URL = API_URL.endsWith("/") ? API_URL.slice(0, -1) : API_URL;
+// Si la URL no contiene ya /api/v1, lo agregamos para coincidir con el backend
+if (baseUrl && !baseUrl.includes("/api/v1")) {
+  baseUrl = `${baseUrl}/api/v1`;
+}
+
+export const API_URL = baseUrl;
+export const BASE_URL = baseUrl;
 
 export const ENDPOINTS = {
   auth: `${BASE_URL}/auth`,

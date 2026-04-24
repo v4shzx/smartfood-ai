@@ -35,20 +35,19 @@ class Settings(BaseSettings):
     @property
     def async_database_url(self) -> str:
         if self.DATABASE_URL:
-            # Handle both postgres:// and postgresql:// from Railway/Heroku
+            # Railway and others sometimes provide postgres:// which asyncpg doesn't like
             url = self.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
-            if "postgresql+asyncpg://" not in url:
-                url = url.replace("postgres://", "postgresql+asyncpg://")
+            url = url.replace("postgres://", "postgresql+asyncpg://")
             
             # If it's a production URL (contains a cloud host), ensure SSL is handled
-            if any(host in url for host in ["railway.app", "amazonaws.com", "elephantsql.com"]):
+            # Railway internal URLs might not need it, but external ones definitely do.
+            if any(host in url for host in ["railway.app", "amazonaws.com", "elephantsql.com", "render.com"]):
                 if "ssl=" not in url:
                     separator = "&" if "?" in url else "?"
                     url = f"{url}{separator}ssl=True"
             return url
         
-        # Fallback to individual components
-        print(f"WARNING: DATABASE_URL not found. Falling back to {self.POSTGRES_SERVER}")
+        # Fallback to individual components (Dev)
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}/{self.POSTGRES_DB}"
 
     model_config = SettingsConfigDict(case_sensitive=True, env_file=".env")

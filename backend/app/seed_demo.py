@@ -135,25 +135,34 @@ async def seed():
 
 
         # 5. Simulate sales (Only for u_demo)
-        print("Simulating sales for u_demo...")
-        product_res = await session.execute(select(Product).where(Product.owner_id == "u_demo"))
-        products = product_res.scalars().all()
-        if products:
-            # Seed from 30 days ago until today to ensure dashboard has data
-            end_date = datetime.now()
-            start_date = end_date - timedelta(days=30)
-            curr = start_date
-            while curr <= end_date:
-                for _ in range(random.randint(8, 20)):
-                    p = random.choice(products)
-                    qty = random.randint(1, 4)
-                    session.add(Sale(
-                        id=f"sale_u_demo_{curr.strftime('%Y%m%d')}_{random.randint(0, 100000)}",
-                        user_id="u_demo", product_id=p.id, quantity=qty, total_price=p.price * qty,
-                        timestamp=curr + timedelta(hours=random.randint(8, 18)),
-                        payment_method=random.choice(["Cash", "Card"])
-                    ))
-                curr += timedelta(days=1)
+        sales_count_res = await session.execute(select(func.count(Sale.id)))
+        sales_exists = (sales_count_res.scalar() or 0) > 0
+
+        if not sales_exists:
+            print("Simulating sales for u_demo...")
+            product_res = await session.execute(select(Product).where(Product.owner_id == "u_demo"))
+            products = product_res.scalars().all()
+            if products:
+                import uuid
+                # Seed from 30 days ago until today to ensure dashboard has data
+                end_date = datetime.now()
+                start_date = end_date - timedelta(days=30)
+                curr = start_date
+                while curr <= end_date:
+                    for _ in range(random.randint(8, 20)):
+                        p = random.choice(products)
+                        qty = random.randint(1, 4)
+                        session.add(Sale(
+                            id=f"sale_{uuid.uuid4().hex[:12]}",
+                            user_id="u_demo", product_id=p.id, quantity=qty, total_price=p.price * qty,
+                            timestamp=curr + timedelta(hours=random.randint(8, 18)),
+                            payment_method=random.choice(["Cash", "Card"])
+                        ))
+                    curr += timedelta(days=1)
+                await session.commit()
+                print("Sales simulated successfully.")
+        else:
+            print("Sales already exist, skipping simulation.")
         
         # 6. Menu Items (Only for u_demo)
         menu_res = await session.execute(select(MenuItem).where(MenuItem.owner_id == "u_demo"))
