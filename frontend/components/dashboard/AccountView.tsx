@@ -227,12 +227,12 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
   };
 
   return (
-    <div className="space-y-12 pb-20">
+    <div className="space-y-8 sm:space-y-12 pb-20">
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.account_title}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">{t.dashboard.account_sub}</p>
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.account_title}</h1>
+          <p className="mt-2 sm:mt-3 text-base sm:text-lg text-slate-500 dark:text-slate-400 font-normal">{t.dashboard.account_sub}</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
@@ -245,10 +245,10 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
         </motion.div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8">
         {/* Left Column: Profile Card */}
         <div className="lg:col-span-1 space-y-8">
-          <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm relative overflow-hidden">
+          <div className="bg-white dark:bg-slate-900/60 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-5 sm:p-8 shadow-sm relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-5">
               <User className="w-32 h-32 text-emerald-600" />
             </div>
@@ -288,7 +288,7 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
             </div>
           </div>
 
-          <div className="bg-linear-to-br from-emerald-600 to-teal-700 rounded-[2.5rem] p-8 text-white shadow-2xl overflow-hidden relative group">
+          <div className="bg-linear-to-br from-emerald-600 to-teal-700 rounded-[2rem] sm:rounded-[2.5rem] p-5 sm:p-8 text-white shadow-2xl overflow-hidden relative group">
             <div className="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
               <CreditCard className="w-32 h-32" />
             </div>
@@ -343,7 +343,7 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
 
         {/* Right Column: Settings Sections */}
         <div className="lg:col-span-2 space-y-8">
-          <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+          <div className="bg-white dark:bg-slate-900/60 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-5 sm:p-8 shadow-sm">
             <div className="flex items-center justify-between mb-8">
               <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.security_title}</h3>
               <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center text-slate-400">
@@ -352,15 +352,15 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
             </div>
 
             <div className="space-y-4">
-              <div className="w-full flex items-center justify-between p-5 rounded-[1.8rem] border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-900/60 hover:border-emerald-500/30 transition-all text-left group">
-                <div className="flex items-center gap-5 flex-1 min-w-0">
+              <div className="w-full flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between p-5 rounded-[1.8rem] border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-900/60 hover:border-emerald-500/30 transition-all text-left group">
+                <div className="flex items-center gap-4 sm:gap-5 flex-1 min-w-0">
                   <div className="w-12 h-12 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 group-hover:text-emerald-500 transition-colors">
                     <Mail className="w-6 h-6" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t.dashboard.email_field}</div>
                     {isEditingEmail ? (
-                      <div className="flex items-center gap-2 mt-1">
+                      <div className="mt-1 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                         <input
                           type="email"
                           value={tempEmail}
@@ -391,8 +391,8 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
               </div>
 
               <div className="w-full rounded-[1.8rem] border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-900/60 transition-all text-left group overflow-hidden">
-                <div className="p-5 flex items-center justify-between">
-                  <div className="flex items-center gap-5">
+                <div className="p-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-4 sm:gap-5">
                     <div className="w-12 h-12 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 group-hover:text-emerald-500 transition-colors">
                       <ShieldCheck className="w-6 h-6" />
                     </div>
@@ -458,7 +458,7 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
                         </div>
                       )}
 
-                      <div className="flex items-center gap-3 mt-8">
+                      <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                         <button 
                           onClick={handleSavePassword}
                           className="px-6 py-3 bg-emerald-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 active:scale-95 transition-all text-white"
@@ -480,8 +480,8 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
                 </AnimatePresence>
               </div>
 
-              <button className="w-full flex items-center justify-between p-5 rounded-[1.8rem] border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-900/60 hover:border-emerald-500/30 transition-all text-left group">
-                <div className="flex items-center gap-5">
+              <button className="w-full flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between p-5 rounded-[1.8rem] border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-900/60 hover:border-emerald-500/30 transition-all text-left group">
+                <div className="flex items-center gap-4 sm:gap-5">
                   <div className="w-12 h-12 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 group-hover:text-emerald-500 transition-colors">
                     <Bell className="w-6 h-6" />
                   </div>
@@ -495,7 +495,7 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm text-slate-900 dark:text-white">
+          <div className="bg-white dark:bg-slate-900/60 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-5 sm:p-8 shadow-sm text-slate-900 dark:text-white">
             <div className="flex items-center justify-between mb-8">
               <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.payment_methods_title}</h3>
               <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center text-slate-400">
@@ -506,12 +506,12 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
             <div className="space-y-4">
               {cards.map((card) => (
                 <div key={card.id} className={cn(
-                  "flex items-center justify-between p-5 rounded-[1.8rem] border transition-all",
+                  "flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between p-5 rounded-[1.8rem] border transition-all",
                   card.isPrimary 
                     ? "bg-emerald-50/30 dark:bg-emerald-500/5 border-emerald-500/20" 
                     : "bg-slate-50/40 dark:bg-slate-800/30 border-slate-100 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-900/60"
                 )}>
-                  <div className="flex items-center gap-5">
+                  <div className="flex items-center gap-4 sm:gap-5">
                     <div className={cn(
                       "w-12 h-12 rounded-2xl border flex items-center justify-center transition-colors",
                       card.isPrimary 
@@ -533,7 +533,7 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 self-end sm:self-auto">
                     {!card.isPrimary && (
                       <button 
                         onClick={() => handleSetPrimary(card.id)}
@@ -579,7 +579,7 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
                   initial={{ scale: 0.9, opacity: 0, y: 20 }}
                   animate={{ scale: 1, opacity: 1, y: 0 }}
                   exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                  className="bg-white dark:bg-slate-900 w-full max-w-md rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-2xl overflow-hidden relative"
+                  className="bg-white dark:bg-slate-900 w-full max-w-md max-h-[calc(100vh-2rem)] overflow-y-auto rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-5 sm:p-8 shadow-2xl relative"
                 >
                   <button 
                     onClick={() => setIsAddingCard(false)}
@@ -624,7 +624,7 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{t.dashboard.expires}</label>
                         <input 
@@ -651,7 +651,7 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
                       </div>
                     </div>
 
-                    <div className="pt-4 flex items-center gap-3">
+                    <div className="pt-4 flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3">
                       <button 
                         type="submit"
                         disabled={isBillingLoading}
@@ -683,7 +683,7 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
             )}
           </AnimatePresence>
 
-          <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+          <div className="bg-white dark:bg-slate-900/60 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-5 sm:p-8 shadow-sm">
             <div className="flex items-center justify-between mb-8">
               <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.preferences}</h3>
               <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center text-slate-400">
@@ -694,7 +694,7 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30 transition-all">
                 <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">{t.dashboard.visual_mode}</div>
-                <div className="flex gap-2 p-1 bg-white dark:bg-slate-950 rounded-2xl border border-slate-100 dark:border-slate-800">
+                <div className="grid grid-cols-1 min-[420px]:grid-cols-3 gap-2 p-1 bg-white dark:bg-slate-950 rounded-2xl border border-slate-100 dark:border-slate-800">
                   <button 
                     onClick={() => setTheme('system')}
                     className={cn(
@@ -727,7 +727,7 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
 
               <div className="p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30 transition-all">
                 <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">{t.dashboard.measurement_units}</div>
-                <div className="flex gap-2 p-1 bg-white dark:bg-slate-950 rounded-2xl border border-slate-100 dark:border-slate-800">
+                <div className="grid grid-cols-2 gap-2 p-1 bg-white dark:bg-slate-950 rounded-2xl border border-slate-100 dark:border-slate-800">
                   <button 
                     onClick={() => handleUnitChange('metric')}
                     className={cn(

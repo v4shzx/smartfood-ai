@@ -44,13 +44,13 @@ export function ChartsView({
 
   return (
     <>
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.charts}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">{t.dashboard.charts_desc}</p>
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.charts}</h1>
+          <p className="mt-2 sm:mt-3 text-base sm:text-lg text-slate-500 dark:text-slate-400 font-normal">{t.dashboard.charts_desc}</p>
         </motion.div>
 
-        <div className="flex p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm h-fit">
+        <div className="grid grid-cols-3 p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm h-fit w-full sm:w-auto">
           {(["7d", "30d", "90d"] as const).map((r) => (
             <button
               key={r}
@@ -68,8 +68,8 @@ export function ChartsView({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8 pb-10">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900/60 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-5 sm:p-8 shadow-sm">
           <div className="flex items-center justify-between mb-10">
             <div>
               <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.revenue_vs_tickets}</h3>
@@ -77,7 +77,7 @@ export function ChartsView({
             </div>
 
           </div>
-          <div className="h-[400px]">
+          <div className="h-[320px] sm:h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
               <ReLineChart data={chartsSales}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(148,163,184,0.15)" />
@@ -96,7 +96,7 @@ export function ChartsView({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+        <div className="bg-white dark:bg-slate-900/60 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-5 sm:p-8 shadow-sm">
           <div className="flex items-center justify-between mb-10">
             <div>
               <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.top_products}</h3>
@@ -104,7 +104,7 @@ export function ChartsView({
             </div>
             <TrendingUp className="w-5 h-5 text-emerald-500" />
           </div>
-          <div className="h-[400px]">
+          <div className="h-[320px] sm:h-[400px]">
             {chartsTopProducts.length === 0 ? (
               <div className="text-center text-slate-500 py-8">{t.dashboard.no_top_products || 'No hay productos destacados'}</div>
             ) : (

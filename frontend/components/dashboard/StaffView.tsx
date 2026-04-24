@@ -42,10 +42,10 @@ export function StaffView({
 }: StaffViewProps) {
   return (
     <>
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.staff}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">{t.dashboard.staff_desc}</p>
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.staff}</h1>
+          <p className="mt-2 sm:mt-3 text-base sm:text-lg text-slate-500 dark:text-slate-400 font-normal">{t.dashboard.staff_desc}</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-3">
@@ -55,9 +55,9 @@ export function StaffView({
         </motion.div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8 pb-10">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900/60 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-5 sm:p-6 md:p-8 shadow-sm">
+          <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.staff}</h3>
               <p className="text-xs text-slate-400 dark:text-slate-500 font-normal mt-1 uppercase tracking-widest">{t.dashboard.search_and_roles}</p>
@@ -72,7 +72,7 @@ export function StaffView({
 
           <div className="space-y-3">
             {staffFiltered.map((u) => (
-              <div key={u.id} className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30 flex items-start justify-between gap-4">
+              <div key={u.id} className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/30 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0">
                   <div className="text-sm font-black text-slate-900 dark:text-white">{u.name}</div>
                   <div className="text-[12px] text-slate-500 dark:text-slate-400 mt-1">
@@ -80,7 +80,7 @@ export function StaffView({
                     <span className="font-normal">{new Date(u.lastActiveAt).toLocaleString()}</span>
                   </div>
                 </div>
-                <div className="shrink-0 flex items-center gap-2">
+                <div className="shrink-0 flex flex-wrap items-center gap-2">
                   <div className={cn("text-[10px] font-black uppercase tracking-[0.2em] px-2 py-1 rounded-lg border", u.active ? "border-emerald-200 text-emerald-700 bg-emerald-50 dark:border-emerald-500/20 dark:text-emerald-200 dark:bg-emerald-500/10" : "border-slate-200 text-slate-500 bg-white dark:border-slate-800 dark:text-slate-400 dark:bg-slate-950/30")}>
                     {u.active ? t.dashboard.sub_active : t.dashboard.no_data}
                   </div>
@@ -93,7 +93,7 @@ export function StaffView({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm">
+        <div className="bg-white dark:bg-slate-900/60 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-5 sm:p-6 md:p-8 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.permissions_title}</h3>
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">{t.dashboard.roles_label}</div>
@@ -154,7 +154,7 @@ export function StaffView({
                 </div>
               </div>
 
-              <div className="mt-6 flex gap-3">
+              <div className="mt-6 flex flex-col-reverse sm:flex-row gap-3">
                 <button onClick={staffClose} className="flex-1 bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-sm text-slate-900 dark:text-white">
                   {t.dashboard.cancel}
                 </button>

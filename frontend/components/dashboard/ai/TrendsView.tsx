@@ -49,15 +49,15 @@ export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.trends}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">{t.dashboard.trends_desc}</p>
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.trends}</h1>
+          <p className="mt-2 sm:mt-3 text-base sm:text-lg text-slate-500 dark:text-slate-400 font-normal">{t.dashboard.trends_desc}</p>
         </motion.div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pb-10">
-        <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-8 pb-10">
+        <div className="bg-white dark:bg-slate-900/60 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-5 sm:p-8 shadow-sm">
           <div className="flex items-center gap-2 mb-8 text-emerald-600 dark:text-emerald-400 font-black text-[12px] uppercase tracking-[0.2em]">
             <Brain className="w-5 h-5" /> {t.dashboard.insights_relevante}
           </div>
@@ -66,7 +66,7 @@ export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
             {relevant.map((ins, i) => {
               const info = renderInsight(ins);
               return (
-                <div key={`${ins.key}-${i}`} className="group p-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/20 hover:border-emerald-500/30 hover:bg-white dark:hover:bg-slate-800 transition-all">
+                <div key={`${ins.key}-${i}`} className="group p-5 sm:p-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/20 hover:border-emerald-500/30 hover:bg-white dark:hover:bg-slate-800 transition-all">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-4">
                       <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-emerald-500 shrink-0">
@@ -85,8 +85,8 @@ export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
           </div>
         </div>
 
-        <div className="space-y-8">
-          <div className="bg-slate-100 dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-800 rounded-[2.5rem] p-8 relative overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700">
+        <div className="space-y-5 sm:space-y-8">
+          <div className="bg-slate-100 dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-800 rounded-[2rem] sm:rounded-[2.5rem] p-5 sm:p-8 relative overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700">
             <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full -mr-10 -mt-10 blur-3xl" />
             <h3 className="text-xl font-black mb-6 flex items-center gap-2 text-slate-900 dark:text-white">
               <TrendingUp className="w-6 h-6 text-emerald-500 dark:text-emerald-400" /> {t.dashboard.opportunities}
@@ -105,9 +105,9 @@ export function TrendsView({ t, trendsInsights }: TrendsViewProps) {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+          <div className="bg-white dark:bg-slate-900/60 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-5 sm:p-8 shadow-sm">
             <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm mb-8">{t.dashboard.waste_analysis}</h3>
-            <div className="flex items-center gap-6 p-6 rounded-2xl bg-rose-50/50 dark:bg-rose-500/5 border border-rose-100 dark:border-rose-500/20">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-5 sm:p-6 rounded-2xl bg-rose-50/50 dark:bg-rose-500/5 border border-rose-100 dark:border-rose-500/20">
               <div className="w-12 h-12 rounded-xl bg-white dark:bg-slate-900 border border-rose-200 dark:border-rose-500/40 flex items-center justify-center text-rose-500 shrink-0">
                 <TrendingDown className="w-6 h-6" />
               </div>

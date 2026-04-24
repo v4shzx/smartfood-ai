@@ -133,10 +133,10 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, subscriptionTier,
 
   return (
     <>
-      <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-10">
+      <div className="mb-8 flex flex-col gap-4 md:mb-10 md:flex-row md:items-start md:justify-between md:gap-6">
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.home}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">
+          <h1 className="text-3xl font-black leading-none tracking-tight text-slate-900 dark:text-white sm:text-4xl">{t.dashboard.home}</h1>
+          <p className="mt-3 text-base font-normal text-slate-500 dark:text-slate-400 sm:text-lg">
             {isProOrAbove 
               ? t.hero_p 
               : "Gestión simplificada de ventas y reportes base."}
@@ -146,7 +146,7 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, subscriptionTier,
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="flex items-center gap-2 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 px-4 py-2.5 rounded-2xl shadow-sm h-fit mt-1"
+          className="mt-1 flex h-fit w-fit items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2.5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60"
         >
           <Sun className="w-5 h-5 text-amber-500" />
           <div className="text-right">
@@ -156,7 +156,7 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, subscriptionTier,
         </motion.div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
         <StatCard title={t.dashboard.total_orders} value={`${kpis.activeStudents}`} subtitle={`${kpis.todayOrders} ${t.dashboard.processed_today}`} icon={<ShoppingCart className="w-6 h-6 text-emerald-600" />} trend="Hoy" />
         <StatCard 
           title={t.dashboard.revenue_today} 
@@ -178,19 +178,19 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, subscriptionTier,
           initial={{ opacity: 0, y: 10 }} 
           animate={{ opacity: 1, y: 0 }}
           onClick={() => setActiveTab("prediction")}
-          className="group cursor-pointer relative overflow-hidden bg-linear-to-br from-emerald-600 to-teal-700 rounded-[2rem] p-6 shadow-lg shadow-emerald-600/10 flex items-center justify-between hover:scale-[1.01] transition-all"
+          className="group relative flex cursor-pointer flex-col gap-5 overflow-hidden rounded-[2rem] bg-linear-to-br from-emerald-600 to-teal-700 p-5 shadow-lg shadow-emerald-600/10 transition-all hover:scale-[1.01] md:flex-row md:items-center md:justify-between md:p-6"
         >
           <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:rotate-12 transition-transform">
             <Brain className="w-32 h-32" />
           </div>
           
-          <div className="relative z-10 flex items-center gap-6">
+          <div className="relative z-10 flex items-center gap-4 md:gap-6">
             <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center shrink-0 shadow-inner text-white">
               <Zap className="w-7 h-7" />
             </div>
             <div>
               <div className="text-[10px] font-black text-emerald-100 uppercase tracking-[0.2em] mb-1">{t.dashboard.ai_prediction_tomorrow}</div>
-              <div className="text-2xl font-black text-white tracking-tight">
+              <div className="text-xl font-black tracking-tight text-white sm:text-2xl">
                 {kpis.topProduct !== "N/A" ? kpis.topProduct : t.dashboard.calculating}
               </div>
               <div className="text-xs text-emerald-50/70 font-medium mt-1 flex items-center gap-2">
@@ -209,13 +209,13 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, subscriptionTier,
         </motion.div>
       )}
 
-      <div className={cn("grid grid-cols-1 gap-8", isEnterpriseOrAbove ? "lg:grid-cols-2" : "lg:grid-cols-1")}>
-        <div className={cn("bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm", !isEnterpriseOrAbove && "lg:col-span-1")}>
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.sales_performance}</h3>
-            <div className="text-[10px] font-normal text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">{t.dashboard.last_7_days} (MXN)</div>
+      <div className={cn("grid grid-cols-1 gap-6 lg:gap-8", isEnterpriseOrAbove ? "lg:grid-cols-2" : "lg:grid-cols-1")}>
+        <div className={cn("rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60 sm:p-6 lg:rounded-[2.5rem] lg:p-8", !isEnterpriseOrAbove && "lg:col-span-1")}>
+          <div className="mb-6 flex flex-col gap-2 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
+            <h3 className="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white">{t.dashboard.sales_performance}</h3>
+            <div className="text-[10px] font-normal uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">{t.dashboard.last_7_days} (MXN)</div>
           </div>
-          <div className="h-64">
+          <div className="h-56 sm:h-64">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={salesSeries} margin={{ top: 10, right: 10, bottom: 0, left: 0 }}>
                 <defs>
@@ -235,8 +235,8 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, subscriptionTier,
         </div>
 
         {isEnterpriseOrAbove && (
-          <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm overflow-hidden">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
+          <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60 sm:p-6 lg:rounded-[2.5rem] lg:p-8">
+            <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
               <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm truncate max-w-[150px] sm:max-w-none">{t.dashboard.inventory_alerts}</h3>
               <div className="w-fit text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-[0.2em] bg-rose-50 dark:bg-rose-500/10 px-2 py-1 rounded-lg shrink-0 whitespace-nowrap">
                 {criticalInventory.items} {t.dashboard.critical_items}

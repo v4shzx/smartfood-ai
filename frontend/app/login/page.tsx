@@ -126,16 +126,16 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-transparent flex flex-row-reverse overflow-hidden font-sans transition-colors duration-500">
       {/* --- Right Side: Login Form --- */}
-      <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-6 md:p-12 relative bg-white dark:bg-slate-950 transition-colors duration-500 border-l border-slate-200 dark:border-slate-800/50">
+      <div className="w-full lg:w-1/2 flex flex-col items-center justify-center px-5 pb-8 pt-24 sm:px-6 sm:pb-10 sm:pt-28 md:px-10 md:pb-12 md:pt-32 relative bg-white dark:bg-slate-950 transition-colors duration-500 border-l border-slate-200 dark:border-slate-800/50">
         {/* Back Link & Lang Switcher */}
-        <div className="absolute top-8 left-8 lg:left-12 right-8 flex justify-between items-center">
+        <div className="absolute top-5 left-5 right-5 sm:top-6 sm:left-6 sm:right-6 lg:top-8 lg:left-12 lg:right-8 flex justify-between items-center gap-3">
           <Link href="/" className="group flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all duration-200">
             <div className="p-1.5 rounded-full border border-slate-200 dark:border-slate-800 group-hover:bg-slate-50 dark:group-hover:bg-slate-900 group-hover:shadow-sm transition-all">
               <ArrowLeft className="w-3.5 h-3.5" />
             </div>
             <span className="text-sm font-medium">{t.login.back}</span>
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <ThemeToggle />
             <LangSwitcher />
           </div>
@@ -143,15 +143,15 @@ export default function LoginPage() {
 
         <div className="w-full max-w-[400px]">
           {/* Mobile Header (Hidden on Desktop) */}
-          <div className="lg:hidden flex items-center gap-2 mb-10">
+          <div className="lg:hidden flex items-center gap-2 mb-8 sm:mb-10">
             <div className="w-8 h-8 flex items-center justify-center">
               <Image src="/logo.png" alt="Logo" width={32} height={32} className="w-full h-full object-contain" priority />
             </div>
             <span className="text-xl font-bold text-slate-900 dark:text-white">SmartFood AI</span>
           </div>
 
-          <div className="mb-10 text-center lg:text-left">
-            <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight mb-2">
+          <div className="mb-8 sm:mb-10 text-center lg:text-left">
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight mb-2">
               {isRegistering ? t.login.welcome_new : t.login.welcome}
             </h2>
             <p className="text-slate-500 dark:text-slate-400 font-medium">
@@ -178,7 +178,7 @@ export default function LoginPage() {
 
           {/* Demo Selector */}
           {!isRegistering && (
-            <div className="mb-8 space-y-3">
+            <div className="mb-6 sm:mb-8 space-y-3">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Accesos Rápidos Demo</span>
@@ -218,7 +218,7 @@ export default function LoginPage() {
           </AnimatePresence>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
             {isRegistering && (
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">{t.login.name_label}</label>
@@ -285,7 +285,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between px-1">
+            <div className="flex flex-col gap-3 px-1 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-2">
                 <input 
                   id="remember" 
@@ -296,7 +296,7 @@ export default function LoginPage() {
                   {t.login.remember}
                 </label>
               </div>
-              <Link href="#" className="text-xs font-semibold text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300 transition-colors">
+              <Link href="#" className="self-start sm:self-auto text-xs font-semibold text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300 transition-colors">
                 {t.login.forgot}
               </Link>
             </div>
@@ -318,7 +318,7 @@ export default function LoginPage() {
           </form>
 
           {/* Footer */}
-          <p className="mt-8 text-center text-sm text-slate-500 dark:text-slate-400 font-medium">
+          <p className="mt-6 sm:mt-8 text-center text-sm text-slate-500 dark:text-slate-400 font-medium">
             {isRegistering ? t.login.has_account : t.login.no_account}{" "}
             <button 
               onClick={() => setIsRegistering(!isRegistering)}
@@ -329,7 +329,7 @@ export default function LoginPage() {
             </button>
           </p>
 
-          <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-wrap justify-center gap-x-6 gap-y-2">
+          <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-wrap justify-center gap-x-5 gap-y-2">
             <Link href="#" className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">{t.login.terms}</Link>
             <Link href="#" className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">{t.login.privacy}</Link>
             <Link href="#" className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">{t.login.security}</Link>

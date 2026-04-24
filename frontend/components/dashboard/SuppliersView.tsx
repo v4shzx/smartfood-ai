@@ -55,10 +55,10 @@ export function SuppliersView({
 }: SuppliersViewProps) {
   return (
     <>
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.suppliers}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">{t.dashboard.suppliers_desc}</p>
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.suppliers}</h1>
+          <p className="mt-2 sm:mt-3 text-base sm:text-lg text-slate-500 dark:text-slate-400 font-normal">{t.dashboard.suppliers_desc}</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="flex gap-3">
@@ -71,8 +71,8 @@ export function SuppliersView({
         </motion.div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8 pb-10">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900/60 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-5 sm:p-6 md:p-8 shadow-sm">
           <div className="mb-8">
             <div className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">
               <PackageSearch className="w-4 h-4 text-slate-400" />
@@ -107,7 +107,7 @@ export function SuppliersView({
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="hidden md:flex flex-col items-end">
+                  <div className="hidden sm:flex flex-col items-end">
                     <div className="flex items-center gap-1 text-amber-500 text-[12px] font-black">
                       <Star className="w-3.5 h-3.5 fill-current" /> {s.rating}
                     </div>
@@ -119,7 +119,7 @@ export function SuppliersView({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm h-fit">
+        <div className="bg-white dark:bg-slate-900/60 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-5 sm:p-8 shadow-sm h-fit">
           {supSelected ? (
             <>
               <div className="flex items-start justify-between gap-4 mb-8">
@@ -147,7 +147,7 @@ export function SuppliersView({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-4">
                   <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
                     <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1">{t.dashboard.lead_time}</div>
                     <div className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-1.5">
@@ -184,7 +184,7 @@ export function SuppliersView({
               </div>
             </>
           ) : (
-            <div className="py-20 text-center">
+            <div className="py-14 sm:py-20 text-center">
               <Building2 className="w-12 h-12 text-slate-200 dark:text-slate-800 mx-auto mb-4" />
               <div className="text-sm font-normal text-slate-400">{t.dashboard.select_supplier_desc}</div>
             </div>

@@ -42,11 +42,11 @@ export function ProductEditorModal({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            className="relative w-full max-w-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[3rem] shadow-2xl overflow-hidden"
+            className="relative w-full max-w-xl max-h-[calc(100vh-2rem)] overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2rem] sm:rounded-[3rem] shadow-2xl"
           >
             {/* Header */}
-            <div className="bg-slate-50/50 dark:bg-slate-800/30 px-8 py-8 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-              <div className="flex items-center gap-4">
+            <div className="bg-slate-50/50 dark:bg-slate-800/30 px-5 sm:px-8 py-5 sm:py-8 border-b border-slate-100 dark:border-slate-800 flex items-start sm:items-center justify-between gap-4">
+              <div className="flex items-start sm:items-center gap-3 sm:gap-4 min-w-0">
                 <div className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-emerald-500 shadow-sm">
                   <Store className="w-7 h-7" />
                 </div>
@@ -67,7 +67,7 @@ export function ProductEditorModal({
               </button>
             </div>
 
-            <div className="p-8 md:p-10 space-y-8">
+            <div className="p-5 sm:p-8 md:p-10 space-y-6 sm:space-y-8">
               {/* Campo de Nombre - Full Width */}
               <div className="space-y-3">
                 <label className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500 ml-1">
@@ -84,7 +84,7 @@ export function ProductEditorModal({
               </div>
 
               {/* Grid para Categoría, Precio y Stock Mínimo */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                 <div className="space-y-3">
                   <label className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500 ml-1">
                     {t.dashboard.category}
@@ -140,7 +140,7 @@ export function ProductEditorModal({
               </div>
 
               {/* Toggle de Disponibilidad */}
-              <div className="flex items-center justify-between p-6 rounded-3xl bg-emerald-50/30 dark:bg-emerald-500/5 border border-emerald-500/10 transition-colors">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between p-5 sm:p-6 rounded-3xl bg-emerald-50/30 dark:bg-emerald-500/5 border border-emerald-500/10 transition-colors">
                 <div className="flex items-center gap-4">
                   <div className={cn(
                     "w-12 h-12 rounded-2xl flex items-center justify-center transition-all",

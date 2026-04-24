@@ -56,6 +56,7 @@ const AccountView = dynamic(() => import("@/components/dashboard/AccountView").t
 export default function Dashboard() {
   const { t, lang } = useI18n();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const userMenuRef = React.useRef<HTMLDivElement>(null);
@@ -121,13 +122,35 @@ export default function Dashboard() {
     router.push("/login");
   };
 
+  const handleTabChange = (tab: typeof activeTab) => {
+    setActiveTab(tab);
+    setIsMobileSidebarOpen(false);
+  };
+
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-500 font-sans font-normal selection:bg-emerald-500/30">
+    <div className="flex min-h-screen overflow-x-clip bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-500 font-sans font-normal selection:bg-emerald-500/30">
+      <AnimatePresence>
+        {isMobileSidebarOpen && (
+          <motion.button
+            type="button"
+            aria-label="Close navigation"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsMobileSidebarOpen(false)}
+            className="fixed inset-0 z-40 bg-slate-950/45 backdrop-blur-sm lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed left-0 top-0 h-full bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] z-40 shadow-[1px_0_0_0_rgba(0,0,0,0.02)]",
-          isSidebarCollapsed ? "w-20" : "w-72"
+          "fixed left-0 top-0 h-full bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] z-50 shadow-[1px_0_0_0_rgba(0,0,0,0.02)]",
+          "w-[88vw] max-w-72 lg:max-w-none",
+          isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full",
+          "lg:translate-x-0",
+          isSidebarCollapsed ? "lg:w-20" : "lg:w-72"
         )}
       >
         <div className="flex flex-col h-full bg-linear-to-b from-transparent via-transparent to-slate-50/50 dark:to-slate-900/10">
@@ -160,7 +183,7 @@ export default function Dashboard() {
                 label={t.dashboard.home}
                 active={activeTab === "home"}
                 isCollapsed={isSidebarCollapsed}
-                onClick={() => setActiveTab("home")}
+                onClick={() => handleTabChange("home")}
               />
               
               {/* POS: Only for Enterprise+ */}
@@ -170,7 +193,7 @@ export default function Dashboard() {
                   label={t.dashboard.pos}
                   active={activeTab === "pos"}
                   isCollapsed={isSidebarCollapsed}
-                  onClick={() => setActiveTab("pos")}
+                  onClick={() => handleTabChange("pos")}
                 />
               )}
 
@@ -179,7 +202,7 @@ export default function Dashboard() {
                 label={t.dashboard.sales}
                 active={activeTab === "sales"}
                 isCollapsed={isSidebarCollapsed}
-                onClick={() => setActiveTab("sales")}
+                onClick={() => handleTabChange("sales")}
               />
             </div>
 
@@ -196,21 +219,21 @@ export default function Dashboard() {
                   label={t.dashboard.store}
                   active={activeTab === "store"}
                   isCollapsed={isSidebarCollapsed}
-                  onClick={() => setActiveTab("store")}
+                  onClick={() => handleTabChange("store")}
                 />
                 <SidebarItem
                   icon={<Box className="w-5 h-5" />}
                   label={t.dashboard.inventory}
                   active={activeTab === "inventory"}
                   isCollapsed={isSidebarCollapsed}
-                  onClick={() => setActiveTab("inventory")}
+                  onClick={() => handleTabChange("inventory")}
                 />
                 <SidebarItem
                   icon={<Truck className="w-5 h-5" />}
                   label={t.dashboard.suppliers}
                   active={activeTab === "suppliers"}
                   isCollapsed={isSidebarCollapsed}
-                  onClick={() => setActiveTab("suppliers")}
+                  onClick={() => handleTabChange("suppliers")}
                 />
               </div>
             )}
@@ -226,7 +249,7 @@ export default function Dashboard() {
                 label={t.dashboard.charts}
                 active={activeTab === "charts"}
                 isCollapsed={isSidebarCollapsed}
-                onClick={() => setActiveTab("charts")}
+                onClick={() => handleTabChange("charts")}
               />
               
               {/* Advanced Analytics: Only for Pro+ */}
@@ -237,14 +260,14 @@ export default function Dashboard() {
                     label={t.dashboard.trends}
                     active={activeTab === "trends"}
                     isCollapsed={isSidebarCollapsed}
-                    onClick={() => setActiveTab("trends")}
+                    onClick={() => handleTabChange("trends")}
                   />
                   <SidebarItem
                     icon={<Brain className="w-5 h-5" />}
                     label={t.dashboard.prediction}
                     active={activeTab === "prediction"}
                     isCollapsed={isSidebarCollapsed}
-                    onClick={() => setActiveTab("prediction")}
+                    onClick={() => handleTabChange("prediction")}
                   />
                 </>
               )}
@@ -256,7 +279,7 @@ export default function Dashboard() {
                   label={t.dashboard.reports}
                   active={activeTab === "reports"}
                   isCollapsed={isSidebarCollapsed}
-                  onClick={() => setActiveTab("reports")}
+                  onClick={() => handleTabChange("reports")}
                 />
               )}
             </div>
@@ -275,7 +298,7 @@ export default function Dashboard() {
                   label={t.dashboard.staff}
                   active={activeTab === "staff"}
                   isCollapsed={isSidebarCollapsed}
-                  onClick={() => setActiveTab("staff")}
+                  onClick={() => handleTabChange("staff")}
                 />
               )}
 
@@ -284,13 +307,13 @@ export default function Dashboard() {
                 label={t.dashboard.profile}
                 active={activeTab === "account"}
                 isCollapsed={isSidebarCollapsed}
-                onClick={() => setActiveTab("account")}
+                onClick={() => handleTabChange("account")}
               />
             </div>
           </nav>
 
           {/* Sidebar Toggle */}
-          <div className="p-4 border-t border-slate-100 dark:border-slate-800/50">
+          <div className="hidden lg:block p-4 border-t border-slate-100 dark:border-slate-800/50">
             <button
               onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
               className="w-full h-11 flex items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-900 text-slate-400 hover:text-emerald-600 transition-all group overflow-hidden"
@@ -311,21 +334,25 @@ export default function Dashboard() {
       {/* Main Content */}
       <main
         className={cn(
-          "flex-1 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] min-h-screen",
-          isSidebarCollapsed ? "ml-20" : "ml-72"
+          "flex-1 min-h-screen transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]",
+          "ml-0",
+          isSidebarCollapsed ? "lg:ml-20" : "lg:ml-72"
         )}
       >
         {/* Header */}
-        <header className="h-20 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 sticky top-0 z-30 shadow-[0_1px_0_0_rgba(0,0,0,0.02)]">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white/70 px-4 shadow-[0_1px_0_0_rgba(0,0,0,0.02)] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/70 sm:h-20 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4">
-            <div className="md:hidden">
-              <button className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-400">
+            <div className="lg:hidden">
+              <button
+                onClick={() => setIsMobileSidebarOpen(true)}
+                className="rounded-xl bg-slate-50 p-2.5 text-slate-600 dark:bg-slate-900 dark:text-slate-400"
+              >
                 <Menu className="w-6 h-6" />
               </button>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 md:gap-5">
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-5">
             <LangSwitcher />
             <ThemeToggle />
             
@@ -351,7 +378,7 @@ export default function Dashboard() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.95 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
-                    className="absolute right-0 mt-3 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 overflow-hidden z-50 p-2 backdrop-blur-xl"
+                    className="absolute right-0 mt-3 w-[min(20rem,calc(100vw-1rem))] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 overflow-hidden z-50 p-2 backdrop-blur-xl"
                   >
                     <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800/50 mb-2">
                       <div className="text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white">{t.dashboard.notifications}</div>
@@ -408,7 +435,7 @@ export default function Dashboard() {
             <div className="relative" ref={userMenuRef}>
               <button 
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center group ml-2"
+                className="flex items-center group ml-1 sm:ml-2"
               >
                 <div className="w-11 h-11 rounded-2xl bg-emerald-600 flex items-center justify-center transition-all group-hover:scale-105 active:scale-95 shadow-lg shadow-emerald-600/20">
                   <span className="text-xs font-black text-white uppercase tracking-wider">CD</span>
@@ -422,7 +449,7 @@ export default function Dashboard() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.95 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
-                    className="absolute right-0 mt-3 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 overflow-hidden z-50 p-2 backdrop-blur-xl"
+                    className="absolute right-0 mt-3 w-[min(14rem,calc(100vw-1rem))] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 overflow-hidden z-50 p-2 backdrop-blur-xl"
                   >
                     {/* User info removed as requested */}
                     
@@ -454,7 +481,7 @@ export default function Dashboard() {
         </header>
 
         {/* View Container */}
-        <div className="p-8 md:p-12 space-y-12">
+        <div className="space-y-8 p-4 sm:p-6 lg:p-8 xl:p-12">
           {activeTab === "home" && (
             <HomeView 
               t={t} 

@@ -132,15 +132,15 @@ export function SalesView({
 
   return (
     <>
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+      <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.sales}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">{t.dashboard.sales_desc}</p>
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.sales}</h1>
+          <p className="mt-2 sm:mt-3 text-base sm:text-lg text-slate-500 dark:text-slate-400 font-normal">{t.dashboard.sales_desc}</p>
         </motion.div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
+      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
+        <div className="bg-white dark:bg-slate-900/60 p-5 sm:p-6 rounded-[1.75rem] sm:rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
           <div className="flex items-center justify-between mb-4">
             <div className="text-slate-400 dark:text-slate-500 text-[12px] font-black uppercase tracking-widest">{t.dashboard.incomes}</div>
             <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600">
@@ -151,7 +151,7 @@ export function SalesView({
           <div className="text-[11px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">{t.dashboard.filtered}</div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
+        <div className="bg-white dark:bg-slate-900/60 p-5 sm:p-6 rounded-[1.75rem] sm:rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
           <div className="flex items-center justify-between mb-4">
             <div className="text-slate-400 dark:text-slate-500 text-[12px] font-black uppercase tracking-widest">{t.dashboard.tickets}</div>
             <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-blue-600">
@@ -162,7 +162,7 @@ export function SalesView({
           <div className="text-[11px] text-slate-400 font-normal mt-1.5 uppercase tracking-wider">{t.dashboard.results}</div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
+        <div className="bg-white dark:bg-slate-900/60 p-5 sm:p-6 rounded-[1.75rem] sm:rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300">
           <div className="flex items-center justify-between mb-4">
             <div className="text-slate-400 dark:text-slate-500 text-[12px] font-black uppercase tracking-widest">{t.dashboard.avg_ticket}</div>
             <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center text-amber-600">
@@ -174,9 +174,9 @@ export function SalesView({
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm mb-8">
-        <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 items-end">
-          <div className="xl:col-span-2 space-y-2">
+      <div className="bg-white dark:bg-slate-900/60 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-5 sm:p-6 md:p-8 shadow-sm mb-8">
+        <div className="grid grid-cols-1 gap-4 items-end xl:grid-cols-5">
+          <div className="space-y-2 xl:col-span-2">
             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">Búsqueda rápida</label>
             <div className={cn(
               "flex items-center gap-2 px-4 py-3 rounded-2xl border transition-all duration-300",
@@ -212,7 +212,7 @@ export function SalesView({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 xl:col-span-1">
+          <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-3 xl:col-span-1">
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">{t.dashboard.from}</label>
               <div className="px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">

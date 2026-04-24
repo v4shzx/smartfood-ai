@@ -56,14 +56,14 @@ export function PredictionView({
   const totalEstimado = prediction.reduce((acc, p) => acc + (p.ventas || 0), 0);
 
   return (
-    <div className="space-y-8 pb-10">
+    <div className="space-y-6 sm:space-y-8 pb-10">
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">
             {t.dashboard.prediction}
           </h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg max-w-2xl">
+          <p className="mt-2 sm:mt-3 text-base sm:text-lg text-slate-500 dark:text-slate-400 font-normal max-w-2xl">
             {t.dashboard.prediction_desc}
           </p>
         </motion.div>
@@ -75,7 +75,7 @@ export function PredictionView({
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white dark:bg-slate-900/60 p-5 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col xl:flex-row items-center gap-6"
+        className="bg-white dark:bg-slate-900/60 p-4 sm:p-5 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col xl:flex-row items-stretch xl:items-center gap-5 sm:gap-6"
       >
         <div className="flex-1 w-full xl:w-auto px-2">
           <div className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 ml-1">{t.dashboard.simulation_scenario}</div>
@@ -92,7 +92,7 @@ export function PredictionView({
                 key={s.id}
                 onClick={() => setPredictionScenario(s.id as any)}
                 className={cn(
-                  "flex items-center gap-3 px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all border",
+                  "flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 rounded-2xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all border",
                   predictionScenario === s.id
                     ? "bg-emerald-600 border-emerald-600 text-white shadow-lg shadow-emerald-500/20 scale-105"
                     : "bg-transparent border-slate-100 dark:border-slate-800 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800"
@@ -133,7 +133,7 @@ export function PredictionView({
 
       {/* Main Content Area */}
       <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform">
               <Clock className="w-12 h-12" />
@@ -165,8 +165,8 @@ export function PredictionView({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
-          <div className="flex items-center justify-between mb-8">
+        <div className="bg-white dark:bg-slate-900/60 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-5 sm:p-8 shadow-sm">
+          <div className="mb-6 sm:mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.daily_revenue_projection}</h3>
               <p className="text-[11px] text-slate-500 font-normal mt-1 uppercase tracking-widest">{t.dashboard.based_on_history}</p>
@@ -177,7 +177,7 @@ export function PredictionView({
             </div>
           </div>
 
-          <div className="h-80">
+          <div className="h-64 sm:h-80">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={prediction} margin={{ top: 10, right: 10, bottom: 0, left: 0 }}>
                 <defs>

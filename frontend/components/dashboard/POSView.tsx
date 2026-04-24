@@ -58,17 +58,17 @@ export function POSView({
 
   return (
     <>
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+      <div className="mb-6 flex flex-col gap-4 md:mb-8 md:flex-row md:items-end md:justify-between md:gap-6">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">{t.dashboard.pos}</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">{t.dashboard.pos_subtitle}</p>
+          <h1 className="text-3xl font-black leading-none tracking-tight text-slate-900 dark:text-white sm:text-4xl">{t.dashboard.pos}</h1>
+          <p className="mt-3 text-base font-normal text-slate-500 dark:text-slate-400 sm:text-lg">{t.dashboard.pos_subtitle}</p>
         </motion.div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
+      <div className="grid grid-cols-1 gap-6 pb-8 lg:grid-cols-3 lg:gap-8 lg:pb-10">
         {/* Catalog */}
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm h-fit">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div className="h-fit rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60 sm:p-6 lg:col-span-2 lg:rounded-[2.5rem] lg:p-8">
+          <div className="mb-6 flex flex-col gap-4 md:mb-8 md:flex-row md:items-center md:justify-between">
             <div>
               <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.store}</h3>
               <p className="text-xs text-slate-400 dark:text-slate-500 font-normal mt-1 uppercase tracking-widest">{t.dashboard.quick_search}</p>
@@ -86,8 +86,8 @@ export function POSView({
             </div>
           </div>
 
-          <div className="max-h-[820px] overflow-y-auto pr-3 -mr-3 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800 scroll-smooth">
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="max-h-[70vh] overflow-y-auto pr-1 sm:pr-3 sm:-mr-3 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800 scroll-smooth">
+            <div className="grid grid-cols-1 gap-4 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
               {posFilteredProducts.map((p) => (
                 <motion.button
                   key={p.id}
@@ -133,18 +133,18 @@ export function POSView({
         </div>
 
         {/* Cart Column */}
-        <div className="space-y-6">
+        <div className="space-y-4 lg:space-y-6">
           <button
             onClick={posClear}
-            className="w-full flex items-center justify-center gap-3 bg-rose-50/50 dark:bg-rose-500/5 border border-rose-200/50 dark:border-rose-500/20 px-5 py-4 rounded-[1.8rem] text-xs font-black uppercase tracking-widest text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-500/15 hover:border-rose-300 dark:hover:border-rose-500/30 transition-all duration-300 active:scale-[0.98] group"
+            className="group flex w-full items-center justify-center gap-3 rounded-[1.5rem] border border-rose-200/50 bg-rose-50/50 px-5 py-4 text-xs font-black uppercase tracking-widest text-rose-600 transition-all duration-300 active:scale-[0.98] hover:border-rose-300 hover:bg-rose-100 dark:border-rose-500/20 dark:bg-rose-500/5 dark:text-rose-400 dark:hover:border-rose-500/30 dark:hover:bg-rose-500/15 lg:rounded-[1.8rem]"
           >
             <Trash2 className="w-4 h-4 group-hover:-rotate-12 transition-transform duration-300" /> 
             {t.dashboard.clear_cart}
           </button>
 
-          <div className="bg-white dark:bg-slate-900/60 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full overflow-hidden">
+          <div className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900/60 lg:rounded-[2.5rem]">
             {/* Cart Header */}
-            <div className="p-8 pb-4 border-b border-slate-100 dark:border-slate-800/60 flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-slate-100 p-5 pb-4 dark:border-slate-800/60 sm:p-6 lg:p-8 lg:pb-4">
               <div>
                 <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm">{t.dashboard.cart}</h3>
                 <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">{posCartLines.length} {t.dashboard.items}</p>
@@ -155,7 +155,7 @@ export function POSView({
             </div>
 
             {/* Cart Items */}
-            <div className="flex-1 overflow-y-auto max-h-[450px] p-6 space-y-3 no-scrollbar">
+            <div className="flex-1 space-y-3 overflow-y-auto p-4 no-scrollbar sm:max-h-[450px] sm:p-6">
               <AnimatePresence initial={false}>
                 {posCartLines.length === 0 ? (
                   <motion.div 
@@ -212,7 +212,7 @@ export function POSView({
             </div>
 
             {/* Cart Summary */}
-            <div className="p-8 pt-6 bg-slate-50/50 dark:bg-slate-800/20 border-t border-slate-100 dark:border-slate-800/60">
+            <div className="border-t border-slate-100 bg-slate-50/50 p-5 pt-6 dark:border-slate-800/60 dark:bg-slate-800/20 sm:p-6 lg:p-8 lg:pt-6">
               <div className="space-y-3 mb-8">
                 <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-widest text-slate-400">
                   <span>{t.dashboard.subtotal}</span>

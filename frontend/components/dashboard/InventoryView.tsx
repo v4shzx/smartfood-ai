@@ -67,12 +67,12 @@ export function InventoryView({
 }: InventoryViewProps) {
   return (
     <>
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+      <div className="mb-8 sm:mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">
             {t.dashboard.inventory}
           </h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-3 font-normal text-lg">
+          <p className="mt-2 sm:mt-3 text-base sm:text-lg text-slate-500 dark:text-slate-400 font-normal">
             {t.dashboard.inventory_desc}
           </p>
         </motion.div>
@@ -87,11 +87,11 @@ export function InventoryView({
         </motion.div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-10">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-slate-900/60 p-8 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300 relative overflow-hidden group"
+          className="bg-white dark:bg-slate-900/60 p-5 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300 relative overflow-hidden group"
         >
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-rose-500/5 rounded-full blur-3xl group-hover:bg-rose-500/10 transition-colors" />
           <div className="relative">
@@ -105,7 +105,7 @@ export function InventoryView({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white dark:bg-slate-900/60 p-8 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300 relative overflow-hidden group"
+          className="bg-white dark:bg-slate-900/60 p-5 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300 relative overflow-hidden group"
         >
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl group-hover:bg-emerald-500/10 transition-colors" />
           <div className="relative">
@@ -117,10 +117,10 @@ export function InventoryView({
       </div>
 
       <div className="grid grid-cols-1 gap-8 pb-10">
-        <div className="bg-white dark:bg-slate-900/60 rounded-[3rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+        <div className="bg-white dark:bg-slate-900/60 rounded-[2rem] sm:rounded-[3rem] border border-slate-200 dark:border-slate-800 p-5 sm:p-6 md:p-8 shadow-sm">
+            <div className="mb-8 sm:mb-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div className={cn(
-                "flex items-center gap-3 px-5 py-4 rounded-2xl border transition-all duration-300 flex-1 max-w-2xl",
+                "flex items-center gap-3 px-4 sm:px-5 py-3.5 sm:py-4 rounded-2xl border transition-all duration-300 flex-1 w-full md:max-w-2xl",
                 invQuery ? "bg-white dark:bg-slate-950 border-emerald-500/30 ring-4 ring-emerald-500/5" : "bg-slate-50/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800"
               )}>
                 <PackageSearch className={cn("w-5 h-5 transition-colors", invQuery ? "text-emerald-500" : "text-slate-400")} />
@@ -137,11 +137,11 @@ export function InventoryView({
                 )}
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <button
                   onClick={() => setInvOnlyCritical((v: boolean) => !v)}
                   className={cn(
-                    "flex items-center gap-3 px-6 py-4 rounded-2xl border transition-all text-[10px] font-black uppercase tracking-[0.2em]",
+                    "flex items-center justify-center gap-3 px-5 sm:px-6 py-3.5 sm:py-4 rounded-2xl border transition-all text-[10px] font-black uppercase tracking-[0.2em]",
                     invOnlyCritical
                       ? "bg-rose-50 border-rose-200 text-rose-600 dark:bg-rose-500/10 dark:border-rose-500/20 dark:text-rose-400 shadow-lg shadow-rose-500/10"
                       : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400"
@@ -156,7 +156,7 @@ export function InventoryView({
                     setInvQuery("");
                     setInvOnlyCritical(false);
                   }}
-                  className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-slate-400 hover:text-rose-500 hover:border-rose-500/30 transition-all active:scale-95 shadow-sm"
+                  className="w-full sm:w-auto p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-slate-400 hover:text-rose-500 hover:border-rose-500/30 transition-all active:scale-95 shadow-sm"
                   title="Limpiar filtros"
                 >
                   <X className="w-5 h-5" />
@@ -169,7 +169,7 @@ export function InventoryView({
                 <motion.div
                   layout
                   key={it.id}
-                  className="group relative flex flex-col md:flex-row md:items-center justify-between gap-6 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800/50 bg-slate-50/30 dark:bg-slate-800/20 hover:bg-white dark:hover:bg-slate-900/60 hover:border-emerald-500/20 hover:shadow-xl transition-all duration-500"
+                  className="group relative flex flex-col gap-4 md:flex-row md:items-center justify-between p-4 sm:p-6 rounded-[1.6rem] sm:rounded-[2rem] border border-slate-100 dark:border-slate-800/50 bg-slate-50/30 dark:bg-slate-800/20 hover:bg-white dark:hover:bg-slate-900/60 hover:border-emerald-500/20 hover:shadow-xl transition-all duration-500"
                 >
                   <div className="flex items-center gap-5 min-w-0">
                     <div
@@ -195,7 +195,7 @@ export function InventoryView({
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-8 justify-between md:justify-end">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between md:justify-end">
                     <div className="text-right group-hover:opacity-40 transition-opacity duration-300">
                       <div className={cn(
                         "text-3xl font-black tracking-tight",
@@ -206,7 +206,7 @@ export function InventoryView({
                       <div className="text-[9px] font-black uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500 mt-1">{t.dashboard.current_stock}</div>
                     </div>
                     
-                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0">
+                    <div className="flex flex-wrap items-center gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 translate-x-0 sm:translate-x-4 sm:group-hover:translate-x-0">
                       <button
                         onClick={() => storeOpenEdit(it.id)}
                         className="w-11 h-11 flex items-center justify-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-400 hover:text-emerald-600 hover:border-emerald-500/30 transition-all active:scale-90 shadow-sm"
