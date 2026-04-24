@@ -761,9 +761,8 @@ export function useDashboard(t: any) {
           setStats(statsRes);
           setInvItems(prev => prev.map(inv => {
             const soldItem = posCart.find(cartItem => cartItem.id === inv.id);
-            return soldItem ? { ...inv, onHand: inv.onHand - soldItem.quantity } : inv;
-          }));
-        } else {
+            return soldItem ? { ...inv, on_hand: inv.on_hand - soldItem.quantity } : inv;
+          }));        } else {
           alert("Error al procesar la venta");
         }
       } catch (error) {

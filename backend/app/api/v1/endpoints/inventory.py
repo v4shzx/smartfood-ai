@@ -13,11 +13,11 @@ class InventoryItemResponse(BaseModel):
     id: str
     name: str
     sku: str
-    onHand: int
-    min: int
+    on_hand: int
+    min_stock: int
     unit: str
     price: float
-    updatedAt: datetime
+    updated_at: datetime
 
     class Config:
         from_attributes = True
@@ -34,11 +34,11 @@ async def get_inventory(
             id=p.id,
             name=p.name,
             sku=f"SKU-{p.id}",
-            onHand=p.on_hand,
-            min=p.min_stock,
+            on_hand=p.on_hand,
+            min_stock=p.min_stock,
             unit="pcs",
             price=p.price,
-            updatedAt=p.updated_at or datetime.now()
+            updated_at=p.updated_at or datetime.now()
         ) for p in products
     ]
 

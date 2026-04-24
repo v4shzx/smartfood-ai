@@ -175,7 +175,7 @@ export function InventoryView({
                     <div
                       className={cn(
                         "w-14 h-14 rounded-2xl border flex items-center justify-center shrink-0 transition-all duration-500 group-hover:scale-105",
-                        it.onHand <= it.min
+                        it.on_hand <= it.min_stock
                           ? "bg-rose-50 border-rose-200 text-rose-600 dark:bg-rose-500/10 dark:border-rose-500/20 dark:text-rose-300 shadow-lg shadow-rose-500/10"
                           : "bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-300 group-hover:text-emerald-500"
                       )}
@@ -188,8 +188,8 @@ export function InventoryView({
                         <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-[9px] font-bold text-slate-400 uppercase tracking-widest">{it.sku}</span>
                       </div>
                       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 font-medium uppercase tracking-wider opacity-70">
-                        <span className="flex items-center gap-1.5"><History className="w-3 h-3" /> {new Date(it.updatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
-                        <span className="flex items-center gap-1.5"><TrendingUp className="w-3 h-3" /> Min: {it.min} {it.unit}</span>
+                        <span className="flex items-center gap-1.5"><History className="w-3 h-3" /> {new Date(it.updated_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+                        <span className="flex items-center gap-1.5"><TrendingUp className="w-3 h-3" /> Min: {it.min_stock} {it.unit}</span>
                         <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold">$ {it.price} / {it.unit}</span>
                       </div>
                     </div>
@@ -199,9 +199,9 @@ export function InventoryView({
                     <div className="text-right group-hover:opacity-40 transition-opacity duration-300">
                       <div className={cn(
                         "text-3xl font-black tracking-tight",
-                        it.onHand <= it.min ? "text-rose-500" : "text-slate-900 dark:text-white"
+                        it.on_hand <= it.min_stock ? "text-rose-500" : "text-slate-900 dark:text-white"
                       )}>
-                        {it.onHand} <span className="text-sm font-bold opacity-50 ml-1">{it.unit}</span>
+                        {it.on_hand} <span className="text-sm font-bold opacity-50 ml-1">{it.unit}</span>
                       </div>
                       <div className="text-[9px] font-black uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500 mt-1">{t.dashboard.current_stock}</div>
                     </div>
@@ -328,7 +328,7 @@ export function InventoryView({
                     </label>
                     <div className="h-[54px] px-6 flex items-center bg-slate-50/30 dark:bg-slate-800/20 border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl font-black text-sm text-slate-400">
                       <TrendingUp className="w-4 h-4 mr-3 opacity-30" />
-                      {Math.max(0, invSelected.onHand + (invMoveType === "in" ? invMoveQty : invMoveType === "out" ? -invMoveQty : invMoveQty))} {invSelected.unit}
+                      {Math.max(0, invSelected.on_hand + (invMoveType === "in" ? invMoveQty : invMoveType === "out" ? -invMoveQty : invMoveQty))} {invSelected.unit}
                     </div>
                   </div>
                 </div>

@@ -62,10 +62,10 @@ export interface InventoryItem {
   id: string;
   name: string;
   sku: string;
-  onHand: number;
-  min: number;
+  on_hand: number;
+  min_stock: number;
   unit: string;
-  updatedAt: number;
+  updated_at: string | number;
 }
 
 export interface InventoryMovement {
