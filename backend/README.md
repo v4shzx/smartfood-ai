@@ -44,3 +44,39 @@ Puedes construir y ejecutar el backend usando el Dockerfile proporcionado:
 docker build -t smartfood-backend .
 docker run -p 8000:8000 smartfood-backend
 ```
+
+## Railway
+
+Para que `Meta Prophet` quede activo en Railway, el backend debe desplegarse usando el `backend/Dockerfile`.
+
+Este proyecto ya quedó preparado para eso:
+
+- instala compiladores y dependencias del sistema necesarias para paquetes científicos;
+- actualiza `pip`, `setuptools` y `wheel` antes de instalar `requirements.txt`;
+- instala `prophet` desde `backend/requirements.txt`;
+- expone en `/health` si `pandas` y `prophet` quedaron disponibles en runtime.
+
+### Verificación después del deploy
+
+Una vez desplegado en Railway, revisa dos cosas:
+
+1. Logs de arranque del backend.
+   Debe aparecer una línea parecida a:
+   `AI runtime status | pandas_available=True | prophet_available=True`
+
+2. Endpoint de salud:
+   `GET /health`
+
+   Debe devolver algo como:
+   ```json
+   {
+     "status": "healthy",
+     "project": "SmartFood AI API",
+     "ai_runtime": {
+       "pandas_available": true,
+       "prophet_available": true
+     }
+   }
+   ```
+
+Si `prophet_available` sale en `false`, Railway construyó el servicio sin esa librería y el endpoint de predicción caerá al fallback heurístico.

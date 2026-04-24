@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional, Union
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, desc
@@ -7,7 +7,85 @@ from app.models.product import Product
 from app.models.sales import Sale
 from datetime import datetime, timedelta
 
+try:
+    import pandas as pd
+except ImportError:  # pragma: no cover - optional runtime dependency
+    pd = None
+
 router = APIRouter()
+
+FORECAST_HOURS = list(range(8, 23))
+DEFAULT_HOURLY_REVENUE = {
+    8: 50.0,
+    9: 60.0,
+    10: 70.0,
+    11: 90.0,
+    12: 150.0,
+    13: 150.0,
+    14: 150.0,
+    15: 150.0,
+    16: 90.0,
+    17: 80.0,
+    18: 70.0,
+    19: 60.0,
+    20: 55.0,
+    21: 50.0,
+    22: 50.0,
+}
+
+
+def _build_baseline_prediction(hourly_totals: Dict[int, float]) -> List[Dict[str, Union[float, str]]]:
+    list_pred = []
+    for hour in FORECAST_HOURS:
+        revenue = hourly_totals.get(hour, 0.0)
+        ventas = revenue if revenue > 0 else DEFAULT_HOURLY_REVENUE[hour]
+        list_pred.append({"hour": f"{hour}:00", "ventas": round(float(ventas), 2)})
+    return list_pred
+
+
+def _fallback_hourly_weights(hourly_average: Dict[int, float]) -> Dict[int, float]:
+    weighted = {
+        hour: (hourly_average.get(hour, 0.0) if hourly_average.get(hour, 0.0) > 0 else DEFAULT_HOURLY_REVENUE[hour])
+        for hour in FORECAST_HOURS
+    }
+    total = sum(weighted.values())
+    if total <= 0:
+        even_weight = 1 / len(FORECAST_HOURS)
+        return {hour: even_weight for hour in FORECAST_HOURS}
+    return {hour: value / total for hour, value in weighted.items()}
+
+
+def _forecast_next_day_total(daily_sales: List[Dict[str, Union[float, datetime]]]) -> Optional[float]:
+    if pd is None or len(daily_sales) < 14:
+        return None
+
+    try:
+        from prophet import Prophet
+    except ImportError:  # pragma: no cover - optional runtime dependency
+        return None
+
+    df = pd.DataFrame(daily_sales)
+    if df.empty:
+        return None
+
+    df["ds"] = pd.to_datetime(df["ds"]).dt.tz_localize(None)
+    df["y"] = pd.to_numeric(df["y"], errors="coerce").fillna(0.0)
+
+    if df["y"].sum() <= 0:
+        return None
+
+    model = Prophet(
+        daily_seasonality=True,
+        weekly_seasonality=True,
+        yearly_seasonality=False,
+        changepoint_prior_scale=0.05,
+        seasonality_prior_scale=10.0,
+    )
+    model.fit(df)
+    future = model.make_future_dataframe(periods=1, freq="D")
+    forecast = model.predict(future)
+    next_day_value = float(forecast["yhat"].iloc[-1])
+    return max(round(next_day_value, 2), 0.0)
 
 @router.get("/")
 async def get_dashboard_stats(
@@ -231,27 +309,47 @@ async def get_trends(owner_id: Optional[str] = Query("u_demo"), db: AsyncSession
 
 @router.get("/prediction")
 async def get_prediction(owner_id: Optional[str] = Query("u_demo"), db: AsyncSession = Depends(get_db)) -> Any:
-    # Estimate hourly revenue based on average historical sales per hour
-    list_pred = []
-    
-    # Query total sales revenue grouped by hour
-    query = (
+    hourly_average_query = (
         select(
-            func.extract('hour', Sale.timestamp).label('hour'),
-            func.sum(Sale.total_price).label('revenue')
+            func.extract("hour", Sale.timestamp).label("hour"),
+            func.avg(Sale.total_price).label("avg_revenue"),
         )
         .where(Sale.user_id == owner_id)
-        .group_by(func.extract('hour', Sale.timestamp))
+        .group_by(func.extract("hour", Sale.timestamp))
     )
-    
-    result = await db.execute(query)
-    hourly_data = {int(row[0]): float(row[1]) for row in result.all()}
-    
-    # Default hours from 8 AM to 10 PM
-    for h in range(8, 23):
-        historical_avg_revenue = hourly_data.get(h, 0.0)
-        # Provide a baseline revenue if no data exists
-        ventas = historical_avg_revenue if historical_avg_revenue > 0 else (150.0 if 12 <= h <= 15 else 50.0)
-        list_pred.append({ "hour": f"{h}:00", "ventas": round(ventas, 2) })
-        
-    return list_pred
+    hourly_average_result = await db.execute(hourly_average_query)
+    hourly_average = {int(row[0]): float(row[1]) for row in hourly_average_result.all()}
+
+    daily_sales_query = (
+        select(
+            func.date(Sale.timestamp).label("sale_day"),
+            func.sum(Sale.total_price).label("daily_total"),
+        )
+        .where(Sale.user_id == owner_id)
+        .group_by(func.date(Sale.timestamp))
+        .order_by(func.date(Sale.timestamp))
+    )
+    daily_sales_result = await db.execute(daily_sales_query)
+    daily_sales = [{"ds": row[0], "y": float(row[1] or 0.0)} for row in daily_sales_result.all()]
+
+    forecast_total = _forecast_next_day_total(daily_sales)
+    if forecast_total is None:
+        return _build_baseline_prediction(hourly_average)
+
+    hourly_weights = _fallback_hourly_weights(hourly_average)
+    prophet_prediction = []
+    running_total = 0.0
+
+    for index, hour in enumerate(FORECAST_HOURS):
+        if index == len(FORECAST_HOURS) - 1:
+            ventas = max(round(forecast_total - running_total, 2), 0.0)
+        else:
+            ventas = round(forecast_total * hourly_weights[hour], 2)
+            running_total += ventas
+        prophet_prediction.append({"hour": f"{hour}:00", "ventas": ventas})
+
+    # If Prophet returns a degenerate value, keep the older heuristic instead of a flatline.
+    if sum(item["ventas"] for item in prophet_prediction) <= 0:
+        return _build_baseline_prediction(hourly_average)
+
+    return prophet_prediction
