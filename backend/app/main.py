@@ -9,29 +9,22 @@ def get_application() -> FastAPI:
         openapi_url=f"{settings.API_V1_STR}/openapi.json"
     )
 
-    # Set all CORS enabled origins
+    # CORS configuration
+    origins = []
     if settings.BACKEND_CORS_ORIGINS:
-        # CORS configuration
         origins = [str(origin) for origin in settings.BACKEND_CORS_ORIGINS]
-        # Si estamos en Railway, nos aseguramos de permitir el dominio
-        if not origins:
-            origins = ["*"] # Fallback para asegurar que funcione en el primer despliegue
+    
+    # If no origins specified or empty, allow all (useful for Railway/Dev)
+    if not origins:
+        origins = ["*"]
 
-        _app.add_middleware(
-            CORSMiddleware,
-            allow_origins=origins,
-            allow_credentials=True,
-            allow_methods=["*"],
-            allow_headers=["*"],
-        )    else:
-        # Default CORS for development if no origins specified
-        _app.add_middleware(
-            CORSMiddleware,
-            allow_origins=["*"],
-            allow_credentials=True,
-            allow_methods=["*"],
-            allow_headers=["*"],
-        )
+    _app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     _app.include_router(api_router, prefix=settings.API_V1_STR)
 
