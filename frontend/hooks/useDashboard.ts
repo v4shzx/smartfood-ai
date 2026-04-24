@@ -631,6 +631,58 @@ export function useDashboard(t: any) {
     }
   };
 
+  const supGeneratePO = (supplierId: string) => {
+    const supplier = suppliers.find((item) => item.id === supplierId);
+    if (!supplier) return;
+
+    const criticalItems = invCritical.map((item) => ({
+      name: item.name,
+      currentStock: item.on_hand,
+      minStock: item.min_stock,
+      suggestedQty: Math.max(item.min_stock * 2 - item.on_hand, item.min_stock - item.on_hand, 1),
+      unit: item.unit || "pz",
+    }));
+
+    const today = new Date();
+    const orderId = `OC-${today.toISOString().slice(0, 10)}-${supplier.id.slice(0, 6).toUpperCase()}`;
+    const lines = [
+      `Orden de Compra: ${orderId}`,
+      `Fecha: ${today.toLocaleDateString()}`,
+      `Proveedor: ${supplier.name}`,
+      `Contacto: ${supplier.contact || "N/D"}`,
+      `Telefono: ${supplier.phone || "N/D"}`,
+      `Email: ${supplier.email || "N/D"}`,
+      "",
+      "Items sugeridos para reabastecimiento:",
+      ...(criticalItems.length > 0
+        ? criticalItems.map(
+            (item, index) =>
+              `${index + 1}. ${item.name} | Stock actual: ${item.currentStock} | Minimo: ${item.minStock} | Sugerido: ${item.suggestedQty} ${item.unit}`
+          )
+        : ["Sin productos en stock critico al momento de generar la orden."]),
+      "",
+      "Notas:",
+      supplier.notes || "Sin notas adicionales.",
+    ];
+
+    const text = lines.join("\n");
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `${orderId}.txt`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+
+    if (supplier.email) {
+      const subject = encodeURIComponent(`${orderId} - Solicitud de cotizacion`);
+      const body = encodeURIComponent(text);
+      window.open(`mailto:${supplier.email}?subject=${subject}&body=${body}`, "_self");
+    } else {
+      navigator.clipboard?.writeText(text).catch(() => undefined);
+    }
+  };
+
   const handleSimulate = () => {
     let factor = 1;
     if (predictionScenario === "promo") factor += (predictionLift / 100);
@@ -745,6 +797,7 @@ export function useDashboard(t: any) {
     supFiltered, supSelected, supSelectedId, setSupSelectedId,
     supOpenCreate, supOpenEdit, supSave, supEditorOpen, setSupEditorOpen,
     supEditingId, supForm, setSupForm,
+    supGeneratePO,
     predictionScenario, setPredictionScenario, predictionLift, setPredictionLift, prediction,
     staffQuery, setStaffQuery, staffFiltered,
     staffOpenCreate, staffOpenEdit, staffDelete, staffEditorOpen, setStaffEditorOpen,

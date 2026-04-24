@@ -33,6 +33,7 @@ interface SuppliersViewProps {
   setSupForm: (f: any) => void;
   supSave: () => void;
   supClose: () => void;
+  supGeneratePO: (id: string) => void;
 }
 
 export function SuppliersView({
@@ -50,6 +51,7 @@ export function SuppliersView({
   setSupForm,
   supSave,
   supClose,
+  supGeneratePO,
 }: SuppliersViewProps) {
   return (
     <>
@@ -172,7 +174,10 @@ export function SuppliersView({
                   <div className="text-[12px] font-normal text-slate-500">
                     {t.dashboard.last_purchase}: {supSelected.lastPurchaseAt ? new Date(supSelected.lastPurchaseAt).toLocaleDateString() : t.dashboard.never}
                   </div>
-                  <button className="w-full py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-90 active:scale-95 transition-all">
+                  <button
+                    onClick={() => supGeneratePO(supSelected.id)}
+                    className="w-full py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-90 active:scale-95 transition-all"
+                  >
                     {t.dashboard.generate_po}
                   </button>
                 </div>

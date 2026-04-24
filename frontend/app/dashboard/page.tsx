@@ -545,6 +545,7 @@ export default function Dashboard() {
               setSupForm={dashboard.setSupForm}
               supSave={dashboard.supSave}
               supClose={() => dashboard.setSupEditorOpen(false)}
+              supGeneratePO={dashboard.supGeneratePO}
             />
           )}
           {activeTab === "charts" && (
