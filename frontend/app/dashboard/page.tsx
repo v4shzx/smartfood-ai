@@ -443,6 +443,7 @@ export default function Dashboard() {
               setActiveTab={setActiveTab} 
               menuItems={dashboard.menuItems}
               subscriptionTier={subscriptionTier}
+              invCritical={dashboard.invCritical}
             />
           )}
           {activeTab === "pos" && (

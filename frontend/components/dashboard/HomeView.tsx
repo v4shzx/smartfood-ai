@@ -50,11 +50,23 @@ interface HomeViewProps {
   setActiveTab: (tab: any) => void;
   menuItems: any[];
   subscriptionTier: string;
+  invCritical: Array<{ name: string; on_hand: number }>;
 }
 
-export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscriptionTier }: HomeViewProps) {
+export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscriptionTier, invCritical }: HomeViewProps) {
   const isProOrAbove = subscriptionTier === "profesional" || subscriptionTier === "empresarial" || subscriptionTier === "administrador";
   const isEnterpriseOrAbove = subscriptionTier === "empresarial" || subscriptionTier === "administrador";
+  const criticalInventory = React.useMemo(() => {
+    if (invCritical.length > 0) {
+      return {
+        items: invCritical.length,
+        sku: invCritical[0].name,
+        remaining: invCritical[0].on_hand,
+      };
+    }
+
+    return kpis.criticalInventory;
+  }, [invCritical, kpis.criticalInventory]);
 
   // Real-time weather logic
   const [weather, setWeather] = React.useState({ temp: 24, status: t.dashboard.sunny });
@@ -127,7 +139,7 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
         />
         <StatCard title={t.dashboard.top_product} value={kpis.topProduct} subtitle={`${kpis.topProductQty} ${t.dashboard.units_sold}`} icon={<Store className="w-6 h-6 text-amber-600" />} />
         {isEnterpriseOrAbove ? (
-          <StatCard title={t.dashboard.critical_stock} value={`${kpis.criticalInventory.items} items`} subtitle={`Alerta: ${kpis.criticalInventory.sku}`} icon={<AlertTriangle className="w-6 h-6 text-rose-600" />} trend="Alerta" />
+          <StatCard title={t.dashboard.critical_stock} value={`${criticalInventory.items} items`} subtitle={`Alerta: ${criticalInventory.sku}`} icon={<AlertTriangle className="w-6 h-6 text-rose-600" />} trend="Alerta" />
         ) : (
           <StatCard title={t.dashboard.reports} value={`${kpis.weekRevenue > 0 ? "Activo" : "Sin Datos"}`} subtitle="Resumen semanal" icon={<BarChart3 className="w-6 h-6 text-indigo-600" />} />
         )}
@@ -199,11 +211,11 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
               <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-sm truncate max-w-[150px] sm:max-w-none">{t.dashboard.inventory_alerts}</h3>
               <div className="w-fit text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-[0.2em] bg-rose-50 dark:bg-rose-500/10 px-2 py-1 rounded-lg shrink-0 whitespace-nowrap">
-                {kpis.criticalInventory.items} {t.dashboard.critical_items}
+                {criticalInventory.items} {t.dashboard.critical_items}
               </div>
             </div>
             <div className="space-y-4">
-              {kpis.criticalInventory.items > 0 ? (
+              {criticalInventory.items > 0 ? (
                 <div className="flex items-start gap-4 p-4 bg-rose-50/50 dark:bg-rose-500/5 rounded-2xl border border-rose-100/50 dark:border-rose-500/10 group hover:border-rose-500/30 transition-all cursor-pointer">
                   <div className="w-12 h-12 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-rose-600 font-normal text-lg">
                     <AlertTriangle className="w-6 h-6" />
@@ -211,10 +223,10 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
                   <div className="min-w-0 flex-1">
                     <div className="text-sm font-normal text-slate-900 dark:text-white truncate">{t.dashboard.critical_stock}</div>
                     <div className="text-[11px] text-slate-500 dark:text-slate-400 font-normal mt-0.5">
-                      {kpis.criticalInventory.sku} requiere reposición inmediata.
+                      {criticalInventory.sku} requiere reposición inmediata.
                     </div>
                     <div className="inline-flex items-center gap-1 text-[9px] font-normal uppercase tracking-tighter text-rose-500 mt-2 bg-white/50 dark:bg-rose-500/10 px-2 py-0.5 rounded-md">
-                       Quedan {kpis.criticalInventory.remaining} unidades
+                       Quedan {criticalInventory.remaining} unidades
                     </div>
                   </div>
                 </div>
