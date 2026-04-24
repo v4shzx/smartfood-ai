@@ -94,7 +94,8 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
 
   const fetchCards = async () => {
     try {
-      const res = await fetch(`${API_URL}/payments/`);
+      const sessionUserId = localStorage.getItem("smartfood_user_id") || "u_demo";
+      const res = await fetch(`${API_URL}/payments/?user_id=${sessionUserId}`);
       if (res.ok) {
         const data = await res.json();
         setCards(data.map((c: any) => ({
