@@ -102,7 +102,7 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, subscriptionTier,
         const code = data.current_weather.weathercode;
         
         // Mapping Open-Meteo codes to our i18n keys
-        let statusKey = t.dashboard.sunny;
+        let statusKey: string = t.dashboard.sunny;
         if (code >= 1 && code <= 3) statusKey = t.dashboard.partly_cloudy;
         if (code >= 45) statusKey = t.dashboard.rainy;
 
