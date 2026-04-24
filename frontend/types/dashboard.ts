@@ -105,7 +105,7 @@ export interface DashboardStats {
 
 export interface TrendInsight {
   key: string;
-  params: Record<string, any>;
+  params: Record<string, string | number | boolean>;
   category: "growth" | "warning" | "opportunity";
 }
 

@@ -14,25 +14,29 @@ async def get_dashboard_stats(
     owner_id: Optional[str] = Query("u_demo", description="Owner ID to filter stats"),
     db: AsyncSession = Depends(get_db)
 ) -> Any:
-    # 1. Today Revenue & Yesterday Revenue
     today = datetime.now().date()
     yesterday = today - timedelta(days=1)
-    
-    query_today = select(func.sum(Sale.total_price)).where(func.date(Sale.timestamp) == today, Sale.user_id == owner_id)
-    result_today = await db.execute(query_today)
-    today_revenue = result_today.scalar() or 0.0
-
-    query_yesterday = select(func.sum(Sale.total_price)).where(func.date(Sale.timestamp) == yesterday, Sale.user_id == owner_id)
-    result_yesterday = await db.execute(query_yesterday)
-    yesterday_revenue = result_yesterday.scalar() or 0.0
-
-    # 2. Week Revenue
     week_ago = datetime.now() - timedelta(days=7)
-    query_week = select(func.sum(Sale.total_price)).where(Sale.timestamp >= week_ago, Sale.user_id == owner_id)
-    result_week = await db.execute(query_week)
-    week_revenue = result_week.scalar() or 0.0
 
-    # 3. Top Product
+    aggregate_query = select(
+        func.coalesce(
+            func.sum(Sale.total_price).filter(func.date(Sale.timestamp) == today),
+            0.0,
+        ).label("today_revenue"),
+        func.coalesce(
+            func.sum(Sale.total_price).filter(func.date(Sale.timestamp) == yesterday),
+            0.0,
+        ).label("yesterday_revenue"),
+        func.coalesce(
+            func.sum(Sale.total_price).filter(Sale.timestamp >= week_ago),
+            0.0,
+        ).label("week_revenue"),
+        func.count(Sale.id).filter(func.date(Sale.timestamp) == today).label("today_orders"),
+        func.count(Sale.id).label("total_orders"),
+    ).where(Sale.user_id == owner_id)
+    aggregate_result = await db.execute(aggregate_query)
+    aggregate_row = aggregate_result.one()
+
     query_top = (
         select(Product.name, func.sum(Sale.quantity).label("total_qty"))
         .join(Sale, Product.id == Sale.product_id)
@@ -46,33 +50,32 @@ async def get_dashboard_stats(
     top_product = top_prod_row[0] if top_prod_row else "N/A"
     top_product_qty = top_prod_row[1] if top_prod_row else 0
 
-    # 4. Total Orders Today and Absolute Total
-    query_orders_today = select(func.count(Sale.id)).where(func.date(Sale.timestamp) == today, Sale.user_id == owner_id)
-    result_orders_today = await db.execute(query_orders_today)
-    total_orders_today = result_orders_today.scalar() or 0
+    critical_count_query = select(func.count(Product.id)).where(
+        Product.on_hand <= Product.min_stock,
+        Product.owner_id == owner_id,
+    )
+    critical_item_query = (
+        select(Product.name, Product.on_hand)
+        .where(Product.on_hand <= Product.min_stock, Product.owner_id == owner_id)
+        .order_by(Product.on_hand.asc(), Product.name.asc())
+        .limit(1)
+    )
+    critical_count_result, critical_item_result = await db.execute(critical_count_query), await db.execute(critical_item_query)
+    critical_item = critical_item_result.first()
 
-    query_orders_total = select(func.count(Sale.id)).where(Sale.user_id == owner_id)
-    result_orders_total = await db.execute(query_orders_total)
-    total_orders_abs = result_orders_total.scalar() or 0
-
-    # 5. Critical Inventory
-    query_crit = select(Product).where(Product.on_hand <= Product.min_stock, Product.owner_id == owner_id)
-    result_crit = await db.execute(query_crit)
-    crit_items = result_crit.scalars().all()
-    
     crit_info = {
-        "items": len(crit_items),
-        "sku": crit_items[0].name if crit_items else "N/A",
-        "remaining": crit_items[0].on_hand if crit_items else 0
+        "items": critical_count_result.scalar() or 0,
+        "sku": critical_item[0] if critical_item else "N/A",
+        "remaining": critical_item[1] if critical_item else 0
     }
     return {
-        "todayRevenue": today_revenue,
-        "yesterdayRevenue": yesterday_revenue,
-        "weekRevenue": week_revenue,
+        "todayRevenue": aggregate_row.today_revenue,
+        "yesterdayRevenue": aggregate_row.yesterday_revenue,
+        "weekRevenue": aggregate_row.week_revenue,
         "topProduct": top_product,
         "topProductQty": top_product_qty,
-        "totalOrdersToday": total_orders_today,
-        "totalOrdersAbs": total_orders_abs,
+        "totalOrdersToday": aggregate_row.today_orders,
+        "totalOrdersAbs": aggregate_row.total_orders,
         "criticalInventory": crit_info
     }
 

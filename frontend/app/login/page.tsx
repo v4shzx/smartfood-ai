@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { 
   Mail, 
@@ -144,7 +145,7 @@ export default function LoginPage() {
           {/* Mobile Header (Hidden on Desktop) */}
           <div className="lg:hidden flex items-center gap-2 mb-10">
             <div className="w-8 h-8 flex items-center justify-center">
-              <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+              <Image src="/logo.png" alt="Logo" width={32} height={32} className="w-full h-full object-contain" priority />
             </div>
             <span className="text-xl font-bold text-slate-900 dark:text-white">SmartFood AI</span>
           </div>
@@ -373,7 +374,7 @@ export default function LoginPage() {
             className="flex items-center gap-3 mb-8"
           >
             <div className="w-12 h-12 flex items-center justify-center">
-              <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+              <Image src="/logo.png" alt="Logo" width={48} height={48} className="w-full h-full object-contain" />
             </div>
             <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">SmartFood AI</span>
           </motion.div>

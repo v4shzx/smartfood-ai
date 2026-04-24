@@ -22,6 +22,7 @@ import {
   Sparkles
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useI18n, LangSwitcher } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/dashboard/shared/ThemeToggle";
@@ -111,7 +112,7 @@ export default function DocumentationPage() {
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2 group text-slate-900 dark:text-white">
             <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform">
-              <img src="/logo.png" alt="SmartFood AI" className="w-full h-full object-cover" />
+              <Image src="/logo.png" alt="SmartFood AI" width={32} height={32} className="w-full h-full object-cover" priority />
             </div>
             <span className="font-black text-lg tracking-tight hidden sm:inline-block">SmartFood <span className="text-emerald-600">Docs</span></span>
           </Link>

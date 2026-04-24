@@ -3,6 +3,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
@@ -143,7 +144,7 @@ function Navbar() {
           {/* Logo */}
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 flex items-center justify-center">
-              <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+              <Image src="/logo.png" alt="Logo" width={36} height={36} className="w-full h-full object-contain" priority />
             </div>
             <span className="font-bold text-xl tracking-tight text-slate-900 dark:text-white">SmartFood AI</span>
           </div>

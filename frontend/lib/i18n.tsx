@@ -1874,19 +1874,44 @@ export const T = {
   },
 } as const;
 
-const LangCtx = createContext<{ lang: Lang; t: any; setLang: (l: Lang) => void }>({
+const LangCtx = createContext<{ lang: Lang; t: Translation; setLang: (l: Lang) => void }>({
   lang: "es", t: T["es"], setLang: () => { },
 });
 
-export function LangProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Lang>("es");
+function FlagIcon({ code }: { code: Lang }) {
+  if (code === "es") return (
+    <svg viewBox="0 0 512 512" className="w-4 h-4 rounded-full shadow-sm border border-slate-200 dark:border-slate-800 shrink-0">
+      <path fill="#AA151B" d="M0 0h512v512H0z" />
+      <path fill="#F1BF00" d="M0 128h512v256H0z" />
+      <path fill="#AA151B" d="M0 0v128h512V0zm0 384v128h512V384z" />
+    </svg>
+  );
+  if (code === "en") return (
+    <svg viewBox="0 0 512 512" className="w-4 h-4 rounded-full shadow-sm border border-slate-200 dark:border-slate-800 shrink-0">
+      <path fill="#012169" d="M0 0h512v512H0z" />
+      <path fill="#FFF" d="m0 0 512 512m0-512L0 512" />
+      <path stroke="#FFF" strokeWidth="64" d="m0 0 512 512m0-512L0 512" />
+      <path stroke="#C8102E" strokeWidth="40" d="m0 0 512 512m0-512L0 512" />
+      <path stroke="#FFF" strokeWidth="96" d="M256 0v512M0 256h512" />
+      <path stroke="#C8102E" strokeWidth="60" d="M256 0v512M0 256h512" />
+    </svg>
+  );
+  if (code === "fr") return (
+    <svg viewBox="0 0 512 512" className="w-4 h-4 rounded-full shadow-sm border border-slate-200 dark:border-slate-800 shrink-0">
+      <path fill="#002395" d="M0 0h171v512H0z" />
+      <path fill="#FFF" d="M171 0h170v512H171z" />
+      <path fill="#ED2939" d="M341 0h171v512H341z" />
+    </svg>
+  );
+  return null;
+}
 
-  useEffect(() => {
-    const saved = localStorage.getItem("app-lang") as Lang;
-    if (saved && (saved === "es" || saved === "en" || saved === "fr")) {
-      setLang(saved);
-    }
-  }, []);
+export function LangProvider({ children }: { children: React.ReactNode }) {
+  const [lang, setLang] = useState<Lang>(() => {
+    if (typeof window === "undefined") return "es";
+    const saved = localStorage.getItem("app-lang") as Lang | null;
+    return saved && (saved === "es" || saved === "en" || saved === "fr") ? saved : "es";
+  });
 
   const handleSetLang = (l: Lang) => {
     setLang(l);
@@ -1909,12 +1934,7 @@ export function useI18n() {
 export function LangSwitcher() {
   const { lang, setLang } = useI18n();
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const current = LANGUAGES.find((l) => l.code === lang)!;
 
@@ -1925,36 +1945,6 @@ export function LangSwitcher() {
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
-
-  if (!mounted) return <div className="w-20 md:w-24 h-8" />;
-
-  const FlagIcon = ({ code }: { code: Lang }) => {
-    if (code === "es") return (
-      <svg viewBox="0 0 512 512" className="w-4 h-4 rounded-full shadow-sm border border-slate-200 dark:border-slate-800 shrink-0">
-        <path fill="#AA151B" d="M0 0h512v512H0z" />
-        <path fill="#F1BF00" d="M0 128h512v256H0z" />
-        <path fill="#AA151B" d="M0 0v128h512V0zm0 384v128h512V384z" />
-      </svg>
-    );
-    if (code === "en") return (
-      <svg viewBox="0 0 512 512" className="w-4 h-4 rounded-full shadow-sm border border-slate-200 dark:border-slate-800 shrink-0">
-        <path fill="#012169" d="M0 0h512v512H0z" />
-        <path fill="#FFF" d="m0 0 512 512m0-512L0 512" />
-        <path stroke="#FFF" strokeWidth="64" d="m0 0 512 512m0-512L0 512" />
-        <path stroke="#C8102E" strokeWidth="40" d="m0 0 512 512m0-512L0 512" />
-        <path stroke="#FFF" strokeWidth="96" d="M256 0v512M0 256h512" />
-        <path stroke="#C8102E" strokeWidth="60" d="M256 0v512M0 256h512" />
-      </svg>
-    );
-    if (code === "fr") return (
-      <svg viewBox="0 0 512 512" className="w-4 h-4 rounded-full shadow-sm border border-slate-200 dark:border-slate-800 shrink-0">
-        <path fill="#002395" d="M0 0h171v512H0z" />
-        <path fill="#FFF" d="M171 0h170v512H171z" />
-        <path fill="#ED2939" d="M341 0h171v512H341z" />
-      </svg>
-    );
-    return null;
-  };
 
   return (
     <div ref={ref} className="relative">

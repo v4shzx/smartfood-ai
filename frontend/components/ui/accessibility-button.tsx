@@ -1,26 +1,24 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Accessibility, X, TextCursorInput, ZoomIn, Eye, Volume2, VolumeX, Check } from "lucide-react";
+import { Accessibility, X, ZoomIn, Eye, Volume2, VolumeX, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function AccessibilityButton() {
   const [isOpen, setIsOpen] = useState(false);
-  const [fontSize, setFontSize] = useState(100);
-  const [isHighContrast, setIsHighContrast] = useState(false);
+  const [fontSize, setFontSize] = useState(() => {
+    if (typeof window === "undefined") return 100;
+    const savedFontSize = window.localStorage.getItem("accessibility-font-size");
+    return savedFontSize ? parseInt(savedFontSize, 10) : 100;
+  });
+  const [isHighContrast, setIsHighContrast] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem("accessibility-high-contrast") === "true";
+  });
   const [isReading, setIsReading] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [voiceIndex, setVoiceIndex] = useState(0);
-
-  // Initial load from localStorage
-  useEffect(() => {
-    const savedFontSize = localStorage.getItem("accessibility-font-size");
-    const savedHighContrast = localStorage.getItem("accessibility-high-contrast");
-
-    if (savedFontSize) setFontSize(parseInt(savedFontSize));
-    if (savedHighContrast) setIsHighContrast(savedHighContrast === "true");
-  }, []);
 
   // Persist settings
   useEffect(() => {
@@ -49,6 +47,11 @@ export function AccessibilityButton() {
     if (typeof window !== "undefined" && window.speechSynthesis) {
       window.speechSynthesis.onvoiceschanged = loadVoices;
     }
+    return () => {
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        window.speechSynthesis.onvoiceschanged = null;
+      }
+    };
   }, []);
 
   // Apply Font Size
@@ -98,7 +101,7 @@ export function AccessibilityButton() {
       document.removeEventListener("mousemove", handleMouseMove);
       window.speechSynthesis.cancel();
     };
-  }, [isReading]);
+  }, [isReading, voiceIndex, voices]);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -138,6 +141,8 @@ export function AccessibilityButton() {
     }
   };
 
+  const selectedVoiceName = useMemo(() => voices[voiceIndex]?.name.split(" - ")[0] || "Default", [voiceIndex, voices]);
+
   const actions = [
     { 
       icon: <ZoomIn className="w-5 h-5" />, 
@@ -165,7 +170,7 @@ export function AccessibilityButton() {
       label: "Cambiar Voz", 
       onClick: cycleVoice,
       active: false,
-      value: voices[voiceIndex]?.name.split(" - ")[0] || "Default"
+      value: selectedVoiceName
     },
   ];
 

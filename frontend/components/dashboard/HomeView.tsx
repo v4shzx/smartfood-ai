@@ -4,19 +4,13 @@ import React from "react";
 import { motion } from "framer-motion";
 import {
   BarChart3,
-  PackageSearch,
   ShoppingCart,
   DollarSign,
-  TrendingUp,
   Store,
   AlertTriangle,
-  Bell,
   ArrowUpRight,
-  Box,
-  ClipboardList,
   Brain,
   Zap,
-  Users,
   Sparkles,
   Sun
 } from "lucide-react";
@@ -32,9 +26,16 @@ import {
 import { StatCard } from "./shared/StatCard";
 import { formatCurrencyMXN } from "@/lib/dashboard-utils";
 import { cn } from "@/lib/utils";
+import type { Translation } from "@/lib/i18n";
+import type { SidebarTab } from "@/types/dashboard";
+
+type SalesSeriesPoint = {
+  label: string;
+  value: number;
+};
 
 interface HomeViewProps {
-  t: any;
+  t: Translation;
   kpis: {
     todayRevenue: number;
     yesterdayRevenue: number;
@@ -46,14 +47,13 @@ interface HomeViewProps {
     menuItemsCount: number;
     criticalInventory: { items: number; sku: string; remaining: number };
   };
-  salesSeries: any[];
-  setActiveTab: (tab: any) => void;
-  menuItems: any[];
+  salesSeries: SalesSeriesPoint[];
+  setActiveTab: (tab: SidebarTab) => void;
   subscriptionTier: string;
   invCritical: Array<{ name: string; on_hand: number }>;
 }
 
-export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscriptionTier, invCritical }: HomeViewProps) {
+export function HomeView({ t, kpis, salesSeries, setActiveTab, subscriptionTier, invCritical }: HomeViewProps) {
   const isProOrAbove = subscriptionTier === "profesional" || subscriptionTier === "empresarial" || subscriptionTier === "administrador";
   const isEnterpriseOrAbove = subscriptionTier === "empresarial" || subscriptionTier === "administrador";
   const criticalInventory = React.useMemo(() => {
@@ -72,9 +72,27 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
   const [weather, setWeather] = React.useState({ temp: 24, status: t.dashboard.sunny });
 
   React.useEffect(() => {
+    const cacheKey = "smartfood:weather-cache";
+    const cachedWeather = window.sessionStorage.getItem(cacheKey);
+    if (cachedWeather) {
+      try {
+        const parsed = JSON.parse(cachedWeather);
+        if (Date.now() - parsed.timestamp < 15 * 60 * 1000) {
+          setWeather(parsed.value);
+          return;
+        }
+      } catch {
+        window.sessionStorage.removeItem(cacheKey);
+      }
+    }
+
+    const controller = new AbortController();
+
     const fetchWeather = async (lat: number, lon: number) => {
       try {
-        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`, {
+          signal: controller.signal,
+        });
         const data = await res.json();
         const code = data.current_weather.weathercode;
         
@@ -83,11 +101,14 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
         if (code >= 1 && code <= 3) statusKey = t.dashboard.partly_cloudy;
         if (code >= 45) statusKey = t.dashboard.rainy;
 
-        setWeather({
+        const nextWeather = {
           temp: Math.round(data.current_weather.temperature),
           status: statusKey
-        });
+        };
+        setWeather(nextWeather);
+        window.sessionStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), value: nextWeather }));
       } catch (e) {
+        if ((e as Error).name === "AbortError") return;
         console.error("Weather fetch failed", e);
       }
     };
@@ -101,6 +122,8 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, menuItems, subscr
     } else {
       fetchWeather(19.4326, -99.1332);
     }
+
+    return () => controller.abort();
   }, [t.dashboard]);
 
   return (

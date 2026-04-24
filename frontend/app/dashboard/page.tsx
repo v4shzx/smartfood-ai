@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   Bell,
@@ -11,7 +13,6 @@ import {
   ChevronRight,
   ClipboardList,
   LayoutDashboard,
-  LineChart,
   LogOut,
   Menu,
   ShoppingCart,
@@ -26,7 +27,6 @@ import {
   AlertCircle,
   Info,
   Clock,
-  Sparkles,
 } from "lucide-react";
 import { useI18n, LangSwitcher } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -34,23 +34,24 @@ import { cn } from "@/lib/utils";
 // Components
 import { SidebarItem } from "@/components/dashboard/SidebarItem";
 import { ThemeToggle } from "@/components/dashboard/shared/ThemeToggle";
-import { HomeView } from "@/components/dashboard/HomeView";
-import { POSView } from "@/components/dashboard/POSView";
-import { SalesView } from "@/components/dashboard/SalesView";
-import { StoreView } from "@/components/dashboard/StoreView";
-import { InventoryView } from "@/components/dashboard/InventoryView";
-import { SuppliersView } from "@/components/dashboard/SuppliersView";
-import { ChartsView } from "@/components/dashboard/ChartsView";
-import { TrendsView } from "@/components/dashboard/ai/TrendsView";
-import { ReportsView } from "@/components/dashboard/ReportsView";
-import { PredictionView } from "@/components/dashboard/ai/PredictionView";
-import { StaffView } from "@/components/dashboard/StaffView";
-import { AccountView } from "@/components/dashboard/AccountView";
 import { TicketModal } from "@/components/dashboard/shared/TicketModal";
 import { ProductEditorModal } from "@/components/dashboard/shared/ProductEditorModal";
 
 // Hooks
 import { useDashboard } from "@/hooks/useDashboard";
+
+const HomeView = dynamic(() => import("@/components/dashboard/HomeView").then((mod) => mod.HomeView));
+const POSView = dynamic(() => import("@/components/dashboard/POSView").then((mod) => mod.POSView));
+const SalesView = dynamic(() => import("@/components/dashboard/SalesView").then((mod) => mod.SalesView));
+const StoreView = dynamic(() => import("@/components/dashboard/StoreView").then((mod) => mod.StoreView));
+const InventoryView = dynamic(() => import("@/components/dashboard/InventoryView").then((mod) => mod.InventoryView));
+const SuppliersView = dynamic(() => import("@/components/dashboard/SuppliersView").then((mod) => mod.SuppliersView));
+const ChartsView = dynamic(() => import("@/components/dashboard/ChartsView").then((mod) => mod.ChartsView));
+const TrendsView = dynamic(() => import("@/components/dashboard/ai/TrendsView").then((mod) => mod.TrendsView));
+const ReportsView = dynamic(() => import("@/components/dashboard/ReportsView").then((mod) => mod.ReportsView));
+const PredictionView = dynamic(() => import("@/components/dashboard/ai/PredictionView").then((mod) => mod.PredictionView));
+const StaffView = dynamic(() => import("@/components/dashboard/StaffView").then((mod) => mod.StaffView));
+const AccountView = dynamic(() => import("@/components/dashboard/AccountView").then((mod) => mod.AccountView));
 
 export default function Dashboard() {
   const { t, lang } = useI18n();
@@ -61,17 +62,27 @@ export default function Dashboard() {
   const notificationsRef = React.useRef<HTMLDivElement>(null);
 
   const dashboard = useDashboard(t);
-  const { activeTab, setActiveTab, activeTitle, subscriptionTier, kpis, invCritical } = dashboard;
+  const { activeTab, setActiveTab, subscriptionTier, kpis, invCritical } = dashboard;
 
   const notifications = React.useMemo(() => {
     const list = [];
     
     // 1. Critical Inventory Notifications
-    if (invCritical.length > 0) {
+    invCritical.slice(0, 3).forEach((item, index) => {
       list.push({
-        id: "inv-alert",
+        id: `inv-alert-${item.id ?? index}`,
         title: t.dashboard.inventory_alerts,
-        message: `${invCritical[0].name} ${t.dashboard.critical_level}.`,
+        message: `${item.name} ${t.dashboard.critical_level}.`,
+        time: t.dashboard.today,
+        type: "warning"
+      });
+    });
+
+    if (invCritical.length > 3) {
+      list.push({
+        id: "inv-alert-overflow",
+        title: t.dashboard.inventory_alerts,
+        message: `${invCritical.length - 3} ${t.dashboard.critical_items.toLowerCase()} adicionales requieren atencion.`,
         time: t.dashboard.today,
         type: "warning"
       });
@@ -99,6 +110,7 @@ export default function Dashboard() {
 
     return list;
   }, [invCritical, kpis, t.dashboard]);
+  const notificationCount = notifications.length;
   const isProOrAbove = subscriptionTier === "profesional" || subscriptionTier === "empresarial" || subscriptionTier === "administrador";
   const isEnterpriseOrAbove = subscriptionTier === "empresarial" || subscriptionTier === "administrador";
   const router = useRouter();
@@ -123,7 +135,7 @@ export default function Dashboard() {
           <div className="p-6">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 shrink-0">
-                <img src="/logo.png" alt="SmartFood Logo" className="w-full h-full object-contain" />
+                <Image src="/logo.png" alt="SmartFood Logo" width={40} height={40} className="w-full h-full object-contain" priority />
               </div>
               {!isSidebarCollapsed && (
                 <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
@@ -325,7 +337,11 @@ export default function Dashboard() {
                 className="w-11 h-11 flex items-center justify-center rounded-2xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400 transition-all relative"
               >
                 <Bell className="w-4.5 h-4.5" />
-                <span className="absolute top-2.5 right-3 w-2 h-2 rounded-full bg-rose-500 border-2 border-white dark:border-slate-950" />
+                {notificationCount > 0 && (
+                  <span className="absolute top-1.5 right-1.5 min-w-5 h-5 px-1 rounded-full bg-rose-500 border-2 border-white dark:border-slate-950 text-white text-[10px] font-black flex items-center justify-center">
+                    {notificationCount > 9 ? "9+" : notificationCount}
+                  </span>
+                )}
               </button>
 
               <AnimatePresence>
@@ -342,7 +358,7 @@ export default function Dashboard() {
                     </div>
                     
                     <div className="max-h-[320px] overflow-y-auto no-scrollbar space-y-1">
-                      {notifications.map((n) => (
+                      {notifications.length > 0 ? notifications.map((n) => (
                         <div 
                           key={n.id}
                           className="w-full flex items-start gap-3 p-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group cursor-default"
@@ -366,7 +382,11 @@ export default function Dashboard() {
                             </div>
                           </div>
                         </div>
-                      ))}
+                      )) : (
+                        <div className="px-4 py-8 text-center text-xs font-semibold text-slate-400 dark:text-slate-500">
+                          {t.dashboard.no_alerts}
+                        </div>
+                      )}
                     </div>
                     
                     <div className="mt-2 p-1">
@@ -441,7 +461,6 @@ export default function Dashboard() {
               kpis={dashboard.kpis} 
               salesSeries={dashboard.salesSeries} 
               setActiveTab={setActiveTab} 
-              menuItems={dashboard.menuItems}
               subscriptionTier={subscriptionTier}
               invCritical={dashboard.invCritical}
             />
@@ -631,11 +650,4 @@ export default function Dashboard() {
       />
     </div>
   );
-}
-
-function formatCurrencyMXN(amount: number) {
-  return new Intl.NumberFormat("es-MX", {
-    style: "currency",
-    currency: "MXN",
-  }).format(amount);
 }

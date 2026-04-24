@@ -29,11 +29,6 @@ export function FlickeringGrid({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const memoizedColor = useMemo(() => {
     const toRGBA = (color: string) => {
@@ -239,7 +234,7 @@ export function FlickeringGrid({
         intersectionObserver.disconnect();
       }
     };
-  }, [setupCanvas, updateSquares, drawInitialGrid, drawUpdatedSquares, width, height, isInView, mounted]);
+  }, [setupCanvas, updateSquares, drawInitialGrid, drawUpdatedSquares, width, height, isInView]);
 
   return (
     <div
@@ -247,16 +242,14 @@ export function FlickeringGrid({
       className={cn("h-full w-full", className)}
       {...props}
     >
-      {mounted && (
-        <canvas
-          ref={canvasRef}
-          className="pointer-events-none"
-          style={{
-            width: canvasSize.width,
-            height: canvasSize.height,
-          }}
-        />
-      )}
+      <canvas
+        ref={canvasRef}
+        className="pointer-events-none"
+        style={{
+          width: canvasSize.width,
+          height: canvasSize.height,
+        }}
+      />
     </div>
   );
 }

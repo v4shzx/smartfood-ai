@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef, useDeferredValue } from "react";
 import { 
   MenuItem, 
   Product, 
@@ -20,6 +20,42 @@ import {
 import { API_URL } from "@/lib/api-config";
 
 const DASHBOARD_REFRESH_EVENT = "smartfood:dashboard-refresh";
+
+type DashboardSection =
+  | "menu"
+  | "plans"
+  | "stats"
+  | "staff"
+  | "products"
+  | "sales"
+  | "inventory"
+  | "movements"
+  | "suppliers"
+  | "series"
+  | "trends"
+  | "prediction"
+  | "categories";
+
+type DashboardRefreshDetail = {
+  sections?: DashboardSection[];
+  immediate?: boolean;
+};
+
+const ALL_DASHBOARD_SECTIONS: DashboardSection[] = [
+  "menu",
+  "plans",
+  "stats",
+  "staff",
+  "products",
+  "sales",
+  "inventory",
+  "movements",
+  "suppliers",
+  "series",
+  "trends",
+  "prediction",
+  "categories",
+];
 
 type ApiSupplier = {
   id: string;
@@ -131,87 +167,173 @@ export function useDashboard(t: any) {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [lastSaleForTicket, setLastSaleForTicket] = useState<Sale | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const abortControllersRef = useRef<Partial<Record<DashboardSection, AbortController>>>({});
+  const pendingSectionsRef = useRef<Set<DashboardSection>>(new Set());
+  const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const fetchWithLogging = async (url: string, defaultValue: any) => {
+  const fetchWithLogging = async (url: string, defaultValue: any, signal?: AbortSignal) => {
     try {
-      const r = await fetch(url);
+      const r = await fetch(url, { signal });
       if (!r.ok) {
         console.warn(`Fetch failed for ${url}: ${r.status}`);
         return defaultValue;
       }
       return await r.json();
     } catch (e) {
+      if ((e as Error).name === "AbortError") {
+        return defaultValue;
+      }
       console.error(`Network error for ${url}:`, e);
       return defaultValue;
     }
   };
 
-  const refreshDashboardData = async (showLoader = false) => {
-    try {
-      if (showLoader) setIsLoading(true);
+  const loadSection = async (section: DashboardSection, ownerId: string) => {
+    abortControllersRef.current[section]?.abort();
+    const controller = new AbortController();
+    abortControllersRef.current[section] = controller;
+
+    switch (section) {
+      case "menu": {
+        const menuRes = await fetchWithLogging(`${API_URL}/cafeteria/menu?owner_id=${ownerId}`, [], controller.signal);
+        setMenuItems(menuRes);
+        break;
+      }
+      case "plans": {
+        const plansRes = await fetchWithLogging(`${API_URL}/cafeteria/plans?owner_id=${ownerId}`, [], controller.signal);
+        setMealPlans(plansRes);
+        break;
+      }
+      case "stats": {
+        const statsRes = await fetchWithLogging(`${API_URL}/stats/?owner_id=${ownerId}`, null, controller.signal);
+        setStats(statsRes);
+        break;
+      }
+      case "staff": {
+        const staffRes = await fetchWithLogging(`${API_URL}/staff/?owner_id=${ownerId}`, [], controller.signal);
+        setStaff(staffRes);
+        break;
+      }
+      case "products": {
+        const productsRes = await fetchWithLogging(`${API_URL}/products/?owner_id=${ownerId}`, [], controller.signal);
+        setProducts(productsRes);
+        break;
+      }
+      case "sales": {
+        const salesRes = await fetchWithLogging(`${API_URL}/sales/?owner_id=${ownerId}`, [], controller.signal);
+        setSalesHistory(salesRes);
+        break;
+      }
+      case "inventory": {
+        const invRes = await fetchWithLogging(`${API_URL}/inventory/?owner_id=${ownerId}`, [], controller.signal);
+        setInvItems(invRes);
+        break;
+      }
+      case "movements": {
+        const movRes = await fetchWithLogging(`${API_URL}/inventory/movements?owner_id=${ownerId}`, [], controller.signal);
+        setInvMovements(movRes);
+        break;
+      }
+      case "suppliers": {
+        const supRes = await fetchWithLogging(`${API_URL}/suppliers/?owner_id=${ownerId}`, [], controller.signal);
+        const mappedSuppliers = (supRes as ApiSupplier[]).map((supplier) => ({
+          ...supplier,
+          contact: supplier.contact || "",
+          phone: supplier.phone || "",
+          email: supplier.email || "",
+          notes: supplier.notes || "",
+          leadDays: supplier.leadDays ?? supplier.lead_days ?? 3,
+        }));
+        setSuppliers(mappedSuppliers);
+        setSupSelectedId((current) => current || mappedSuppliers[0]?.id || null);
+        break;
+      }
+      case "series": {
+        const seriesRes = await fetchWithLogging(`${API_URL}/stats/sales-series?owner_id=${ownerId}`, [], controller.signal);
+        setSalesSeries(seriesRes);
+        break;
+      }
+      case "trends": {
+        const trendsRes = await fetchWithLogging(`${API_URL}/stats/trends?owner_id=${ownerId}`, [], controller.signal);
+        setTrendsInsights(trendsRes);
+        break;
+      }
+      case "prediction": {
+        const predRes = await fetchWithLogging(`${API_URL}/stats/prediction?owner_id=${ownerId}`, [], controller.signal);
+        setPrediction(predRes);
+        setBasePrediction(predRes);
+        break;
+      }
+      case "categories": {
+        const catRes = await fetchWithLogging(`${API_URL}/categories/?owner_id=${ownerId}`, [], controller.signal);
+        setCategories(catRes);
+        break;
+      }
+      default:
+        break;
+    }
+  };
+
+  const refreshSections = async (
+    sections: DashboardSection[],
+    options: { showLoader?: boolean; immediate?: boolean } = {}
+  ) => {
+    const uniqueSections = Array.from(new Set(sections));
+    const runRefresh = async () => {
       const sessionUserId = localStorage.getItem("smartfood_user_id") || "u_demo";
       const tier = localStorage.getItem("smartfood_subscription_tier") || "basico";
       setSubscriptionTier(tier.toLowerCase());
 
-      const [menuRes, plansRes, statsRes, staffRes, productsRes, salesRes, invRes, movRes, supRes, seriesRes, trendsRes, predRes, catRes] = await Promise.all([
-        fetchWithLogging(`${API_URL}/cafeteria/menu?owner_id=${sessionUserId}`, []),
-        fetchWithLogging(`${API_URL}/cafeteria/plans?owner_id=${sessionUserId}`, []),
-        fetchWithLogging(`${API_URL}/stats/?owner_id=${sessionUserId}`, null),
-        fetchWithLogging(`${API_URL}/staff/?owner_id=${sessionUserId}`, []),
-        fetchWithLogging(`${API_URL}/products/?owner_id=${sessionUserId}`, []),
-        fetchWithLogging(`${API_URL}/sales/?owner_id=${sessionUserId}`, []),
-        fetchWithLogging(`${API_URL}/inventory/?owner_id=${sessionUserId}`, []),
-        fetchWithLogging(`${API_URL}/inventory/movements?owner_id=${sessionUserId}`, []),
-        fetchWithLogging(`${API_URL}/suppliers/?owner_id=${sessionUserId}`, []),
-        fetchWithLogging(`${API_URL}/stats/sales-series?owner_id=${sessionUserId}`, []),
-        fetchWithLogging(`${API_URL}/stats/trends?owner_id=${sessionUserId}`, []),
-        fetchWithLogging(`${API_URL}/stats/prediction?owner_id=${sessionUserId}`, []),
-        fetchWithLogging(`${API_URL}/categories/?owner_id=${sessionUserId}`, [])
-      ]);
+      if (options.showLoader) setIsLoading(true);
+      try {
+        await Promise.all(uniqueSections.map((section) => loadSection(section, sessionUserId)));
+      } catch (error) {
+        console.error("Dashboard section refresh error:", error);
+      } finally {
+        if (options.showLoader) setIsLoading(false);
+      }
+    };
 
-      setMenuItems(menuRes);
-      setMealPlans(plansRes);
-      setStats(statsRes);
-      setStaff(staffRes);
-      setProducts(productsRes);
-      setCategories(catRes);
-      setInvItems(invRes);
-      setInvMovements(movRes);
-      setSalesHistory(salesRes);
-      const mappedSuppliers = (supRes as ApiSupplier[]).map((supplier) => ({
-        ...supplier,
-        contact: supplier.contact || "",
-        phone: supplier.phone || "",
-        email: supplier.email || "",
-        notes: supplier.notes || "",
-        leadDays: supplier.leadDays ?? supplier.lead_days ?? 3,
-      }));
-      setSuppliers(mappedSuppliers);
-      setSupSelectedId((current) => current || mappedSuppliers[0]?.id || null);
-      setSalesSeries(seriesRes);
-      setTrendsInsights(trendsRes);
-      setPrediction(predRes);
-      setBasePrediction(predRes);
-    } catch (error) {
-      console.error("Dashboard total fetch error:", error);
-    } finally {
-      if (showLoader) setIsLoading(false);
+    if (options.immediate ?? false) {
+      await runRefresh();
+      return;
     }
+
+    uniqueSections.forEach((section) => pendingSectionsRef.current.add(section));
+    if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
+    refreshTimerRef.current = setTimeout(async () => {
+      const queuedSections = Array.from(pendingSectionsRef.current);
+      pendingSectionsRef.current.clear();
+      await refreshSections(queuedSections, { immediate: true });
+    }, 160);
   };
 
-  const triggerDashboardRefresh = () => {
-    window.dispatchEvent(new CustomEvent(DASHBOARD_REFRESH_EVENT));
+  const triggerDashboardRefresh = (
+    sections: DashboardSection[] = ["stats", "inventory", "sales", "movements", "series", "trends", "prediction"],
+    immediate = false
+  ) => {
+    window.dispatchEvent(
+      new CustomEvent<DashboardRefreshDetail>(DASHBOARD_REFRESH_EVENT, {
+        detail: { sections, immediate },
+      })
+    );
   };
 
   useEffect(() => {
-    refreshDashboardData(true);
+    refreshSections(ALL_DASHBOARD_SECTIONS, { showLoader: true, immediate: true });
 
-    const handleDashboardRefresh = () => {
-      refreshDashboardData(false);
+    const handleDashboardRefresh = (event: Event) => {
+      const customEvent = event as CustomEvent<DashboardRefreshDetail>;
+      const sections = customEvent.detail?.sections?.length ? customEvent.detail.sections : ALL_DASHBOARD_SECTIONS;
+      refreshSections(sections, { immediate: customEvent.detail?.immediate });
     };
 
     window.addEventListener(DASHBOARD_REFRESH_EVENT, handleDashboardRefresh);
-    return () => window.removeEventListener(DASHBOARD_REFRESH_EVENT, handleDashboardRefresh);
+    return () => {
+      window.removeEventListener(DASHBOARD_REFRESH_EVENT, handleDashboardRefresh);
+      if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
+      Object.values(abortControllersRef.current).forEach((controller) => controller?.abort());
+    };
   }, []);
   
   const storeCategories = useMemo(() => {
@@ -220,45 +342,52 @@ export function useDashboard(t: any) {
     return Array.from(new Set([...fromProducts, ...fromDB]));
   }, [products, categories]);
 
+  const deferredStoreQuery = useDeferredValue(storeQuery);
+  const deferredInvQuery = useDeferredValue(invQuery);
+  const deferredSupQuery = useDeferredValue(supQuery);
+  const deferredStaffQuery = useDeferredValue(staffQuery);
+  const deferredSalesQuery = useDeferredValue(salesQuery);
+  const deferredPosQuery = useDeferredValue(posQuery);
+
   const storeFiltered = useMemo(() => {
     return products.filter((p) => {
-      const matchQuery = p.name.toLowerCase().includes(storeQuery.toLowerCase()) || p.category?.toLowerCase().includes(storeQuery.toLowerCase());
+      const matchQuery = p.name.toLowerCase().includes(deferredStoreQuery.toLowerCase()) || p.category?.toLowerCase().includes(deferredStoreQuery.toLowerCase());
       const matchCat = storeCategory === "all" || p.category?.toLowerCase() === storeCategory.toLowerCase();
       const matchAvail = !storeOnlyAvailable || p.available;
       return matchQuery && matchCat && matchAvail;
     });
-  }, [products, storeQuery, storeCategory, storeOnlyAvailable]);
+  }, [products, deferredStoreQuery, storeCategory, storeOnlyAvailable]);
 
   const invFiltered = useMemo(() => {
     return invItems.filter((it) => {
-      const matchQuery = it.name.toLowerCase().includes(invQuery.toLowerCase()) || it.sku.toLowerCase().includes(invQuery.toLowerCase());
+      const matchQuery = it.name.toLowerCase().includes(deferredInvQuery.toLowerCase()) || it.sku.toLowerCase().includes(deferredInvQuery.toLowerCase());
       const matchCritical = !invOnlyCritical || it.on_hand <= it.min_stock;
       return matchQuery && matchCritical;
     });
-  }, [invItems, invQuery, invOnlyCritical]);
+  }, [invItems, deferredInvQuery, invOnlyCritical]);
 
   const invCritical = useMemo(() => invItems.filter((it) => it.on_hand <= it.min_stock), [invItems]);
 
   const invSelected = useMemo(() => invItems.find((it) => it.id === invSelectedId), [invItems, invSelectedId]);
 
   const supFiltered = useMemo(() => {
-    const query = supQuery.toLowerCase();
+    const query = deferredSupQuery.toLowerCase();
     return suppliers.filter((s) =>
       s.name.toLowerCase().includes(query) ||
       (s.contact || "").toLowerCase().includes(query) ||
       (s.email || "").toLowerCase().includes(query)
     );
-  }, [suppliers, supQuery]);
+  }, [suppliers, deferredSupQuery]);
 
   const supSelected = useMemo(() => suppliers.find((s) => s.id === supSelectedId), [suppliers, supSelectedId]);
 
   const staffFiltered = useMemo(() => {
-    return staff.filter((u) => u.name.toLowerCase().includes(staffQuery.toLowerCase()) || u.role.toLowerCase().includes(staffQuery.toLowerCase()));
-  }, [staff, staffQuery]);
+    return staff.filter((u) => u.name.toLowerCase().includes(deferredStaffQuery.toLowerCase()) || u.role.toLowerCase().includes(deferredStaffQuery.toLowerCase()));
+  }, [staff, deferredStaffQuery]);
 
   const salesFiltered = useMemo(() => {
     return salesHistory.filter((s) => {
-      const matchQuery = s.id.toLowerCase().includes(salesQuery.toLowerCase());
+      const matchQuery = s.id.toLowerCase().includes(deferredSalesQuery.toLowerCase());
       const matchMethod = salesMethod === "all" || s.method?.toLowerCase() === salesMethod.toLowerCase();
       let matchDate = true;
       if (salesDateFrom || salesDateTo) {
@@ -268,7 +397,7 @@ export function useDashboard(t: any) {
       }
       return matchQuery && matchMethod && matchDate;
     });
-  }, [salesHistory, salesQuery, salesMethod, salesDateFrom, salesDateTo]);
+  }, [salesHistory, deferredSalesQuery, salesMethod, salesDateFrom, salesDateTo]);
 
   const selectedSale = useMemo(() => {
     return salesHistory.find((s) => s.id === selectedSaleId) || null;
@@ -276,10 +405,10 @@ export function useDashboard(t: any) {
 
   const posFilteredProducts = useMemo(() => {
     return products.filter((p) => {
-      const matchQuery = p.name.toLowerCase().includes(posQuery.toLowerCase());
+      const matchQuery = p.name.toLowerCase().includes(deferredPosQuery.toLowerCase());
       return matchQuery && p.available;
     });
-  }, [products, posQuery]);
+  }, [products, deferredPosQuery]);
 
   const posCartLines = useMemo(() => {
     return posCart.map((item, idx) => ({
@@ -417,7 +546,7 @@ export function useDashboard(t: any) {
         }
       }
       setStoreEditorOpen(false);
-      triggerDashboardRefresh();
+      triggerDashboardRefresh(["products", "inventory", "stats", "categories", "series", "trends", "prediction"]);
     } catch (error) {
       console.error("Product save error:", error);
     }
@@ -429,7 +558,8 @@ export function useDashboard(t: any) {
       const res = await fetch(`${API_URL}/products/${id}`, { method: "DELETE" });
       if (res.ok) {
         setProducts((prev) => prev.filter((p) => p.id !== id));
-        triggerDashboardRefresh();
+        setInvItems((prev) => prev.filter((it) => it.id !== id));
+        triggerDashboardRefresh(["products", "inventory", "stats", "series", "trends", "prediction"]);
       }
     } catch (error) {
       console.error("Product delete error:", error);
@@ -447,7 +577,7 @@ export function useDashboard(t: any) {
       if (res.ok) {
         const newCat: Category = await res.json();
         setCategories(prev => [...prev, newCat]);
-        triggerDashboardRefresh();
+        triggerDashboardRefresh(["categories"], false);
         return true;
       }
       return false;
@@ -503,7 +633,7 @@ export function useDashboard(t: any) {
         }, ...prev]);
         
         setInvEditorOpen(false);
-        triggerDashboardRefresh();
+        triggerDashboardRefresh(["inventory", "products", "stats", "movements", "trends", "prediction"]);
       } else {
         alert("Error al actualizar el inventario");
       }
@@ -558,7 +688,7 @@ export function useDashboard(t: any) {
         setStaff((prev) => [...prev, created]);
       }
       setStaffEditorOpen(false);
-      triggerDashboardRefresh();
+      triggerDashboardRefresh(["staff"], false);
     } catch (error) {
       console.error("Staff save error:", error);
     }
@@ -625,7 +755,7 @@ export function useDashboard(t: any) {
         }
       }
       setSupEditorOpen(false);
-      triggerDashboardRefresh();
+      triggerDashboardRefresh(["suppliers"], false);
     } catch (error) {
       console.error("Supplier save error:", error);
     }
@@ -831,13 +961,11 @@ export function useDashboard(t: any) {
           setPosCart([]);
           setPosDiscount(0);
           setLastSaleForTicket(newSale);
-          const statsRes: DashboardStats = await fetch(`${API_URL}/stats/`).then(r => r.json());
-          setStats(statsRes);
           setInvItems(prev => prev.map(inv => {
             const soldItem = posCart.find(cartItem => cartItem.id === inv.id);
             return soldItem ? { ...inv, on_hand: inv.on_hand - soldItem.quantity } : inv;
           }));
-          triggerDashboardRefresh();
+          triggerDashboardRefresh(["sales", "inventory", "products", "stats", "movements", "series", "trends", "prediction"], true);
         } else {
           alert("Error al procesar la venta");
         }
