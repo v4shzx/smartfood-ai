@@ -34,6 +34,11 @@ type SalesSeriesPoint = {
   value: number;
 };
 
+type WeatherState = {
+  temp: number;
+  status: string;
+};
+
 interface HomeViewProps {
   t: Translation;
   kpis: {
@@ -69,7 +74,7 @@ export function HomeView({ t, kpis, salesSeries, setActiveTab, subscriptionTier,
   }, [invCritical, kpis.criticalInventory]);
 
   // Real-time weather logic
-  const [weather, setWeather] = React.useState({ temp: 24, status: t.dashboard.sunny });
+  const [weather, setWeather] = React.useState<WeatherState>({ temp: 24, status: t.dashboard.sunny });
 
   React.useEffect(() => {
     const cacheKey = "smartfood:weather-cache";
