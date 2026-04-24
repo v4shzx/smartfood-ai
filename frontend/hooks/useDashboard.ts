@@ -166,6 +166,7 @@ export function useDashboard(t: any) {
   const [prediction, setPrediction] = useState<PredictionData[]>([]);
   const [basePrediction, setBasePrediction] = useState<PredictionData[]>([]);
   const [predictionMeta, setPredictionMeta] = useState<PredictionMeta | null>(null);
+  const [scenarioMeta, setScenarioMeta] = useState<any | null>(null);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [lastSaleForTicket, setLastSaleForTicket] = useState<Sale | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -817,15 +818,26 @@ export function useDashboard(t: any) {
     }
   };
 
-  const handleSimulate = () => {
-    let factor = 1;
-    if (predictionScenario === "promo") factor += (predictionLift / 100);
-    if (predictionScenario === "rain") factor -= 0.20;
-    if (predictionScenario === "event") factor += 0.50;
-    if (predictionScenario === "heatwave") factor += 0.15;
-    if (predictionScenario === "monthend") factor -= 0.15;
-    const simulated = basePrediction.map(p => ({ ...p, ventas: Math.round(p.ventas * factor) }));
-    setPrediction(simulated);
+  const handleSimulate = async () => {
+    try {
+      const sessionUserId = localStorage.getItem("smartfood_user_id") || "u_demo";
+      const url = new URL(`${API_URL}/stats/prediction/scenario`);
+      url.searchParams.set("owner_id", sessionUserId);
+      url.searchParams.set("scenario", predictionScenario);
+      if (predictionScenario === "promo") {
+        url.searchParams.set("promo_lift_pct", String(predictionLift));
+      }
+
+      const response = await fetch(url.toString());
+      if (!response.ok) return;
+      const payload = await response.json();
+      if (Array.isArray(payload?.prediction)) {
+        setPrediction(payload.prediction);
+      }
+      setScenarioMeta(payload?.scenario_meta || null);
+    } catch (error) {
+      console.error("Scenario simulation error:", error);
+    }
   };
 
   const activeTitle = useMemo(() => {
@@ -908,6 +920,7 @@ export function useDashboard(t: any) {
 
   const handleApplyPrediction = () => {
     setPrediction(basePrediction);
+    setScenarioMeta(null);
   };
 
   return {
@@ -934,6 +947,7 @@ export function useDashboard(t: any) {
     supGeneratePO,
     predictionScenario, setPredictionScenario, predictionLift, setPredictionLift, prediction,
     predictionMeta,
+    scenarioMeta,
     staffQuery, setStaffQuery, staffFiltered,
     staffOpenCreate, staffOpenEdit, staffDelete, staffEditorOpen, setStaffEditorOpen,
     staffEditingId, staffForm, setStaffForm, staffSave,

@@ -36,6 +36,11 @@ interface PredictionViewProps {
   setPredictionLift: (l: number) => void;
   prediction: any[];
   predictionMeta: PredictionMeta | null;
+  scenarioMeta?: {
+    scenario?: string;
+    model_used?: string;
+    applied_factor?: number;
+  } | null;
   trends: any[];
   onSimulate: () => void;
   onApply?: () => void;
@@ -49,6 +54,7 @@ export function PredictionView({
   setPredictionLift,
   prediction,
   predictionMeta,
+  scenarioMeta,
   trends,
   onSimulate,
   onApply,
@@ -137,6 +143,14 @@ export function PredictionView({
 
       {/* Main Content Area */}
       <div className="space-y-6">
+        {scenarioMeta?.scenario && scenarioMeta.scenario !== "baseline" && (
+          <div className="bg-emerald-50/60 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700/40 rounded-2xl px-4 py-3">
+            <p className="text-xs font-bold tracking-wide text-emerald-700 dark:text-emerald-300 uppercase">
+              Escenario {scenarioMeta.scenario} aplicado | Modelo {scenarioMeta.model_used || "n/a"} | Factor {scenarioMeta.applied_factor ?? 1}
+            </p>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           <div className="bg-white dark:bg-slate-900/60 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform">

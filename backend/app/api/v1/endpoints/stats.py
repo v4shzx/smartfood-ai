@@ -157,6 +157,20 @@ def _forecast_prophet_with_meta(
     except Exception:
         return None
 
+
+def _compute_hourly_prediction_from_total(forecast_total: float, hourly_average: Dict[int, float]) -> List[Dict[str, Union[float, str]]]:
+    hourly_weights = _fallback_hourly_weights(hourly_average)
+    prediction: List[Dict[str, Union[float, str]]] = []
+    running_total = 0.0
+    for index, hour in enumerate(FORECAST_HOURS):
+        if index == len(FORECAST_HOURS) - 1:
+            ventas = max(round(forecast_total - running_total, 2), 0.0)
+        else:
+            ventas = round(forecast_total * hourly_weights[hour], 2)
+            running_total += ventas
+        prediction.append({"hour": f"{hour}:00", "ventas": ventas})
+    return prediction
+
 @router.get("/")
 async def get_dashboard_stats(
     owner_id: Optional[str] = Query("u_demo", description="Owner ID to filter stats"),
@@ -406,23 +420,104 @@ async def get_prediction(owner_id: Optional[str] = Query("u_demo"), db: AsyncSes
     if forecast_total is None:
         return _build_baseline_prediction(hourly_average)
 
-    hourly_weights = _fallback_hourly_weights(hourly_average)
-    prophet_prediction = []
-    running_total = 0.0
-
-    for index, hour in enumerate(FORECAST_HOURS):
-        if index == len(FORECAST_HOURS) - 1:
-            ventas = max(round(forecast_total - running_total, 2), 0.0)
-        else:
-            ventas = round(forecast_total * hourly_weights[hour], 2)
-            running_total += ventas
-        prophet_prediction.append({"hour": f"{hour}:00", "ventas": ventas})
+    prophet_prediction = _compute_hourly_prediction_from_total(forecast_total, hourly_average)
 
     # If Prophet returns a degenerate value, keep the older heuristic instead of a flatline.
     if sum(item["ventas"] for item in prophet_prediction) <= 0:
         return _build_baseline_prediction(hourly_average)
 
     return prophet_prediction
+
+
+@router.get("/prediction/scenario")
+async def get_prediction_scenario(
+    owner_id: Optional[str] = Query("u_demo"),
+    scenario: str = Query("baseline"),
+    promo_lift_pct: float = Query(0.0, ge=0.0, le=100.0),
+    rain_probability: float = Query(0.0, ge=0.0, le=1.0),
+    temperature_c: float = Query(25.0, ge=-20.0, le=55.0),
+    event_multiplier: float = Query(1.0, ge=1.0, le=3.0),
+    target_date: Optional[str] = Query(None),
+    db: AsyncSession = Depends(get_db),
+) -> Any:
+    hourly_average_query = (
+        select(
+            func.extract("hour", Sale.timestamp).label("hour"),
+            func.avg(Sale.total_price).label("avg_revenue"),
+        )
+        .where(Sale.user_id == owner_id)
+        .group_by(func.extract("hour", Sale.timestamp))
+    )
+    hourly_average_result = await db.execute(hourly_average_query)
+    hourly_average = {int(row[0]): float(row[1]) for row in hourly_average_result.all()}
+
+    daily_sales_query = (
+        select(
+            func.date(Sale.timestamp).label("sale_day"),
+            func.sum(Sale.total_price).label("daily_total"),
+        )
+        .where(Sale.user_id == owner_id)
+        .group_by(func.date(Sale.timestamp))
+        .order_by(func.date(Sale.timestamp))
+    )
+    daily_sales_result = await db.execute(daily_sales_query)
+    daily_sales = [{"ds": row[0], "y": float(row[1] or 0.0)} for row in daily_sales_result.all()]
+
+    base_total = _forecast_next_day_total(daily_sales)
+    model_used = "prophet" if base_total is not None else "fallback"
+    if base_total is None:
+        baseline = _build_baseline_prediction(hourly_average)
+        base_total = sum(float(item["ventas"]) for item in baseline)
+
+    factor = 1.0
+    scenario_key = (scenario or "baseline").strip().lower()
+    assumptions: List[str] = []
+
+    if scenario_key == "promo":
+        factor *= 1 + (promo_lift_pct / 100.0)
+        assumptions.append(f"promo_lift_pct={promo_lift_pct}")
+    elif scenario_key == "rain":
+        rain_factor = max(0.65, 1 - (0.35 * rain_probability))
+        factor *= rain_factor
+        assumptions.append(f"rain_probability={rain_probability}")
+    elif scenario_key == "event":
+        factor *= event_multiplier
+        assumptions.append(f"event_multiplier={event_multiplier}")
+    elif scenario_key == "heatwave":
+        if temperature_c > 30:
+            heat_boost = min((temperature_c - 30) * 0.02, 0.25)
+            factor *= (1 + heat_boost)
+        assumptions.append(f"temperature_c={temperature_c}")
+    elif scenario_key == "monthend":
+        day_of_month = datetime.utcnow().day
+        if target_date:
+            try:
+                day_of_month = datetime.fromisoformat(target_date).day
+            except ValueError:
+                pass
+        if day_of_month >= 28:
+            factor *= 1.1
+        assumptions.append(f"day_of_month={day_of_month}")
+    else:
+        scenario_key = "baseline"
+
+    scenario_total = max(round(base_total * factor, 2), 0.0)
+    prediction = _compute_hourly_prediction_from_total(scenario_total, hourly_average)
+    if sum(float(item["ventas"]) for item in prediction) <= 0:
+        prediction = _build_baseline_prediction(hourly_average)
+
+    return {
+        "prediction": prediction,
+        "scenario_meta": {
+            "scenario": scenario_key,
+            "model_used": model_used,
+            "baseline_total": round(base_total, 2),
+            "applied_factor": round(factor, 4),
+            "scenario_total": scenario_total,
+            "assumptions": assumptions,
+            "generated_at": datetime.utcnow().isoformat() + "Z",
+        },
+    }
 
 
 @router.get("/prediction/meta")

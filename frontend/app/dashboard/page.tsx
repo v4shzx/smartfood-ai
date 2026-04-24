@@ -652,6 +652,7 @@ export default function Dashboard() {
               setPredictionLift={dashboard.setPredictionLift}
               prediction={dashboard.prediction}
               predictionMeta={dashboard.predictionMeta}
+              scenarioMeta={dashboard.scenarioMeta}
               trends={dashboard.trendsInsights}
               onSimulate={dashboard.handleSimulate}
               onApply={dashboard.handleApplyPrediction}
