@@ -110,8 +110,18 @@ export interface TrendInsight {
 }
 
 export interface PredictionData {
-  fecha: string;
+  hour: string;
   ventas: number;
+}
+
+export interface PredictionMeta {
+  model_used: "prophet" | "fallback";
+  daily_total_yhat: number;
+  daily_total_yhat_lower: number | null;
+  daily_total_yhat_upper: number | null;
+  mape: number | null;
+  history_points: number;
+  generated_at: string;
 }
 
 export interface ReportStats {

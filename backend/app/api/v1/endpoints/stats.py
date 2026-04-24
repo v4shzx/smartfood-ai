@@ -93,6 +93,70 @@ def _forecast_next_day_total(daily_sales: List[Dict[str, Union[float, datetime]]
         # Never break the endpoint; caller will use heuristic fallback.
         return None
 
+
+def _safe_mape(actual_values: List[float], predicted_values: List[float]) -> Optional[float]:
+    if not actual_values or len(actual_values) != len(predicted_values):
+        return None
+    pairs = [(a, p) for a, p in zip(actual_values, predicted_values) if a > 0]
+    if not pairs:
+        return None
+    ape = [abs((a - p) / a) * 100 for a, p in pairs]
+    return round(sum(ape) / len(ape), 2)
+
+
+def _forecast_prophet_with_meta(
+    daily_sales: List[Dict[str, Union[float, datetime]]]
+) -> Optional[Dict[str, Union[str, float, int, None]]]:
+    if pd is None or len(daily_sales) < 14:
+        return None
+
+    try:
+        from prophet import Prophet
+    except ImportError:  # pragma: no cover - optional runtime dependency
+        return None
+
+    df = pd.DataFrame(daily_sales)
+    if df.empty:
+        return None
+
+    df["ds"] = pd.to_datetime(df["ds"], utc=True, errors="coerce").dt.tz_convert(None)
+    df["y"] = pd.to_numeric(df["y"], errors="coerce").fillna(0.0)
+    df = df.dropna(subset=["ds"])
+    if df.empty or df["y"].sum() <= 0:
+        return None
+
+    try:
+        model = Prophet(
+            daily_seasonality=True,
+            weekly_seasonality=True,
+            yearly_seasonality=False,
+            changepoint_prior_scale=0.05,
+            seasonality_prior_scale=10.0,
+        )
+        model.fit(df)
+
+        history_forecast = model.predict(df[["ds"]])
+        mape = _safe_mape(df["y"].tolist(), history_forecast["yhat"].tolist())
+
+        future = model.make_future_dataframe(periods=1, freq="D")
+        future_forecast = model.predict(future).iloc[-1]
+
+        yhat = max(round(float(future_forecast["yhat"]), 2), 0.0)
+        yhat_lower = max(round(float(future_forecast["yhat_lower"]), 2), 0.0)
+        yhat_upper = max(round(float(future_forecast["yhat_upper"]), 2), 0.0)
+
+        return {
+            "model_used": "prophet",
+            "daily_total_yhat": yhat,
+            "daily_total_yhat_lower": yhat_lower,
+            "daily_total_yhat_upper": yhat_upper,
+            "mape": mape,
+            "history_points": int(len(df)),
+            "generated_at": datetime.utcnow().isoformat() + "Z",
+        }
+    except Exception:
+        return None
+
 @router.get("/")
 async def get_dashboard_stats(
     owner_id: Optional[str] = Query("u_demo", description="Owner ID to filter stats"),
@@ -359,3 +423,33 @@ async def get_prediction(owner_id: Optional[str] = Query("u_demo"), db: AsyncSes
         return _build_baseline_prediction(hourly_average)
 
     return prophet_prediction
+
+
+@router.get("/prediction/meta")
+async def get_prediction_meta(owner_id: Optional[str] = Query("u_demo"), db: AsyncSession = Depends(get_db)) -> Any:
+    daily_sales_query = (
+        select(
+            func.date(Sale.timestamp).label("sale_day"),
+            func.sum(Sale.total_price).label("daily_total"),
+        )
+        .where(Sale.user_id == owner_id)
+        .group_by(func.date(Sale.timestamp))
+        .order_by(func.date(Sale.timestamp))
+    )
+    daily_sales_result = await db.execute(daily_sales_query)
+    daily_sales = [{"ds": row[0], "y": float(row[1] or 0.0)} for row in daily_sales_result.all()]
+
+    prophet_meta = _forecast_prophet_with_meta(daily_sales)
+    if prophet_meta is not None:
+        return prophet_meta
+
+    daily_total = _forecast_next_day_total(daily_sales)
+    return {
+        "model_used": "fallback",
+        "daily_total_yhat": round(float(daily_total or 0.0), 2),
+        "daily_total_yhat_lower": None,
+        "daily_total_yhat_upper": None,
+        "mape": None,
+        "history_points": len(daily_sales),
+        "generated_at": datetime.utcnow().isoformat() + "Z",
+    }

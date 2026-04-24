@@ -12,6 +12,7 @@ import {
   DashboardStats, 
   TrendInsight, 
   PredictionData, 
+  PredictionMeta,
   ReportStats,
   Category,
   SidebarTab
@@ -164,6 +165,7 @@ export function useDashboard(t: any) {
   const [trendsInsights, setTrendsInsights] = useState<TrendInsight[]>([]);
   const [prediction, setPrediction] = useState<PredictionData[]>([]);
   const [basePrediction, setBasePrediction] = useState<PredictionData[]>([]);
+  const [predictionMeta, setPredictionMeta] = useState<PredictionMeta | null>(null);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [lastSaleForTicket, setLastSaleForTicket] = useState<Sale | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -260,8 +262,10 @@ export function useDashboard(t: any) {
       }
       case "prediction": {
         const predRes = await fetchWithLogging(`${API_URL}/stats/prediction?owner_id=${ownerId}`, [], controller.signal);
+        const predMetaRes = await fetchWithLogging(`${API_URL}/stats/prediction/meta?owner_id=${ownerId}`, null, controller.signal);
         setPrediction(predRes);
         setBasePrediction(predRes);
+        setPredictionMeta(predMetaRes);
         break;
       }
       case "categories": {
@@ -929,6 +933,7 @@ export function useDashboard(t: any) {
     supEditingId, supForm, setSupForm,
     supGeneratePO,
     predictionScenario, setPredictionScenario, predictionLift, setPredictionLift, prediction,
+    predictionMeta,
     staffQuery, setStaffQuery, staffFiltered,
     staffOpenCreate, staffOpenEdit, staffDelete, staffEditorOpen, setStaffEditorOpen,
     staffEditingId, staffForm, setStaffForm, staffSave,

@@ -26,6 +26,7 @@ import {
 } from "recharts";
 import type { ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { cn } from "@/lib/utils";
+import { PredictionMeta } from "@/types/dashboard";
 
 interface PredictionViewProps {
   t: any;
@@ -34,6 +35,7 @@ interface PredictionViewProps {
   predictionLift: number;
   setPredictionLift: (l: number) => void;
   prediction: any[];
+  predictionMeta: PredictionMeta | null;
   trends: any[];
   onSimulate: () => void;
   onApply?: () => void;
@@ -46,6 +48,7 @@ export function PredictionView({
   predictionLift,
   setPredictionLift,
   prediction,
+  predictionMeta,
   trends,
   onSimulate,
   onApply,
@@ -53,7 +56,8 @@ export function PredictionView({
   // Calculate some quick stats from prediction data
   const maxVentas = Math.max(...prediction.map(p => p.ventas || 0));
   const peakHour = prediction.find(p => p.ventas === maxVentas)?.hour || "--:--";
-  const totalEstimado = prediction.reduce((acc, p) => acc + (p.ventas || 0), 0);
+  const totalEstimado = predictionMeta?.daily_total_yhat ?? prediction.reduce((acc, p) => acc + (p.ventas || 0), 0);
+  const modelAccuracy = predictionMeta?.mape != null ? Math.max(0, Math.min(100, Number((100 - predictionMeta.mape).toFixed(1)))) : null;
 
   return (
     <div className="space-y-6 sm:space-y-8 pb-10">
@@ -160,7 +164,10 @@ export function PredictionView({
             </div>
             <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">{t.dashboard.model_precision}</div>
             <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
-              94.2% <span className="text-[10px] bg-emerald-500/10 text-emerald-600 px-2 py-0.5 rounded-lg">{t.dashboard.optimal}</span>
+              {modelAccuracy != null ? `${modelAccuracy}%` : "--"}
+              <span className="text-[10px] bg-emerald-500/10 text-emerald-600 px-2 py-0.5 rounded-lg">
+                {predictionMeta?.model_used === "prophet" ? "Prophet" : "Fallback"}
+              </span>
             </div>
           </div>
         </div>
