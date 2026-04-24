@@ -104,6 +104,21 @@ def _safe_mape(actual_values: List[float], predicted_values: List[float]) -> Opt
     return round(sum(ape) / len(ape), 2)
 
 
+def _fallback_daily_mape(daily_sales: List[Dict[str, Union[float, datetime]]]) -> Optional[float]:
+    values = [float(item.get("y", 0.0)) for item in daily_sales]
+    if len(values) < 8:
+        return None
+    actual: List[float] = []
+    predicted: List[float] = []
+    window = 7
+    for i in range(window, len(values)):
+        hist = values[i - window:i]
+        pred = sum(hist) / len(hist) if hist else 0.0
+        actual.append(values[i])
+        predicted.append(pred)
+    return _safe_mape(actual, predicted)
+
+
 def _forecast_prophet_with_meta(
     daily_sales: List[Dict[str, Union[float, datetime]]]
 ) -> Optional[Dict[str, Union[str, float, int, None]]]:
@@ -463,6 +478,8 @@ async def get_prediction(owner_id: Optional[str] = Query("u_demo"), db: AsyncSes
     )
     daily_sales_result = await db.execute(daily_sales_query)
     daily_sales = [{"ds": row[0], "y": float(row[1] or 0.0)} for row in daily_sales_result.all()]
+    fallback_mape = _fallback_daily_mape(daily_sales)
+    fallback_mape = _fallback_daily_mape(daily_sales)
 
     forecast_total = _forecast_next_day_total(daily_sales)
     if forecast_total is None:
@@ -524,6 +541,7 @@ async def get_prediction_scenario(
     if base_total is None:
         baseline = _build_baseline_prediction(hourly_average)
         base_total = sum(float(item["ventas"]) for item in baseline)
+        mape = fallback_mape
 
     factor = 1.0
     scenario_key = (scenario or "baseline").strip().lower()
@@ -622,7 +640,7 @@ async def get_prediction_meta(owner_id: Optional[str] = Query("u_demo"), db: Asy
         "daily_total_yhat": round(float(daily_total), 2),
         "daily_total_yhat_lower": None,
         "daily_total_yhat_upper": None,
-        "mape": None,
+        "mape": fallback_mape,
         "history_points": len(daily_sales),
         "generated_at": datetime.utcnow().isoformat() + "Z",
     }
