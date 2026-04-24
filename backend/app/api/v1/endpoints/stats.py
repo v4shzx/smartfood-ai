@@ -463,8 +463,16 @@ async def get_prediction_scenario(
     daily_sales_result = await db.execute(daily_sales_query)
     daily_sales = [{"ds": row[0], "y": float(row[1] or 0.0)} for row in daily_sales_result.all()]
 
-    base_total = _forecast_next_day_total(daily_sales)
-    model_used = "prophet" if base_total is not None else "fallback"
+    prophet_meta = _forecast_prophet_with_meta(daily_sales)
+    base_total: Optional[float] = None
+    model_used = "fallback"
+    mape: Optional[float] = None
+
+    if prophet_meta is not None:
+        base_total = float(prophet_meta["daily_total_yhat"])  # type: ignore[index]
+        model_used = "prophet"
+        mape = prophet_meta.get("mape")  # type: ignore[assignment]
+
     if base_total is None:
         baseline = _build_baseline_prediction(hourly_average)
         base_total = sum(float(item["ventas"]) for item in baseline)
@@ -511,6 +519,7 @@ async def get_prediction_scenario(
         "scenario_meta": {
             "scenario": scenario_key,
             "model_used": model_used,
+            "mape": mape,
             "baseline_total": round(base_total, 2),
             "applied_factor": round(factor, 4),
             "scenario_total": scenario_total,

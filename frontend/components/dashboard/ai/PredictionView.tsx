@@ -48,6 +48,8 @@ interface PredictionViewProps {
     scenario?: string;
     model_used?: string;
     applied_factor?: number;
+    scenario_total?: number;
+    mape?: number | null;
   } | null;
   trends: any[];
   onSimulate: () => void;
@@ -79,9 +81,11 @@ export function PredictionView({
   const maxVentas = Math.max(...prediction.map(p => p.ventas || 0));
   const peakHour = prediction.find(p => p.ventas === maxVentas)?.hour || "--:--";
   const totalFromSeries = prediction.reduce((acc, p) => acc + (p.ventas || 0), 0);
+  const totalFromScenario = scenarioMeta?.scenario_total ?? 0;
   const totalFromMeta = predictionMeta?.daily_total_yhat ?? 0;
-  const totalEstimado = totalFromMeta > 0 ? totalFromMeta : totalFromSeries;
-  const modelAccuracy = predictionMeta?.mape != null ? Math.max(0, Math.min(100, Number((100 - predictionMeta.mape).toFixed(1)))) : null;
+  const totalEstimado = totalFromScenario > 0 ? totalFromScenario : (totalFromMeta > 0 ? totalFromMeta : totalFromSeries);
+  const rawMape = scenarioMeta?.mape ?? predictionMeta?.mape ?? null;
+  const modelAccuracy = rawMape != null ? Math.max(0, Math.min(100, Number((100 - rawMape).toFixed(1)))) : null;
 
   return (
     <div className="space-y-6 sm:space-y-8 pb-10">
