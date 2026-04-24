@@ -10,12 +10,14 @@ from app.schemas.staff import StaffCreate, StaffResponse, StaffUpdate
 router = APIRouter()
 
 def to_staff_response(worker: Staff) -> StaffResponse:
+    # Safely get timestamps
+    last_active = getattr(worker, 'updated_at', None) or getattr(worker, 'created_at', None)
     return StaffResponse(
         id=worker.id,
         name=worker.full_name,
         role=worker.role,
         active=worker.active,
-        lastActiveAt=worker.updated_at or worker.created_at
+        lastActiveAt=last_active
     )
 
 @router.get("/", response_model=List[StaffResponse])

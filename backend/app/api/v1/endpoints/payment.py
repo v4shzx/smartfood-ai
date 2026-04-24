@@ -11,7 +11,7 @@ router = APIRouter()
 
 @router.get("/", response_model=List[PaymentMethod])
 async def get_payment_methods(
-    user_id: Optional[str] = Query("u_demo", description="User ID to filter payment methods"),
+    user_id: Optional[str] = Query(None, description="User ID to filter payment methods"),
     db: AsyncSession = Depends(get_db),
     skip: int = 0,
     limit: int = 100,
@@ -19,9 +19,12 @@ async def get_payment_methods(
     """
     Retrieve payment methods for a specific user.
     """
+    # Si no se pasa user_id, podemos retornar lista vacía o usar el demo
+    target_user = user_id or "u_demo"
+    
     result = await db.execute(
         select(PaymentMethodModel)
-        .where(PaymentMethodModel.user_id == user_id)
+        .where(PaymentMethodModel.user_id == target_user)
         .offset(skip)
         .limit(limit)
     )
