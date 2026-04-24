@@ -235,7 +235,7 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
           <p className="mt-2 sm:mt-3 text-base sm:text-lg text-slate-500 dark:text-slate-400 font-normal">{t.dashboard.account_sub}</p>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="hidden md:block">
           <button 
             onClick={handleLogout}
             className="flex items-center gap-2 bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/20 px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-500/20 transition-all shadow-sm active:scale-95"
@@ -752,6 +752,15 @@ export function AccountView({ t, handleLogout, mealPlans, subscriptionTier }: Ac
           </div>
         </div>
       </div>
+
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="md:hidden">
+        <button 
+          onClick={handleLogout}
+          className="w-full flex items-center justify-center gap-2 bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/20 px-6 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-500/20 transition-all shadow-sm active:scale-95"
+        >
+          <LogOut className="w-4 h-4" /> {t.dashboard.logout}
+        </button>
+      </motion.div>
     </div>
   );
 }
