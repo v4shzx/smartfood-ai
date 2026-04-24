@@ -1,4 +1,5 @@
-from sqlalchemy import Column, String, Float, Boolean, ForeignKey, Integer
+from sqlalchemy import Column, String, Float, Boolean, ForeignKey, Integer, DateTime, Text
+from sqlalchemy.sql import func
 from app.core.database import Base
 
 class Product(Base):
@@ -12,3 +13,6 @@ class Product(Base):
     available = Column(Boolean, default=True)
     on_hand = Column(Integer, default=0)
     min_stock = Column(Integer, default=5)
+    image_url = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

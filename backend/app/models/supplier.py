@@ -1,4 +1,5 @@
-from sqlalchemy import Column, String, Integer, Float
+from sqlalchemy import Column, String, Integer, Float, DateTime
+from sqlalchemy.sql import func
 from app.core.database import Base
 
 class Supplier(Base):
@@ -12,3 +13,5 @@ class Supplier(Base):
     email = Column(String)
     lead_days = Column(Integer)
     rating = Column(Float)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

@@ -12,6 +12,7 @@ class SchoolUser(Base):
     role = Column(String)
     subscription_tier = Column(String)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
 class MealPlan(Base):
     __tablename__ = "meal_plans"
@@ -19,8 +20,12 @@ class MealPlan(Base):
     id = Column(String, primary_key=True, index=True)
     owner_id = Column(String, index=True)
     name = Column(String)
+    description = Column(String, nullable=True)
     price_mxn = Column(Float)
     days_per_week = Column(Integer)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
 class MenuItem(Base):
     __tablename__ = "menu_items"
@@ -32,3 +37,5 @@ class MenuItem(Base):
     description = Column(String)
     calories = Column(Integer)
     is_vegetarian = Column(Boolean, default=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

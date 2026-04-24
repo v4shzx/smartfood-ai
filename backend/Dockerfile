@@ -17,6 +17,5 @@ ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8000
 
-# Script para asegurar que la DB esté lista, migrada y con datos
-# Intentamos correr migraciones, si falla (porque no hay), el script de seed creará las tablas.
-CMD ["sh", "-c", "sleep 5 && (alembic upgrade head || echo 'No migrations found, relying on sync models') && python -m app.seed_demo && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# Script para asegurar que la DB esté lista y arrancar el servidor
+CMD ["sh", "-c", "sleep 2 && (alembic upgrade head || echo 'No migrations needed') && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
