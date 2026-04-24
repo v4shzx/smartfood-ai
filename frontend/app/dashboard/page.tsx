@@ -650,6 +650,14 @@ export default function Dashboard() {
               setPredictionScenario={dashboard.setPredictionScenario}
               predictionLift={dashboard.predictionLift}
               setPredictionLift={dashboard.setPredictionLift}
+              rainProbability={dashboard.rainProbability}
+              setRainProbability={dashboard.setRainProbability}
+              temperatureC={dashboard.temperatureC}
+              setTemperatureC={dashboard.setTemperatureC}
+              eventMultiplier={dashboard.eventMultiplier}
+              setEventMultiplier={dashboard.setEventMultiplier}
+              scenarioDate={dashboard.scenarioDate}
+              setScenarioDate={dashboard.setScenarioDate}
               prediction={dashboard.prediction}
               predictionMeta={dashboard.predictionMeta}
               scenarioMeta={dashboard.scenarioMeta}

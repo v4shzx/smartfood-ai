@@ -100,6 +100,10 @@ export function useDashboard(t: any) {
     "baseline" | "promo" | "rain" | "event" | "heatwave" | "monthend"
   >("baseline");
   const [predictionLift, setPredictionLift] = useState(15);
+  const [rainProbability, setRainProbability] = useState(0.5);
+  const [temperatureC, setTemperatureC] = useState(34);
+  const [eventMultiplier, setEventMultiplier] = useState(1.2);
+  const [scenarioDate, setScenarioDate] = useState("");
 
   const [staffQuery, setStaffQuery] = useState("");
 
@@ -827,6 +831,18 @@ export function useDashboard(t: any) {
       if (predictionScenario === "promo") {
         url.searchParams.set("promo_lift_pct", String(predictionLift));
       }
+      if (predictionScenario === "rain") {
+        url.searchParams.set("rain_probability", String(rainProbability));
+      }
+      if (predictionScenario === "event") {
+        url.searchParams.set("event_multiplier", String(eventMultiplier));
+      }
+      if (predictionScenario === "heatwave") {
+        url.searchParams.set("temperature_c", String(temperatureC));
+      }
+      if (predictionScenario === "monthend" && scenarioDate) {
+        url.searchParams.set("target_date", scenarioDate);
+      }
 
       const response = await fetch(url.toString());
       if (!response.ok) return;
@@ -946,6 +962,10 @@ export function useDashboard(t: any) {
     supEditingId, supForm, setSupForm,
     supGeneratePO,
     predictionScenario, setPredictionScenario, predictionLift, setPredictionLift, prediction,
+    rainProbability, setRainProbability,
+    temperatureC, setTemperatureC,
+    eventMultiplier, setEventMultiplier,
+    scenarioDate, setScenarioDate,
     predictionMeta,
     scenarioMeta,
     staffQuery, setStaffQuery, staffFiltered,
