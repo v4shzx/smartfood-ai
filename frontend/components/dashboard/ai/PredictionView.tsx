@@ -78,7 +78,9 @@ export function PredictionView({
   // Calculate some quick stats from prediction data
   const maxVentas = Math.max(...prediction.map(p => p.ventas || 0));
   const peakHour = prediction.find(p => p.ventas === maxVentas)?.hour || "--:--";
-  const totalEstimado = predictionMeta?.daily_total_yhat ?? prediction.reduce((acc, p) => acc + (p.ventas || 0), 0);
+  const totalFromSeries = prediction.reduce((acc, p) => acc + (p.ventas || 0), 0);
+  const totalFromMeta = predictionMeta?.daily_total_yhat ?? 0;
+  const totalEstimado = totalFromMeta > 0 ? totalFromMeta : totalFromSeries;
   const modelAccuracy = predictionMeta?.mape != null ? Math.max(0, Math.min(100, Number((100 - predictionMeta.mape).toFixed(1)))) : null;
 
   return (
@@ -260,7 +262,7 @@ export function PredictionView({
             </div>
             <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">{t.dashboard.model_precision}</div>
             <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
-              {modelAccuracy != null ? `${modelAccuracy}%` : "--"}
+              {modelAccuracy != null ? `${modelAccuracy}%` : "N/D"}
               <span className="text-[10px] bg-emerald-500/10 text-emerald-600 px-2 py-0.5 rounded-lg">
                 {predictionMeta?.model_used === "prophet" ? "Prophet" : "Fallback"}
               </span>

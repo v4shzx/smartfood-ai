@@ -522,6 +522,17 @@ async def get_prediction_scenario(
 
 @router.get("/prediction/meta")
 async def get_prediction_meta(owner_id: Optional[str] = Query("u_demo"), db: AsyncSession = Depends(get_db)) -> Any:
+    hourly_average_query = (
+        select(
+            func.extract("hour", Sale.timestamp).label("hour"),
+            func.avg(Sale.total_price).label("avg_revenue"),
+        )
+        .where(Sale.user_id == owner_id)
+        .group_by(func.extract("hour", Sale.timestamp))
+    )
+    hourly_average_result = await db.execute(hourly_average_query)
+    hourly_average = {int(row[0]): float(row[1]) for row in hourly_average_result.all()}
+
     daily_sales_query = (
         select(
             func.date(Sale.timestamp).label("sale_day"),
@@ -538,10 +549,11 @@ async def get_prediction_meta(owner_id: Optional[str] = Query("u_demo"), db: Asy
     if prophet_meta is not None:
         return prophet_meta
 
-    daily_total = _forecast_next_day_total(daily_sales)
+    baseline_prediction = _build_baseline_prediction(hourly_average)
+    daily_total = sum(float(item["ventas"]) for item in baseline_prediction)
     return {
         "model_used": "fallback",
-        "daily_total_yhat": round(float(daily_total or 0.0), 2),
+        "daily_total_yhat": round(float(daily_total), 2),
         "daily_total_yhat_lower": None,
         "daily_total_yhat_upper": None,
         "mape": None,
