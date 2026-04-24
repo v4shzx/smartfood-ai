@@ -19,6 +19,8 @@ import {
 
 import { API_URL } from "@/lib/api-config";
 
+const DASHBOARD_REFRESH_EVENT = "smartfood:dashboard-refresh";
+
 type ApiSupplier = {
   id: string;
   owner_id: string;
@@ -130,75 +132,86 @@ export function useDashboard(t: any) {
   const [lastSaleForTicket, setLastSaleForTicket] = useState<Sale | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const fetchWithLogging = async (url: string, defaultValue: any) => {
+    try {
+      const r = await fetch(url);
+      if (!r.ok) {
+        console.warn(`Fetch failed for ${url}: ${r.status}`);
+        return defaultValue;
+      }
+      return await r.json();
+    } catch (e) {
+      console.error(`Network error for ${url}:`, e);
+      return defaultValue;
+    }
+  };
+
+  const refreshDashboardData = async (showLoader = false) => {
+    try {
+      if (showLoader) setIsLoading(true);
+      const sessionUserId = localStorage.getItem("smartfood_user_id") || "u_demo";
+      const tier = localStorage.getItem("smartfood_subscription_tier") || "basico";
+      setSubscriptionTier(tier.toLowerCase());
+
+      const [menuRes, plansRes, statsRes, staffRes, productsRes, salesRes, invRes, movRes, supRes, seriesRes, trendsRes, predRes, catRes] = await Promise.all([
+        fetchWithLogging(`${API_URL}/cafeteria/menu?owner_id=${sessionUserId}`, []),
+        fetchWithLogging(`${API_URL}/cafeteria/plans?owner_id=${sessionUserId}`, []),
+        fetchWithLogging(`${API_URL}/stats/?owner_id=${sessionUserId}`, null),
+        fetchWithLogging(`${API_URL}/staff/?owner_id=${sessionUserId}`, []),
+        fetchWithLogging(`${API_URL}/products/?owner_id=${sessionUserId}`, []),
+        fetchWithLogging(`${API_URL}/sales/?owner_id=${sessionUserId}`, []),
+        fetchWithLogging(`${API_URL}/inventory/?owner_id=${sessionUserId}`, []),
+        fetchWithLogging(`${API_URL}/inventory/movements?owner_id=${sessionUserId}`, []),
+        fetchWithLogging(`${API_URL}/suppliers/?owner_id=${sessionUserId}`, []),
+        fetchWithLogging(`${API_URL}/stats/sales-series?owner_id=${sessionUserId}`, []),
+        fetchWithLogging(`${API_URL}/stats/trends?owner_id=${sessionUserId}`, []),
+        fetchWithLogging(`${API_URL}/stats/prediction?owner_id=${sessionUserId}`, []),
+        fetchWithLogging(`${API_URL}/categories/?owner_id=${sessionUserId}`, [])
+      ]);
+
+      setMenuItems(menuRes);
+      setMealPlans(plansRes);
+      setStats(statsRes);
+      setStaff(staffRes);
+      setProducts(productsRes);
+      setCategories(catRes);
+      setInvItems(invRes);
+      setInvMovements(movRes);
+      setSalesHistory(salesRes);
+      const mappedSuppliers = (supRes as ApiSupplier[]).map((supplier) => ({
+        ...supplier,
+        contact: supplier.contact || "",
+        phone: supplier.phone || "",
+        email: supplier.email || "",
+        notes: supplier.notes || "",
+        leadDays: supplier.leadDays ?? supplier.lead_days ?? 3,
+      }));
+      setSuppliers(mappedSuppliers);
+      setSupSelectedId((current) => current || mappedSuppliers[0]?.id || null);
+      setSalesSeries(seriesRes);
+      setTrendsInsights(trendsRes);
+      setPrediction(predRes);
+      setBasePrediction(predRes);
+    } catch (error) {
+      console.error("Dashboard total fetch error:", error);
+    } finally {
+      if (showLoader) setIsLoading(false);
+    }
+  };
+
+  const triggerDashboardRefresh = () => {
+    window.dispatchEvent(new CustomEvent(DASHBOARD_REFRESH_EVENT));
+  };
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        setIsLoading(true);
-        const sessionUserId = localStorage.getItem("smartfood_user_id") || "u_demo";
-        const tier = localStorage.getItem("smartfood_subscription_tier") || "basico";
-        setSubscriptionTier(tier.toLowerCase());
+    refreshDashboardData(true);
 
-        const fetchWithLogging = async (url: string, defaultValue: any) => {
-          try {
-            const r = await fetch(url);
-            if (!r.ok) {
-              console.warn(`Fetch failed for ${url}: ${r.status}`);
-              return defaultValue;
-            }
-            return await r.json();
-          } catch (e) {
-            console.error(`Network error for ${url}:`, e);
-            return defaultValue;
-          }
-        };
+    const handleDashboardRefresh = () => {
+      refreshDashboardData(false);
+    };
 
-        const [menuRes, plansRes, statsRes, staffRes, productsRes, salesRes, invRes, movRes, supRes, seriesRes, trendsRes, predRes, catRes] = await Promise.all([
-          fetchWithLogging(`${API_URL}/cafeteria/menu?owner_id=${sessionUserId}`, []),
-          fetchWithLogging(`${API_URL}/cafeteria/plans?owner_id=${sessionUserId}`, []),
-          fetchWithLogging(`${API_URL}/stats/?owner_id=${sessionUserId}`, null),
-          fetchWithLogging(`${API_URL}/staff/?owner_id=${sessionUserId}`, []),
-          fetchWithLogging(`${API_URL}/products/?owner_id=${sessionUserId}`, []),
-          fetchWithLogging(`${API_URL}/sales/?owner_id=${sessionUserId}`, []),
-          fetchWithLogging(`${API_URL}/inventory/?owner_id=${sessionUserId}`, []),
-          fetchWithLogging(`${API_URL}/inventory/movements?owner_id=${sessionUserId}`, []),
-          fetchWithLogging(`${API_URL}/suppliers/?owner_id=${sessionUserId}`, []),
-          fetchWithLogging(`${API_URL}/stats/sales-series?owner_id=${sessionUserId}`, []),
-          fetchWithLogging(`${API_URL}/stats/trends?owner_id=${sessionUserId}`, []),
-          fetchWithLogging(`${API_URL}/stats/prediction?owner_id=${sessionUserId}`, []),
-          fetchWithLogging(`${API_URL}/categories/?owner_id=${sessionUserId}`, [])
-        ]);
-
-        setMenuItems(menuRes);
-        setMealPlans(plansRes);
-        setStats(statsRes);
-        setStaff(staffRes);
-        setProducts(productsRes);
-        setCategories(catRes);
-        setInvItems(invRes);
-        setInvMovements(movRes);
-        setSalesHistory(salesRes);
-        const mappedSuppliers = (supRes as ApiSupplier[]).map((supplier) => ({
-          ...supplier,
-          contact: supplier.contact || "",
-          phone: supplier.phone || "",
-          email: supplier.email || "",
-          notes: supplier.notes || "",
-          leadDays: supplier.leadDays ?? supplier.lead_days ?? 3,
-        }));
-        setSuppliers(mappedSuppliers);
-        setSupSelectedId((current) => current || mappedSuppliers[0]?.id || null);
-        setSalesSeries(seriesRes);
-        setTrendsInsights(trendsRes);
-        setPrediction(predRes);
-        setBasePrediction(predRes);
-      } catch (error) {
-        console.error("Dashboard total fetch error:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchData();
+    window.addEventListener(DASHBOARD_REFRESH_EVENT, handleDashboardRefresh);
+    return () => window.removeEventListener(DASHBOARD_REFRESH_EVENT, handleDashboardRefresh);
   }, []);
   
   const storeCategories = useMemo(() => {
@@ -404,6 +417,7 @@ export function useDashboard(t: any) {
         }
       }
       setStoreEditorOpen(false);
+      triggerDashboardRefresh();
     } catch (error) {
       console.error("Product save error:", error);
     }
@@ -413,7 +427,10 @@ export function useDashboard(t: any) {
     if (!confirm("¿Seguro que quieres eliminar este producto?")) return;
     try {
       const res = await fetch(`${API_URL}/products/${id}`, { method: "DELETE" });
-      if (res.ok) setProducts((prev) => prev.filter((p) => p.id !== id));
+      if (res.ok) {
+        setProducts((prev) => prev.filter((p) => p.id !== id));
+        triggerDashboardRefresh();
+      }
     } catch (error) {
       console.error("Product delete error:", error);
     }
@@ -430,6 +447,7 @@ export function useDashboard(t: any) {
       if (res.ok) {
         const newCat: Category = await res.json();
         setCategories(prev => [...prev, newCat]);
+        triggerDashboardRefresh();
         return true;
       }
       return false;
@@ -485,6 +503,7 @@ export function useDashboard(t: any) {
         }, ...prev]);
         
         setInvEditorOpen(false);
+        triggerDashboardRefresh();
       } else {
         alert("Error al actualizar el inventario");
       }
@@ -539,6 +558,7 @@ export function useDashboard(t: any) {
         setStaff((prev) => [...prev, created]);
       }
       setStaffEditorOpen(false);
+      triggerDashboardRefresh();
     } catch (error) {
       console.error("Staff save error:", error);
     }
@@ -605,6 +625,7 @@ export function useDashboard(t: any) {
         }
       }
       setSupEditorOpen(false);
+      triggerDashboardRefresh();
     } catch (error) {
       console.error("Supplier save error:", error);
     }
@@ -762,7 +783,9 @@ export function useDashboard(t: any) {
           setInvItems(prev => prev.map(inv => {
             const soldItem = posCart.find(cartItem => cartItem.id === inv.id);
             return soldItem ? { ...inv, on_hand: inv.on_hand - soldItem.quantity } : inv;
-          }));        } else {
+          }));
+          triggerDashboardRefresh();
+        } else {
           alert("Error al procesar la venta");
         }
       } catch (error) {
